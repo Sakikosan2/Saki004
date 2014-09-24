@@ -8,6 +8,7 @@
 
 #import "ThirdViewController.h"
 #import "changeCViewController.h"
+#import "AppDelegate.h"
 
 
 
@@ -127,6 +128,7 @@
     
     
     
+    
     //行番号を保存
     dvc.selectnum = indexPath.row;
     
@@ -150,11 +152,14 @@
     //APIの呼び出し
     NSString *orign =@"http://rate-exchange.appspot.com/currency";
     
+    //アップデリゲートをインスタンス化(カプセル化)
+    AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
+    
     
     //プロパティからデータを取り出して指定
-    NSString *from_cr_code = @"jpy";
+    NSString *from_cr_code = app._genchiCurrency;
     
-    NSString *to_cr_code = @"php";
+    NSString *to_cr_code = app._convertCurrency;
     
     
     
@@ -175,9 +180,9 @@
     NSString *toCode = [dictionary valueForKeyPath:@"to"];
     
     
-    //ResultLabelに結果を表示する
+   //ResultLabelに結果を表示する
     self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",fromCode,rate,toCode];
-    
+
     
 
     
@@ -194,6 +199,8 @@
     NSString *from_cr_code = @"jpy";
     
     NSString *to_cr_code = @"php";
+    
+    
     
    
  

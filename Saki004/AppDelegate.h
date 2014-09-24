@@ -22,6 +22,12 @@
 //NSPersistentStoreCoordinator　は①②の橋渡し役
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
+//currencyListのグローバル変数をつくる
+@property(strong,nonatomic) NSString *_genchiCurrency;
+@property(strong,nonatomic) NSString *_convertCurrency;
+@property(strong,nonatomic) NSString *_commitCurrency;
+
+
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 
