@@ -43,6 +43,8 @@
     [super viewDidLoad];
     
     //ユーザーデフォルトで入力したデータを取り出す
+    
+    
     //ローカル変数。別々のmethodに同じ変数をセットしてもエラーにならない
     NSUserDefaults *myDefaults = [NSUserDefaults standardUserDefaults];
     //ハコからデータをとりだす

@@ -16,11 +16,13 @@
 
 //APIで取得したデータをラベルに返す
 @property (weak,nonatomic)IBOutlet UILabel *resultLabel;
+
+//selectnamに行番号を格納して、スイッチ文で振り分けている
+@property(nonatomic,assign) NSInteger selectnum;
+
+
 -(IBAction)tapBtn:(id)sender;
 
-
-
-    
 
 @property (weak, nonatomic) IBOutlet UITableView *setTableView;
 

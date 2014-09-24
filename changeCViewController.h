@@ -22,7 +22,8 @@
 //selectnumに行番号を格納。スイッチ文で振り分ける
 @property(nonatomic,assign) NSInteger selectnum;
 
-@property(weak,nonatomic)IBOutlet UILabel *myLabel;
+@property(weak,nonatomic)IBOutlet UILabel *resultLabel;
+
 
 //
 //@property(weak,nonatomic) NSDictionary *CurrencyList;

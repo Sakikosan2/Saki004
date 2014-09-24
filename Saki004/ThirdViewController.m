@@ -147,6 +147,40 @@
 -(IBAction)tapBtn:(id)sender
 {
     
+    //APIの呼び出し
+    NSString *orign =@"http://rate-exchange.appspot.com/currency";
+    
+    
+    //プロパティからデータを取り出して指定
+    NSString *from_cr_code = @"jpy";
+    
+    NSString *to_cr_code = @"php";
+    
+    
+    
+    //?以降の文字列を完成させる
+    NSString *url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
+    
+    //NSURLRequestを生成
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    
+    //サーバー（API)と通信を行い、JSON形式のデータを取得
+    NSData *json = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    
+    //JSONをパース(データの設定)
+    NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
+    
+    NSString *fromCode = [dictionary valueForKeyPath:@"from"];
+    NSString *rate  = [dictionary  valueForKeyPath:@"rate"];
+    NSString *toCode = [dictionary valueForKeyPath:@"to"];
+    
+    
+    //ResultLabelに結果を表示する
+    self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",fromCode,rate,toCode];
+    
+    
+
+    
 }
 
 
@@ -155,6 +189,8 @@
     //APIの呼び出し
     NSString *orign =@"http://rate-exchange.appspot.com/currency";
     
+    
+    //プロパティからデータを取り出して指定
     NSString *from_cr_code = @"jpy";
     
     NSString *to_cr_code = @"php";
