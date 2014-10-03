@@ -66,6 +66,9 @@
     //NOでなくてはいけない。
     _isVisible = NO;
     
+ 
+
+    
 }
 
 //TableView
@@ -155,6 +158,8 @@
     //アップデリゲートをインスタンス化(カプセル化)
     AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
     
+    //
+    
     
     //プロパティからデータを取り出して指定
     NSString *from_cr_code = app._genchiCurrency;
@@ -180,10 +185,18 @@
     NSString *toCode = [dictionary valueForKeyPath:@"to"];
     
     
+    //APIで取るべきデータがnilの時
+    if (fromCode ==nil) {
+        fromCode = @"usd";
+        rate = 0;
+        toCode= @"jpy";
+        
+        
+    }else{
    //ResultLabelに結果を表示する
     self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",fromCode,rate,toCode];
 
-    
+    }
 
     
 }
@@ -221,11 +234,63 @@
     NSString *toCode = [dictionary valueForKeyPath:@"to"];
     
     
-    //ResultLabelに結果を表示する
-    self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",fromCode,rate,toCode];
+//    // 9/29 ! データをユーザーデフォルトに保存
+//    //UserDefaultを宣言する
+//    NSUserDefaults *myDefaults = [NSUserDefaults standardUserDefaults];
+//    
+//    [myDefaults setObject:self.resultLabel.text forKey:@"rate"];
+//    NSLog(@"rate",[NSUserDefaults standardUserDefaults]);
+//    
+//    NSDictionary *appDefaults = [NSDictionary
+//                                 dictionaryWithObject:@"default value" forKey:@"KEY0"];
+    
+//    [defaults registerDefaults:appDefaults];
     
 
+    
+    //データを保存
+//    [myDefaults synchronize];
 
+    
+    //!!JSONをパースで取れなかった時→前回保存したデータから取り出す
+    
+    
+//- (void)applicationWillTerminate:(UIApplication *)application
+//    {
+//    // Saves changes in the application's managed object context before the application terminates.
+//        [self saveContext];
+//    }
+//    
+//    - (void)saveContext
+//    {
+//        NSError *error = nil;
+//        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+//        if (managedObjectContext != nil) {
+//            if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
+//                // Replace this implementation with code to handle the error appropriately.
+//                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//                NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+//                abort();
+//            } 
+//        }
+//    }
+//
+//    
+//    
+    //APIで取るべきデータがnilの時
+    if (fromCode ==nil) {
+        fromCode = @"usd";
+        rate = 0;
+        toCode= @"jpy";
+        
+        
+    }else{
+        //ResultLabelに結果を表示する
+        self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",fromCode,rate,toCode];
+        
+    }
+
+    
 }
 
 

@@ -29,6 +29,10 @@
 //@property(weak,nonatomic) NSDictionary *CurrencyList;
 @property (weak, nonatomic) IBOutlet UITableView *currencyTableView;
 
+//ユーザーデフォルト
+@property(strong,nonatomic) NSUserDefaults *_currencyDefaults;
+
+
 
 
 

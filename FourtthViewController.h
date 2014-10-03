@@ -7,12 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "dateViewController.h"
-#import "budgetViewController.h"
 #import <iAd/iAd.h>
 
 
-@interface FourtthViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,ADBannerViewDelegate>
+@interface FourtthViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,ADBannerViewDelegate,UITextFieldDelegate>
+
 
 
 @property(weak,nonatomic) IBOutlet UITableView *setBTableView;

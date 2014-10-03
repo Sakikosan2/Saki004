@@ -7,12 +7,26 @@
 //
 
 #import "FourtthViewController.h"
-#import "dateViewController.h"
-#import "budgetViewController.h"
+
 
 
 @interface FourtthViewController ()
 {
+    UIView *_skyView;
+    BOOL _viewFlag;
+    //if文のときは、BOOL型
+    //ボタンの状態が変わった時に、その時の状態を知る目印
+    //Viewを表示してる時はYES、非表示のときはNO
+    
+    UITextField *_budgetTextField;
+    
+    //ボタンをメンバ変数にする
+    UIButton *_decideButton;
+    //→ViewDidLoadのローカル変数を書き換える。データ型を削除して、置き換える
+    
+    
+
+
     NSArray *_budgetArray;
     
     //広告
@@ -78,7 +92,7 @@
     
     //NOでなくてはいけない。
     _isVisible = NO;
-    
+
 
     
 }
@@ -161,23 +175,73 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //セクションを宣言
-    int section = indexPath.section;
     
-    if (section ==0) {
-        //どこに移動するかを指定
-        budgetViewController *dvd =[self.storyboard instantiateViewControllerWithIdentifier:@"budgetViewController"];
-        
-        //ナビゲーションコントローラーの機能で画面遷移
-        [[self navigationController] pushViewController:dvd animated:YES];
-        
-    }
-    else{
-        dateViewController *dvc = [self.storyboard instantiateViewControllerWithIdentifier:@"dateViewController"];
-        
-        [[self navigationController] pushViewController:dvc animated:YES];
+    //    画面遷移
+    //①コードを使ってボタンオブジェクトを配置する
+    //宣言と代入を一文で行っている
+    //ボタン自体の高さが20あるので、568-20の高さにする。CGRectMakeのときはこの順番で座標書く
+    _decideButton = [[UIButton alloc] initWithFrame:CGRectMake(280, 460, 40, 20)];
+    
+    [_decideButton setTitle:@"Tap" forState:UIControlStateNormal];
+    
+    [_decideButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    
+    //ボタンを押した時に、「tapBtn」のメソッドを実行する
+    [_decideButton addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    //これを忘れるとViewに表示されない
+    [self.view addSubview:_decideButton];
+    
+    
+    //②水色のビューを作成
+    _skyView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 250)];
+    
+    
+    //色の配合の仕方を調整
+    _skyView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:0.2];
+    
+    //まだ隠れている状態＝NOとする
+    _viewFlag = NO;
+    
+    [self.view addSubview:_skyView];
+    
+    
+    
+    
+    //テキストフィールドを作成
+    //_myTextFieldはスカイビューの上に載せているので、(0.0)の位置は、全体のViewの真ん中らへんになる。
+    _budgetTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
+    
+    _budgetTextField.backgroundColor = [UIColor colorWithRed:0.78 green:0.27 blue:0.99 alpha:0.2];
 
-    }
+    
+    //キーボードを閉じるためのアクション。ストーリーボードでアクションつけたときと同じ
+    [_budgetTextField addTarget:self action:@selector(tapReturn) forControlEvents:UIControlEventEditingDidEndOnExit];
+    
+    
+    //ポイント！水色のViewの上に載せている！！
+    [_skyView addSubview:_budgetTextField];
+    
+
+    
+//    //セクションを宣言
+//    int section = indexPath.section;
+//    
+//    if (section ==0) {
+//        //どこに移動するかを指定
+//        budgetViewController *dvd =[self.storyboard instantiateViewControllerWithIdentifier:@"budgetViewController"];
+//        
+//        //ナビゲーションコントローラーの機能で画面遷移
+//        [[self navigationController] pushViewController:dvd animated:YES];
+//        
+//    }
+//    else{
+//        dateViewController *dvc = [self.storyboard instantiateViewControllerWithIdentifier:@"dateViewController"];
+//        
+//        [[self navigationController] pushViewController:dvc animated:YES];
+//
+//    }
     
    
     NSLog(@"%ld",(long)indexPath.section);
@@ -186,6 +250,98 @@
     
     
 }
+
+//キーボードのリターンキーが押された時に呼び出されるメソッド
+-(void)tapReturn
+{
+    NSLog(@"tapReturn");
+    
+    //    //ボタンとViewが表示されてボタンが押された場合は全体が下がる処理
+    //    _myButton.frame = CGRectMake(280, 400, 40, 20);
+    //    _skyView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 250);
+    //
+    //    _viewFlag = NO;
+    
+    [self downObjects];
+    
+}
+
+//ボタンとビューが下がる自作メソッドをつくる！
+-(void)downObjects
+{
+    //ボタンとViewが表示されてボタンが押された場合は全体が下がる処理
+    _decideButton.frame = CGRectMake(280, 400, 40, 20);
+    _skyView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 250);
+    
+    _viewFlag = NO;
+    
+    
+}
+
+//ボタンとビューが上がる自作メソッドをつくる！
+-(void)upObjects
+{
+    //非表示で押されたら上がる処理
+    _decideButton.frame = CGRectMake(280, 150, 40, 10);
+    
+    //引数でmyButtonを渡しているので、myButtonを使える。このmyButtonはローカル変数のmyButtonではない
+    
+    //水色のViewを上げる
+    //その前に、メンバ変数でskyViewを宣言する
+    _skyView.frame =CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width,250);
+    _viewFlag = YES;
+    
+    
+}
+
+
+
+
+
+
+//ボタンTapされた時に呼び出されるメソッド
+-(void)tapBtn:(UIButton *)myButton
+{
+    NSLog(@"Tap!!!");
+    
+    //ボタンが上がるアニメーション
+    [UIView beginAnimations:nil context:nil];
+    //0.3秒の長さのアニメーション
+    [UIView setAnimationDuration:0.3];
+    
+    if (_viewFlag) {
+        //        //ボタンとViewが表示されてボタンが押された場合は全体が下がる処理
+        //        myButton.frame = CGRectMake(280, 400, 40, 20);
+        //        _skyView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 250);
+        //
+        //        _viewFlag = NO;
+        //
+        
+        [self downObjects];
+        
+    }else{
+        //        //非表示で押されたら上がる処理
+        //        myButton.frame = CGRectMake(280, 150, 40, 10);
+        //
+        //        //引数でmyButtonを渡しているので、myButtonを使える。このmyButtonはローカル変数のmyButtonではない
+        //
+        //        //水色のViewを上げる
+        //        //その前に、メンバ変数でskyViewを宣言する
+        //        _skyView.frame =CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width,250);
+        //        _viewFlag = YES;
+        
+        [self upObjects];
+        
+    }
+    
+    
+    //アニメーションの最後にはこれが必要！
+    [UIView commitAnimations];
+    
+    
+    
+}
+
 
 
 -(void) bannerViewDidLoadAd:(ADBannerView *)banner

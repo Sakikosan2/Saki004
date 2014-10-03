@@ -136,10 +136,8 @@
         
     }
     
-    //FetchedResultsControllerのデータセット
-    
-    //
-    -(NSFetchedResultsController *) fechedResultsController{
+//FetchedResultsControllerのデータセット
+-(NSFetchedResultsController *) fechedResultsController{
         
         //nilじゃなくて、データが入っていたら、そのデータをそのまま返す。
         if (_fechedResultController) {

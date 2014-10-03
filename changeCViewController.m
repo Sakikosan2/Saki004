@@ -58,7 +58,13 @@
     self.currencyTableView.delegate=self;
     self.currencyTableView.dataSource=self;
     
-                           
+//    選択した通貨をユーザーデフォルトに保存
+    NSUserDefaults *_currencyDefaults = [NSUserDefaults standardUserDefaults];
+    //Memoという名前のハコからデータをとりだす
+    //_currencyDefaults = [_currencyDefaults stringForKey:@"Currency"];
+    
+    
+    
 }
 
 //行数を返す
@@ -113,7 +119,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    //クリックしたときに画面遷移したあとのLabelに配列の中身を投影する
+    //クリックして画面遷移したあとのLabelに配列の中身を投影する
     //selectnamは前の画面のどれを選んだか
     //アップデリゲートをインスタンス化(カプセル化)
     AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
@@ -124,19 +130,10 @@
     
     
     
-    
-
-    
-
- 
-    
-    
     switch (self.selectnum) {
         case 0:
             //現地通貨設定
             //今の画面のどれを選んだか=indexPath.row
-            //
-            
             NSLog(@"%@",[_currencyInfo objectForKey:@"code"]);
             
             if (app._genchiCurrency == nil){
@@ -173,6 +170,21 @@
     NSLog(@"dismiss");
     //dismissViewControllerAnimatedで子の画面を消してる
     [self dismissViewControllerAnimated:YES completion:nil];
+    
+    
+    //UserDefaultに保存する
+    //UserDefaultを宣言する
+    NSUserDefaults *_currencyDefaults = [NSUserDefaults standardUserDefaults];
+    
+    //[_currencyDefault
+    // setObject:self._currencyTextField forKey:@"Currency"];
+    //「Key」はいれもののの名前。Key＝メモって名前のハコ
+    
+    //データを保存
+    [_currencyDefaults synchronize];
+    //returnをおした時に保存されるから、押さなかったら保存されない
+    
+
     
 
 }
