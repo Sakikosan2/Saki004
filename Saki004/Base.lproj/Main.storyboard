@@ -193,7 +193,7 @@
                         <segue destination="vXZ-lx-hvc" kind="relationship" relationship="viewControllers" id="gWe-AS-yGv"/>
                         <segue destination="69R-Hf-t2w" kind="relationship" relationship="viewControllers" id="IHb-OJ-Sbv"/>
                         <segue destination="jb8-X0-a2I" kind="relationship" relationship="viewControllers" id="ohj-dQ-kPQ"/>
-                        <segue destination="hbZ-dD-79I" kind="relationship" relationship="viewControllers" id="7dd-7E-lBQ"/>
+                        <segue destination="jiO-i3-NNx" kind="relationship" relationship="viewControllers" id="nI8-l3-SCy"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tjq-Jx-W0q" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -219,7 +219,7 @@
             </objects>
             <point key="canvasLocation" x="-195" y="754"/>
         </scene>
-        <!--Fourtth View Controller-->
+        <!--Fourtth View Controller - Item-->
         <scene sceneID="Zb4-gY-Py0">
             <objects>
                 <viewController storyboardIdentifier="FourthViewController" id="jiO-i3-NNx" customClass="FourtthViewController" sceneMemberID="viewController">
@@ -238,13 +238,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="akS-8L-FXN">
-                                <rect key="frame" x="0.0" y="142" width="320" height="373"/>
+                                <rect key="frame" x="-6" y="66" width="327" height="194"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="FO6-GX-k6q"/>
                     <navigationItem key="navigationItem" id="fGg-9K-39a"/>
                     <connections>
                         <outlet property="setBTableView" destination="akS-8L-FXN" id="NLj-nC-wAl"/>
@@ -252,26 +253,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ykT-9x-dxz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="337" y="1507"/>
-        </scene>
-        <!--Navigation Controller - Item-->
-        <scene sceneID="iYX-B9-83p">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hbZ-dD-79I" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="N4b-vI-H2r"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="21d-Tu-qNJ">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="jiO-i3-NNx" kind="relationship" relationship="rootViewController" id="VBj-gg-5LT"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="bDp-Xg-59r" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-189" y="1507"/>
+            <point key="canvasLocation" x="-155" y="1547"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

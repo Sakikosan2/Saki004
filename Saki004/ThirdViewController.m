@@ -38,9 +38,6 @@
     [super viewDidLoad];
     
     _currencyArray =@[@"現地通貨設定",@"手数料通貨設定",@"換算通貨設定"];
-    
-    
-    
     self.setTableView.delegate = self;
     self.setTableView.dataSource = self;
     
@@ -111,7 +108,6 @@
     }
     
     cell.textLabel.text = [NSString stringWithFormat:@"行番号=%d",indexPath.row];
-    
     cell.textLabel.text = _currencyArray[indexPath.row];
     
     
@@ -127,9 +123,6 @@
     
     //画面オブジェクトのインスタンス化(カプセル化)
     changeCViewController *dvc = [self.storyboard instantiateViewControllerWithIdentifier:@"changeCViewController"];
-    
-    
-    
     
     
     //行番号を保存
@@ -234,33 +227,69 @@
     NSString *toCode = [dictionary valueForKeyPath:@"to"];
     
     
-//    // 9/29 ! データをユーザーデフォルトに保存
-//    //UserDefaultを宣言する
-//    NSUserDefaults *myDefaults = [NSUserDefaults standardUserDefaults];
-//    
-//    [myDefaults setObject:self.resultLabel.text forKey:@"rate"];
-//    NSLog(@"rate",[NSUserDefaults standardUserDefaults]);
-//    
-//    NSDictionary *appDefaults = [NSDictionary
-//                                 dictionaryWithObject:@"default value" forKey:@"KEY0"];
-    
-//    [defaults registerDefaults:appDefaults];
-    
 
-    
-    //データを保存
-//    [myDefaults synchronize];
 
     
     //!!JSONをパースで取れなかった時→前回保存したデータから取り出す
     
+    //APIで取るべきデータがnilの時
+    NSUserDefaults *myDefaults = [NSUserDefaults standardUserDefaults];
     
+    if (fromCode ==nil) {
+        
+        //まずはUserDefaultsにデータが存在するかチェック
+        if ([myDefaults objectForKey:@"rate"]==nil) {
+            //UserDefaultsにも入っていない場合は暫定の値をセット
+            fromCode = @"usd";
+            rate = @"100";
+            toCode= @"jpy";
+            
+        }else{
+            fromCode = [myDefaults objectForKey:@"from"];
+            rate  = [myDefaults  objectForKey:@"rate"];
+            toCode = [myDefaults objectForKey:@"to"];
+            
+
+        
+        }
+        
+        
+    }else{
+      //APIで値がとれたのでUserDefaultsに保存
+     
+        
+        
+        [myDefaults setObject:rate forKey:@"rate"];
+        [myDefaults setObject:fromCode forKey:@"from"];
+        [myDefaults setObject:toCode forKey:@"to"];
+        
+        NSLog(@"rate=%@",[myDefaults objectForKey:@"rate"]);
+        
+        //    NSDictionary *appDefaults = [NSDictionary
+        //                                 dictionaryWithObject:@"default value" forKey:@"KEY0"];
+        //
+        //    [defaults registerDefaults:appDefaults];
+        
+        //
+        
+        //データを保存
+        [myDefaults synchronize];
+        
+        
+    }
+    
+    //ResultLabelに結果を表示する
+    self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",fromCode,rate,toCode];
+    
+
+}
+
 //- (void)applicationWillTerminate:(UIApplication *)application
 //    {
 //    // Saves changes in the application's managed object context before the application terminates.
 //        [self saveContext];
 //    }
-//    
+
 //    - (void)saveContext
 //    {
 //        NSError *error = nil;
@@ -274,24 +303,10 @@
 //            } 
 //        }
 //    }
-//
-//    
-//    
-    //APIで取るべきデータがnilの時
-    if (fromCode ==nil) {
-        fromCode = @"usd";
-        rate = 0;
-        toCode= @"jpy";
-        
-        
-    }else{
-        //ResultLabelに結果を表示する
-        self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",fromCode,rate,toCode];
-        
-    }
 
     
-}
+
+
 
 
 //広告
