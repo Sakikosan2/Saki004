@@ -32,10 +32,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="881-Ik-BaH"/>
+                    <connections>
+                        <segue destination="69R-Hf-t2w" kind="modal" id="ZI9-y6-Vyp"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-204" y="-704"/>
+            <point key="canvasLocation" x="-204" y="-252"/>
         </scene>
         <!--Second View Controller - Item-->
         <scene sceneID="26u-U6-EcY">
@@ -74,7 +77,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qQr-Ce-QCE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-204" y="-24"/>
+            <point key="canvasLocation" x="302" y="-252"/>
         </scene>
         <!--ChangeC View Controller-->
         <scene sceneID="zgu-Pp-ODV">
@@ -191,7 +194,6 @@
                     </tabBar>
                     <connections>
                         <segue destination="vXZ-lx-hvc" kind="relationship" relationship="viewControllers" id="gWe-AS-yGv"/>
-                        <segue destination="69R-Hf-t2w" kind="relationship" relationship="viewControllers" id="IHb-OJ-Sbv"/>
                         <segue destination="jb8-X0-a2I" kind="relationship" relationship="viewControllers" id="ohj-dQ-kPQ"/>
                         <segue destination="jiO-i3-NNx" kind="relationship" relationship="viewControllers" id="nI8-l3-SCy"/>
                     </connections>

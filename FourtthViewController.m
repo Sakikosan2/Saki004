@@ -13,8 +13,10 @@
 @interface FourtthViewController ()
 {
     UIView *_skyView;
+    UIView *_dateView;
+    
     BOOL *_viewFlag;
-    //if文のときは、BOOL型
+    
     //ボタンの状態が変わった時に、その時の状態を知る目印
     //Viewを表示してる時はYES、非表示のときはNO
     
@@ -60,6 +62,7 @@
 //TableViewに設定画面を設定する
 - (void)viewDidLoad
 {
+    
     [super viewDidLoad];
     
     //ユーザーデフォルトで入力したデータを取り出す
@@ -264,18 +267,16 @@
     
     else
     {
-        //!!DatePickerが載ってる方のViewを出す
+        _dateView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
         
+        _viewFlag = YES;
+        
+    
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.3];
         
         [self downObjects];
         
-        _skyView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
-        
-        _viewFlag = YES;
-        
-        [UIView commitAnimations];
         
         [_incomeDatePicker setDatePickerMode:UIDatePickerModeDate];
         NSDateFormatter *df = [[NSDateFormatter alloc]init];
@@ -283,6 +284,15 @@
         NSData *date = [df dateFromString:@"2014/01/01"];
         [_incomeDatePicker setDate:date];
         
+        //[self.view addSubview:_dateView];
+        
+        [_dateView addSubview:_incomeDatePicker];
+    
+        
+
+    
+        
+        [UIView commitAnimations];
         
         
         
@@ -384,13 +394,7 @@
     
     
     //入力した金額をボタンがTapされた時にユーザーデフォルトに保存する
-    
-    
     NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
-            
-            
-    
-    
     if (_budgetFlag == YES) {
         NSString *_budget = _budgetTextField.text;
         [_budgetDefaults setObject:_budget forKey:@"budget"];
@@ -399,10 +403,7 @@
         NSString *_income = _budgetTextField.text;
         [_budgetDefaults setObject:_income forKey:@"income"];
         
-        
-        
-        
-    }
+        }
     
             [_budgetDefaults synchronize];
     
