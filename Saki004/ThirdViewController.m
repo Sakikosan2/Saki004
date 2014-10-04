@@ -257,8 +257,6 @@
     }else{
       //APIで値がとれたのでUserDefaultsに保存
      
-        
-        
         [myDefaults setObject:rate forKey:@"rate"];
         [myDefaults setObject:fromCode forKey:@"from"];
         [myDefaults setObject:toCode forKey:@"to"];

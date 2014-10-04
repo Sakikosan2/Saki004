@@ -14,7 +14,11 @@
 
 
 
-@property(weak,nonatomic) IBOutlet UITableView *setBTableView;
+@property(weak,nonatomic) IBOutlet UITableView *setBTableView;//ユーザーデフォルト
+@property(strong,nonatomic) NSUserDefaults *_currencyDefaults;
+
+
+
 
 
 @end
