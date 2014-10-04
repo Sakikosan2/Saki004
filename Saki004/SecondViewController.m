@@ -11,10 +11,18 @@
 
 @interface SecondViewController ()
 {
-    //上に表示されるバナー広告のこと
+    //バナー広告
     ADBannerView *_adView;
-    //ちゃんと表示されるかどうか
-    //BOOL値はフラグとしての役割
+    
+    //テキストフィールドを乗せるView
+    UIView *_textView;
+    BOOL _viewFlag;
+    UITextField *_hikidashiTextField;
+    UITextField *_tesuryouTextField;
+    
+    
+    
+    
     BOOL _isVisible;
     
 }
@@ -39,6 +47,35 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //②水色のビューを作成
+    _textView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 250)];
+    
+    
+    //色の配合の仕方を調整
+    _textView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:1.0];
+    
+    //まだ隠れている状態＝NOとする
+    _viewFlag = NO;
+    
+    [_textView addSubview:_textView];
+    
+    
+    
+    
+    //テキストフィールドを作成
+    _hikidashiTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
+    
+    _hikidashiTextField.backgroundColor = [UIColor colorWithRed:0.78 green:0.27 blue:0.99 alpha:0.6];
+    
+    [_hikidashiTextField addTarget:self action:@selector(tapReturn) forControlEvents:UIControlEventEditingDidEndOnExit];
+    
+    
+    [_textView addSubview:_hikidashiTextField];
+    
+    
+    
+    
     //バナーオブジェクト生成
     _adView = [[ADBannerView alloc] initWithFrame:CGRectMake(0, -_adView.frame.size.height, _adView.frame.size.width, _adView.frame.size.height)];
     
@@ -56,6 +93,9 @@
     //NOでなくてはいけない。
     _isVisible = NO;
     
+    
+    
+    
 //    //コアデータ
 //    self.managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
 //    
@@ -71,6 +111,8 @@
     //if文をつくる.isVisibleの中がNOだったときにこの中の処理をする。
     
     if (!_isVisible) {
+        
+        
         
         
         //バナーが表示されるアニメーション。落ちてくる。
@@ -223,8 +265,6 @@
 }
 */
 
-- (IBAction)tapBtn:(id)sender {
-}
 
 - (IBAction)tapCancel:(id)sender {
     
@@ -233,6 +273,24 @@
 
 
 - (IBAction)tapSave:(id)sender {
+}
+
+
+
+
+
+//引き出し額と手数料の入力
+- (IBAction)insertHikidashi:(id)sender {
+     self.hikidashiTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    [self.hikidashiTextField setKeyboardType:UIKeyboardTypeNumberPad];
+    
+     [_textView addSubview:_hikidashiTextField];
+}
+
+
+- (IBAction)insertTesuryou:(id)sender {
+     self.tesuryouTextField.keyboardType = UIKeyboardTypeNumberPad;
 }
 @end
 

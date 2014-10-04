@@ -28,6 +28,13 @@
 - (IBAction)tapCancel:(id)sender;
 - (IBAction)tapSave:(id)sender;
 
+@property (weak, nonatomic) IBOutlet UITextField *hikidashiTextField;
+
+@property (weak, nonatomic) IBOutlet UITextField *tesuryouTextField;
+- (IBAction)insertHikidashi:(id)sender;
+- (IBAction)insertTesuryou:(id)sender;
+
+
 
 
 

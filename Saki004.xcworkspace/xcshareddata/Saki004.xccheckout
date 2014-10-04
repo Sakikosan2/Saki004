@@ -5,13 +5,15 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>AD81440C-8FAD-4AB1-A9BC-0EAB48D65E32</string>
+	<string>0039C4D7-F3F7-42B9-8849-39C66E6FD8F9</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Saki004</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>77C9DE14-1997-4FCC-A540-D2786AEACE3F</key>
 		<string>https://github.com/Sakikosan2/sebu_iosdevelop.git</string>
+		<key>BB6FF679-E476-4EF8-9CD1-916049FCB4DE</key>
+		<string>https://github.com/Sakikosan2/Saki004.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Saki004/Saki004.xcworkspace</string>
@@ -19,15 +21,25 @@
 	<dict>
 		<key>77C9DE14-1997-4FCC-A540-D2786AEACE3F</key>
 		<string>../..</string>
+		<key>BB6FF679-E476-4EF8-9CD1-916049FCB4DE</key>
+		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/Sakikosan2/sebu_iosdevelop.git</string>
+	<string>https://github.com/Sakikosan2/Saki004.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
 	<string>77C9DE14-1997-4FCC-A540-D2786AEACE3F</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>BB6FF679-E476-4EF8-9CD1-916049FCB4DE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Saki004</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
