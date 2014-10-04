@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "RDVDayCell.h"
+#import "SecondViewController.h"
 
 
 //@interface ViewController ()
@@ -44,6 +45,21 @@
 
 }
 
+//カレンダーから画面遷移する
+-(void)calendarView:(RDVCalendarView *)calendarView didSelectDate:(NSDate *)date
+{
+    NSLog(@"%@",date);
+    
+    SecondViewController *svc = [self.storyboard instantiateViewControllerWithIdentifier:@"SecondViewController"];
+    
+    
+    [self presentViewController:svc animated:YES completion:nil];
+    
+    
+    
+    }
+    
+
 - (void)calendarView:(RDVCalendarView *)calendarView configureDayCell:(RDVCalendarDayCell *)dayCell
              atIndex:(NSInteger)index {
     RDVDayCell *exampleDayCell = (RDVDayCell *)dayCell;
@@ -57,5 +73,14 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (IBAction)openSecondScene:(id)sender
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Second Scene" message:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Open!", nil];
+    [alertView show];
+}
+
+
+
 
 @end

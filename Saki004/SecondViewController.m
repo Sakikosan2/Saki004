@@ -223,5 +223,16 @@
 }
 */
 
+- (IBAction)tapBtn:(id)sender {
+}
+
+- (IBAction)tapCancel:(id)sender {
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+- (IBAction)tapSave:(id)sender {
+}
 @end
 
