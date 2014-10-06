@@ -10,7 +10,7 @@
 #import <iAd/iAd.h>
 
 
-@interface FourtthViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,ADBannerViewDelegate,UITextFieldDelegate>
+@interface FourtthViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,ADBannerViewDelegate,UITextFieldDelegate,UIAlertViewDelegate>
 
 
 

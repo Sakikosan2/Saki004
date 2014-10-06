@@ -17,8 +17,8 @@
     //テキストフィールドを乗せるView
     UIView *_textView;
     BOOL _viewFlag;
-    UITextField *_hikidashiTextField;
-    UITextField *_tesuryouTextField;
+//    UITextField *_hikidashiTextField;
+//    UITextField *_tesuryouTextField;
     
     
     
@@ -48,30 +48,30 @@
 {
     [super viewDidLoad];
     
-    //②水色のビューを作成
-    _textView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 250)];
-    
-    
-    //色の配合の仕方を調整
-    _textView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:1.0];
-    
-    //まだ隠れている状態＝NOとする
-    _viewFlag = NO;
-    
-    [_textView addSubview:_textView];
-    
-    
-    
-    
-    //テキストフィールドを作成
-    _hikidashiTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
-    
-    _hikidashiTextField.backgroundColor = [UIColor colorWithRed:0.78 green:0.27 blue:0.99 alpha:0.6];
-    
-    [_hikidashiTextField addTarget:self action:@selector(tapReturn) forControlEvents:UIControlEventEditingDidEndOnExit];
-    
-    
-    [_textView addSubview:_hikidashiTextField];
+//    //②水色のビューを作成
+//    _textView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 250)];
+//    
+//    
+//    //色の配合の仕方を調整
+//    _textView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:1.0];
+//    
+//    //まだ隠れている状態＝NOとする
+//    _viewFlag = NO;
+//    
+//    [_textView addSubview:_textView];
+//    
+//    
+//    
+//    
+//    //テキストフィールドを作成
+//    _hikidashiTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
+//    
+//    _hikidashiTextField.backgroundColor = [UIColor colorWithRed:0.78 green:0.27 blue:0.99 alpha:0.6];
+//    
+//    [_hikidashiTextField addTarget:self action:@selector(tapReturn) forControlEvents:UIControlEventEditingDidEndOnExit];
+//    
+//    
+//    [_textView addSubview:_hikidashiTextField];
     
     
     
@@ -93,17 +93,55 @@
     //NOでなくてはいけない。
     _isVisible = NO;
     
+    //コアデータ
+    self.managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
     
     
-    
-//    //コアデータ
-//    self.managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
-//    
+    self.hikidashiTextField.delegate = self;
+//    self.hikidashiTextField.dataSource = self;
     
 
     
 
 }
+
+//コアデータ
+- (void)cancel:(id)sender {
+//    if(tapCancel) {
+//        // 新規オブジェクトのキャンセルなので、呼び出し元で挿入したオブジェクトを削除します。
+//        NSManagedObjectContext *context = editingObject.managedObjectContext;
+//        [context deleteObject:editingObject];
+//        NSError *error = nil;
+//        if (![context save:&error]) {
+//            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+//            abort();
+//        }
+//    }
+//    [self.navigationController dismissModalViewControllerAnimated:YES];
+}
+
+//- (void)save:(id)sender {
+//    // テキストフィールドの内容をキー"name"にセットして変更を保存します。
+//    [editingObject setValue:textField.text forKey:@"name"];
+//    if(newObject&&[editingObject.entity.name isEqualToString:@"SecondLevel"]) {
+//        // SecondLevelでは新規作成のオブジェクトを上位のRootLevelと関連をさせる必要があります。
+//        FirstCoreDataAppDelegate *appDelegate =
+//        (FirstCoreDataAppDelegate *)[[UIApplication sharedApplication] delegate];
+//        // このビューの呼び出し元はアプリケーションデリゲートで作ったナビゲーションコントローラーで
+//        // 現在一番上に表示されています。
+//        SecondLevelViewController *controller =
+//        (SecondLevelViewController *)[appDelegate.navigationController topViewController];
+//        //呼び出し元のRootLevelのsecondLevelsにeditingObjectを追加します。
+//        [controller.rootLevel addSecondLevelsObject:editingObject];
+//    }
+//    NSManagedObjectContext *context = editingObject.managedObjectContext;
+//    NSError *error = nil;
+//    if (![context save:&error]) {
+//        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+//        abort();
+//    }
+//    [self.navigationController dismissModalViewControllerAnimated:YES];
+//}
 
 -(void) bannerViewDidLoadAd:(ADBannerView *)banner
 {
@@ -111,8 +149,6 @@
     //if文をつくる.isVisibleの中がNOだったときにこの中の処理をする。
     
     if (!_isVisible) {
-        
-        
         
         
         //バナーが表示されるアニメーション。落ちてくる。
@@ -273,6 +309,7 @@
 
 
 - (IBAction)tapSave:(id)sender {
+    
 }
 
 

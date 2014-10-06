@@ -139,7 +139,7 @@
         <!--Third View Controller-->
         <scene sceneID="rtz-AM-PrU">
             <objects>
-                <viewController id="SuW-Rb-MoB" customClass="ThirdViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ThirdViewController" id="SuW-Rb-MoB" customClass="ThirdViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="z8Y-l2-7XA"/>
                         <viewControllerLayoutGuide type="bottom" id="aqA-Uc-zG6"/>

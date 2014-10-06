@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AppDelegate.h"
 
 //広告バナー追加
 #import <iAd/iAd.h>
@@ -16,6 +17,7 @@
 
 //コアデータ
 #import <CoreData/CoreData.h>
+
 
 @property(strong,nonatomic)NSManagedObjectContext *managedObjectContext;
 

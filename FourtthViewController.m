@@ -7,6 +7,8 @@
 //
 
 #import "FourtthViewController.h"
+#import "ThirdViewController.h"
+#import "AppDelegate.h"
 
 
 
@@ -15,8 +17,9 @@
     UIView *_skyView;
     UIView *_dateView;
     
-    BOOL *_viewFlag;
-    
+    BOOL _viewFlag;
+
+
     //ボタンの状態が変わった時に、その時の状態を知る目印
     //Viewを表示してる時はYES、非表示のときはNO
     
@@ -42,6 +45,8 @@
     //予算をユーザーデフォルトに保存
     BOOL _budgetFlag;
     
+    //Alertを一回しか出さない
+    BOOL _alertFlag;
     
 }
 
@@ -58,16 +63,52 @@
     return self;
 }
 
-
-//TableViewに設定画面を設定する
-- (void)viewDidLoad
+//通貨設定が済んでいるかどうかのalertView
+-(void)viewWillAppear:(BOOL)animated
 {
+    //選択した通貨をユーザーデフォルトに保存
+    NSUserDefaults *_currencyDefaults = [NSUserDefaults standardUserDefaults];
     
-    [super viewDidLoad];
+    _alertFlag = [_currencyDefaults boolForKey:@"isShownCurrencySelectAlert"];
     
+    //アップデリゲートをインスタンス化(カプセル化)
+    AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
+    
+    
+    if(!_alertFlag)
+    {
+        
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"通貨設定は済んでいますか？" message:@"通貨設定画面で設定できます" delegate:self cancelButtonTitle:@"いいえ、これからです" otherButtonTitles:@"はい、済んでいます", nil];
+        
+        [alert show];
+        _alertFlag = YES;
+        
+        
+    }
+//    }else{
+//        //_alertFlag がYESの時
+//        _alertFlag = [_currencyDefaults boolForKey:@"isShownCurrencySelectAlert"];
+//        //選択した通貨をユーザーデフォルトに保存
+//        [_currencyDefaults setBool:_alertFlag forKey:@"isShownCurrencySelectAlert"];
+//        
+//        
+//        
+//    
+//    }
+    //Convertからデータを取り出し、左辺にセットする
+    app._convertCurrency = [_currencyDefaults objectForKey:@"Convert"];
+    
+    //デフォルトの通過設定をJPYにする
+    if (app._convertCurrency == nil){
+        
+        [_currencyDefaults setObject:@"JPY" forKey:@"Convert"];
+    
+        [_currencyDefaults synchronize];
+    
+        app._convertCurrency = @"JPY";
+    }
+
     //ユーザーデフォルトで入力したデータを取り出す
-    
-    
     //ローカル変数。別々のmethodに同じ変数をセットしてもエラーにならない
     NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
     
@@ -78,18 +119,57 @@
     NSString *Kaishibi = [_budgetDefaults stringForKey:@"Kaishibi"];
     NSString *Syuryoubi = [_budgetDefaults stringForKey:@"Syuryoubi"];
     
+    //取り出したデータを%@に指定する
+    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"給与額(%@) %@",app._convertCurrency,income],[NSString stringWithFormat:@"給料日 %@",Kyuryoubi],[NSString stringWithFormat:@"開始日 %@",Kaishibi],[NSString stringWithFormat:@"終了日 %@",Syuryoubi]];
+    
+    self.setBTableView.delegate = self;
+    self.setBTableView.dataSource = self;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
+
+//alertViewが選択された時の処理
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 0:
+        {
+            //「いいえ」が選択されたとき
+            NSLog(@"いいえ");
+//            ThirdViewController *thd = [self.storyboard instantiateViewControllerWithIdentifier:@"ThirdViewController"];
+//            [self presentViewController:thd animated:YES completion:nil];
+            self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
+            
+            break;
+        }
+        case 1:
+        {
+//            //「はい」が選択されたとき
+//            NSLog(@"はい");
+//        
+            break;
+        }
+    }
+}
+
+//TableViewに設定画面を設定する
+- (void)viewDidLoad
+{
+    
+    [super viewDidLoad];
+    
+    
 
     
     
     
-    
-    //取り出したデータを%@に指定する
-    _budgetArray =@[[NSString stringWithFormat:@"予算額 %@",budget],[NSString stringWithFormat:@"給与額 %@",income],[NSString stringWithFormat:@"給料日 %@",Kyuryoubi],[NSString stringWithFormat:@"開始日 %@",Kaishibi],[NSString stringWithFormat:@"終了日 %@",Syuryoubi]];
-    
-    
-    
-    self.setBTableView.delegate = self;
-    self.setBTableView.dataSource = self;
     
     
 //広告
@@ -281,7 +361,7 @@
         [_incomeDatePicker setDatePickerMode:UIDatePickerModeDate];
         NSDateFormatter *df = [[NSDateFormatter alloc]init];
         [df setDateFormat:@"yyyy/MM/dd"];
-        NSData *date = [df dateFromString:@"2014/01/01"];
+        NSDate *date = [df dateFromString:@"2014/01/01"];
         [_incomeDatePicker setDate:date];
         
         //[self.view addSubview:_dateView];

@@ -21,10 +21,6 @@
     ADBannerView *_adView;
     
     BOOL _isVisible;
-    
-    
-    
-    
 }
 
 
@@ -45,26 +41,13 @@
     [self getRate];
     
     
-    //広告
     //バナーオブジェクト生成
     _adView = [[ADBannerView alloc] initWithFrame:CGRectMake(0, -_adView.frame.size.height, _adView.frame.size.width, _adView.frame.size.height)];
-    
     _adView.delegate = self;
-    
-    
-    //アドビューをつくるよ！このビューの一部に部品を追加する
     [self.view addSubview:_adView];
-    
-    
-    //透明度を0にする
     _adView.alpha =0.0;
-    
-    
-    //NOでなくてはいけない。
     _isVisible = NO;
     
- 
-
     
 }
 
@@ -117,7 +100,6 @@
 
 
 //セルが選択するときに何を実行するか
-
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -132,16 +114,11 @@
     //modalで画面遷移
     [self presentViewController:dvc animated:YES completion:nil];
     
-    
-    
-//    //ナビゲーションコントローラーの機能で画面遷移
-//    [[self navigationController] pushViewController:dvc animated:YES];
-//    
 }
 
 
 
-//API
+//API 
 -(IBAction)tapBtn:(id)sender
 {
     
@@ -151,15 +128,9 @@
     //アップデリゲートをインスタンス化(カプセル化)
     AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
     
-    //
-    
-    
     //プロパティからデータを取り出して指定
     NSString *from_cr_code = app._genchiCurrency;
-    
     NSString *to_cr_code = app._convertCurrency;
-    
-    
     
     //?以降の文字列を完成させる
     NSString *url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
@@ -184,8 +155,7 @@
         rate = 0;
         toCode= @"jpy";
         
-        
-    }else{
+        }else{
    //ResultLabelに結果を表示する
     self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",fromCode,rate,toCode];
 
@@ -200,44 +170,53 @@
     //APIの呼び出し
     NSString *orign =@"http://rate-exchange.appspot.com/currency";
     
-    
     //プロパティからデータを取り出して指定
     NSString *from_cr_code = @"jpy";
-    
     NSString *to_cr_code = @"php";
     
     
-    
-   
- 
-    //?以降の文字列を完成させる
-    NSString *url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
-    
-    //NSURLRequestを生成
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    
-    //サーバー（API)と通信を行い、JSON形式のデータを取得
-    NSData *json = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    
-    //JSONをパース(データの設定)
-    NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
-    
-    NSString *fromCode = [dictionary valueForKeyPath:@"from"];
-    NSString *rate  = [dictionary  valueForKeyPath:@"rate"];
-    NSString *toCode = [dictionary valueForKeyPath:@"to"];
+    //エラーが起こりそうな処理を@tryで囲む
+    //@tryの前に宣言文出す
+    NSString *url;
+    NSURLRequest *request;
+    NSData *json;
+    NSDictionary *dictionary;
+    NSString *fromCode;
+    NSString *rate;
+    NSString *toCode;
     
     
-
-
+    @try {
+        //?以降の文字列を完成させる
+        url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
+        
+        //NSURLRequestを生成
+        request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+        
+        //サーバー（API)と通信を行い、JSON形式のデータを取得
+        json = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+        
+        //JSONをパース(データの設定)
+        dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
+        
+        fromCode = [dictionary valueForKeyPath:@"from"];
+        rate  = [dictionary  valueForKeyPath:@"rate"];
+        toCode = [dictionary valueForKeyPath:@"to"];
+    }
+    //エラーが起きた時どうするか
+    @catch (NSException *exception) {
+        fromCode = nil;
+    }
     
-    //!!JSONをパースで取れなかった時→前回保存したデータから取り出す
     
+    
+    //JSONをパースで取れなかった時→前回保存したデータから取り出す
     //APIで取るべきデータがnilの時
     NSUserDefaults *myDefaults = [NSUserDefaults standardUserDefaults];
     
     if (fromCode ==nil) {
         
-        //まずはUserDefaultsにデータが存在するかチェック
+        //UserDefaultsにデータが存在するかチェック
         if ([myDefaults objectForKey:@"rate"]==nil) {
             //UserDefaultsにも入っていない場合は暫定の値をセット
             fromCode = @"usd";
@@ -248,15 +227,11 @@
             fromCode = [myDefaults objectForKey:@"from"];
             rate  = [myDefaults  objectForKey:@"rate"];
             toCode = [myDefaults objectForKey:@"to"];
-            
-
-        
         }
         
         
     }else{
       //APIで値がとれたのでUserDefaultsに保存
-     
         [myDefaults setObject:rate forKey:@"rate"];
         [myDefaults setObject:fromCode forKey:@"from"];
         [myDefaults setObject:toCode forKey:@"to"];
@@ -269,16 +244,12 @@
         //    [defaults registerDefaults:appDefaults];
         
         //
-        
-        //データを保存
+    
         [myDefaults synchronize];
-        
         
     }
     
-    //ResultLabelに結果を表示する
-    self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",fromCode,rate,toCode];
-    
+    self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",toCode,rate,fromCode];
 
 }
 

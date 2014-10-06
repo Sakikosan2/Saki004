@@ -18,7 +18,7 @@
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 
-
+//アプリの初回起動時のみ呼ばれるメソッド
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.

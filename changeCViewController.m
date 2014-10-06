@@ -93,7 +93,7 @@
     
     //※メインストーリーボードで、delegateとDataSourceを関連付ける
     
-    //Plistからデータを取り出す。 ※Dictionary型の部分全体を取り出す
+//Plistからデータを取り出す。 ※Dictionary型の部分全体を取り出す
     NSDictionary *currencyData = _currencyList[indexPath.row];
     
     //plistのnameのデータを取り出す
@@ -105,12 +105,7 @@
     //表示する文字列を作成
     cell.textLabel.text = [NSString stringWithFormat:@"%@(%@)",currencyName,currencyCode];
     
-    
-
-    
     return cell;
-    
-    
     
     
 }
@@ -139,8 +134,8 @@
             if (app._genchiCurrency == nil){
                 app._genchiCurrency = [NSString new];
             }
-            app._genchiCurrency = [_currencyInfo objectForKey:@"code"];
-            NSLog(@"Code");
+            app._genchiCurrency = [_currencyInfo objectForKey:@"genchi"];
+            NSLog(@"Genchi");
 
             
             
@@ -148,6 +143,11 @@
     
         case 1:
             //手数料通貨設定
+            NSLog(@"%@",[_currencyInfo objectForKey:@"code"]);
+            if (app._commitCurrency == nil){
+                app._commitCurrency = [NSString new];
+            }
+
             app._commitCurrency = [_currencyInfo objectForKey:@"Commit"];
             NSLog(@"Commit");
 
@@ -157,6 +157,11 @@
             
         case 2:
             //換算通貨設定
+            NSLog(@"%@",[_currencyInfo objectForKey:@"code"]);
+            if (app._convertCurrency == nil){
+                app._convertCurrency = [NSString new];
+            }
+
             app._convertCurrency = [_currencyInfo objectForKey:@"Convert"];
             NSLog(@"Convert");
 
@@ -171,23 +176,15 @@
     //dismissViewControllerAnimatedで子の画面を消してる
     [self dismissViewControllerAnimated:YES completion:nil];
     
-    
     //UserDefaultに保存する
-    //UserDefaultを宣言する
     NSUserDefaults *_currencyDefaults = [NSUserDefaults standardUserDefaults];
-    
-    //[_currencyDefault
-    // setObject:self._currencyTextField forKey:@"Currency"];
-    //「Key」はいれもののの名前。Key＝メモって名前のハコ
-    
-    //データを保存
     [_currencyDefaults synchronize];
-    //returnをおした時に保存されるから、押さなかったら保存されない
-    
-
     
 
 }
+
+
+
 
 
 
