@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="Entity" representedClassName="Entity" syncable="YES">
+    <entity name="Withdrawmemo" representedClassName="Entity" syncable="YES">
         <attribute name="after" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="before" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cafter" optional="YES" attributeType="String" syncable="YES"/>
@@ -13,6 +13,6 @@
         <attribute name="withdraw" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Entity" positionX="-63" positionY="-18" width="128" height="195"/>
+        <element name="Withdrawmemo" positionX="-63" positionY="-18" width="128" height="195"/>
     </elements>
 </model>

@@ -7,7 +7,8 @@
 //
 
 #import "SecondViewController.h"
-
+#import "AppDelegate.h"
+#import "FourtthViewController.h"
 
 @interface SecondViewController ()
 {
@@ -82,15 +83,12 @@
     _adView.delegate = self;
     
     
-    //アドビューをつくるよ！このビューの一部に部品を追加する
+    //アドビューをつくる
     [self.view addSubview:_adView];
-    
     
     //透明度を0にする
     _adView.alpha =0.0;
-    
-    
-    //NOでなくてはいけない。
+
     _isVisible = NO;
     
     //コアデータ
@@ -187,12 +185,11 @@
         
     }
     
-    -(UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+-(UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
     {
         //定数を宣言
         static NSString *cellIdentifier = @"cell";
         
-        //
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         
         if (cell==nil){
@@ -217,13 +214,13 @@
 //FetchedResultsControllerのデータセット
 -(NSFetchedResultsController *) fechedResultsController{
         
-        //nilじゃなくて、データが入っていたら、そのデータをそのまま返す。
+        //データが入っているとき = そのデータをそのまま返す
         if (_fechedResultController) {
             return _fechedResultController;
             
         }
         
-        //nil　のとき
+        //nilのとき
         NSEntityDescription *entity = [NSEntityDescription entityForName:@"Place" inManagedObjectContext:self.managedObjectContext];
         
         //一行ずつデータを取得する
@@ -256,9 +253,9 @@
 //            
 //        }
 //        
-        return _fechedResultController;
-        //コロンのあとはかならず引き数
-        
+    return _fechedResultController;
+    
+
         
     }
 
@@ -309,8 +306,26 @@
 
 
 - (IBAction)tapSave:(id)sender {
+    //キーボードを閉じる
+    [self.hikidashiTextField resignFirstResponder];
+    [self.tesuryouTextField  resignFirstResponder];
     
-}
+    
+    //  10/7  入力した値をテキストフィールドに表示する
+//    NSLog(@"引き出し額は[%@]");
+    
+    int d=0;
+    
+    NSString *hikidashiString=@"";
+    
+
+   self.hikidashiTextField.text=hikidashiString;
+    
+    //取り出したデータを%@に指定する
+//    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"給与額(%@) %@",app._convertCurrency,income],[NSString stringWithFormat:@"給料日 %@",Kyuryoubi],[NSString stringWithFormat:@"開始日 %@",Kaishibi],[NSString stringWithFormat:@"終了日 %@",Syuryoubi]];
+    
+    
+    }
 
 
 

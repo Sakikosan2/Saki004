@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3E406C7F19C820EF00DB6F9A /* FourtthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E406C7E19C820EF00DB6F9A /* FourtthViewController.m */; };
 		3E406C8A19CAB46600DB6F9A /* CurrencyList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E406C8919CAB46600DB6F9A /* CurrencyList.plist */; };
+		3E9406B619E53621005B0407 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E9406B519E53621005B0407 /* Entity.m */; };
 		3E94E4A619C6CDA200DDBFDD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E94E4A519C6CDA200DDBFDD /* Foundation.framework */; };
 		3E94E4A819C6CDA200DDBFDD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E94E4A719C6CDA200DDBFDD /* CoreGraphics.framework */; };
 		3E94E4AA19C6CDA200DDBFDD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E94E4A919C6CDA200DDBFDD /* UIKit.framework */; };
@@ -29,7 +30,6 @@
 		3E94E4E919C6E97E00DDBFDD /* changeCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E94E4E819C6E97E00DDBFDD /* changeCViewController.m */; };
 		3E9DCBBF19CC034C0070E9D1 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E9DCBBE19CC034C0070E9D1 /* CoreData.framework */; };
 		3E9DCBC219CC03B30070E9D1 /* User.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3E9DCBC019CC03B30070E9D1 /* User.xcdatamodeld */; };
-		3E9DCBC819CFECD50070E9D1 /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E9DCBC719CFECD50070E9D1 /* Entity.m */; };
 		E1F5F7E845FB4A319BE26148 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E9AF94D1A564748B60ADBE9 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +47,8 @@
 		3E406C7D19C820EF00DB6F9A /* FourtthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FourtthViewController.h; path = ../FourtthViewController.h; sourceTree = "<group>"; };
 		3E406C7E19C820EF00DB6F9A /* FourtthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FourtthViewController.m; path = ../FourtthViewController.m; sourceTree = "<group>"; };
 		3E406C8919CAB46600DB6F9A /* CurrencyList.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CurrencyList.plist; sourceTree = "<group>"; };
+		3E9406B419E53621005B0407 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
+		3E9406B519E53621005B0407 /* Entity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Entity.m; sourceTree = "<group>"; };
 		3E94E4A219C6CDA200DDBFDD /* Saki004.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Saki004.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E94E4A519C6CDA200DDBFDD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		3E94E4A719C6CDA200DDBFDD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -76,8 +78,6 @@
 		3E94E4E819C6E97E00DDBFDD /* changeCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = changeCViewController.m; path = ../changeCViewController.m; sourceTree = "<group>"; };
 		3E9DCBBE19CC034C0070E9D1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		3E9DCBC119CC03B30070E9D1 /* User.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = User.xcdatamodel; sourceTree = "<group>"; };
-		3E9DCBC619CFECD50070E9D1 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
-		3E9DCBC719CFECD50070E9D1 /* Entity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Entity.m; sourceTree = "<group>"; };
 		4E9AF94D1A564748B60ADBE9 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FEF5E44B8024BFBAECC3346 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -161,10 +161,10 @@
 				3E406C7E19C820EF00DB6F9A /* FourtthViewController.m */,
 				3E406C8919CAB46600DB6F9A /* CurrencyList.plist */,
 				3E94E4BD19C6CDA200DDBFDD /* Images.xcassets */,
-				3E9DCBC619CFECD50070E9D1 /* Entity.h */,
-				3E9DCBC719CFECD50070E9D1 /* Entity.m */,
 				3E9DCBC019CC03B30070E9D1 /* User.xcdatamodeld */,
 				3E94E4AC19C6CDA200DDBFDD /* Supporting Files */,
+				3E9406B419E53621005B0407 /* Entity.h */,
+				3E9406B519E53621005B0407 /* Entity.m */,
 			);
 			path = Saki004;
 			sourceTree = "<group>";
@@ -331,6 +331,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E9406B619E53621005B0407 /* Entity.m in Sources */,
 				3E94E4E119C6CFF500DDBFDD /* SecondViewController.m in Sources */,
 				3E94E4BC19C6CDA200DDBFDD /* ViewController.m in Sources */,
 				3E94E4E919C6E97E00DDBFDD /* changeCViewController.m in Sources */,
@@ -340,7 +341,6 @@
 				3E406C7F19C820EF00DB6F9A /* FourtthViewController.m in Sources */,
 				3E94E4B219C6CDA200DDBFDD /* main.m in Sources */,
 				3E94E4E619C6DC1100DDBFDD /* RDVDayCell.m in Sources */,
-				3E9DCBC819CFECD50070E9D1 /* Entity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

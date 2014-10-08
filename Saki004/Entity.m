@@ -2,27 +2,24 @@
 //  Entity.m
 //  Saki004
 //
-//  Created by 丸山　咲 on 2014/09/22.
+//  Created by 丸山　咲 on 2014/10/08.
 //  Copyright (c) 2014年 Saki Maruyama. All rights reserved.
 //
 
 #import "Entity.h"
 
-#import "AppDelegate.h"
-
-
 
 @implementation Entity
 
-@dynamic date;
-@dynamic withdraw;
+@dynamic after;
+@dynamic before;
+@dynamic cafter;
+@dynamic cbefore;
 @dynamic commission;
 @dynamic credit;
-@dynamic result;
-@dynamic before;
-@dynamic after;
-@dynamic cbefore;
-@dynamic cafter;
+@dynamic date;
 @dynamic rate;
+@dynamic result;
+@dynamic withdraw;
 
 @end

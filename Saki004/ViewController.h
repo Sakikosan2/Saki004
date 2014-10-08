@@ -12,5 +12,8 @@
 
 @interface ViewController : RDVCalendarViewController
 
+@property (weak, nonatomic) IBOutlet UILabel *balanceLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *lastwithdrawalLabel;
 
 @end

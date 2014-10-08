@@ -115,10 +115,9 @@
 {
     
     //クリックして画面遷移したあとのLabelに配列の中身を投影する
-    //selectnamは前の画面のどれを選んだか
+    
     //アップデリゲートをインスタンス化(カプセル化)
     AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
-    
     
     //プロパティリストの中身のデータをNSDictionaryにいれる
     NSDictionary *_currencyInfo = _currencyList[indexPath.row];
@@ -127,6 +126,47 @@
     
     switch (self.selectnum) {
         case 0:
+        {
+            
+            //APIの呼び出し
+            NSString *orign =@"http://rate-exchange.appspot.com/currency";
+            
+            //アップデリゲートをインスタンス化(カプセル化)
+            AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
+            
+            //プロパティからデータを取り出して指定
+            NSString *from_cr_code = app._genchiCurrency;
+            NSString *to_cr_code = app._convertCurrency;
+            
+            //?以降の文字列を完成させる
+            NSString *url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
+            
+            //NSURLRequestを生成
+            NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+            
+            //サーバー（API)と通信を行い、JSON形式のデータを取得
+            NSData *json = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+            
+            //JSONをパース(データの設定)
+            NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
+            
+            NSString *fromCode = [dictionary valueForKeyPath:@"from"];
+            NSString *rate  = [dictionary  valueForKeyPath:@"rate"];
+            NSString *toCode = [dictionary valueForKeyPath:@"to"];
+            
+            
+            //APIで取るべきデータがnilの時
+            if (fromCode ==nil) {
+                fromCode = @"usd";
+                rate = 0;
+                toCode= @"jpy";
+                
+            }else{
+                //ResultLabelに結果を表示する
+                self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",fromCode,rate,toCode];
+                
+            
+        }
             //現地通貨設定
             //今の画面のどれを選んだか=indexPath.row
             NSLog(@"%@",[_currencyInfo objectForKey:@"code"]);
@@ -137,12 +177,12 @@
             app._genchiCurrency = [_currencyInfo objectForKey:@"genchi"];
             NSLog(@"Genchi");
 
-            
+        }
             
             break;
     
         case 1:
-            //手数料通貨設定
+        {//手数料通貨設定
             NSLog(@"%@",[_currencyInfo objectForKey:@"code"]);
             if (app._commitCurrency == nil){
                 app._commitCurrency = [NSString new];
@@ -150,13 +190,95 @@
 
             app._commitCurrency = [_currencyInfo objectForKey:@"Commit"];
             NSLog(@"Commit");
-
             
+            
+            //APIの呼び出し
+            NSString *orign =@"http://rate-exchange.appspot.com/currency";
+            
+            //アップデリゲートをインスタンス化(カプセル化)
+            AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
+            
+            //プロパティからデータを取り出して指定
+            NSString *from_cr_code = app._genchiCurrency;
+            NSString *to_cr_code = app._convertCurrency;
+            
+            //?以降の文字列を完成させる
+            NSString *url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
+            
+            //NSURLRequestを生成
+            NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+            
+            //サーバー（API)と通信を行い、JSON形式のデータを取得
+            NSData *json = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+            
+            //JSONをパース(データの設定)
+            NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
+            
+            NSString *fromCode = [dictionary valueForKeyPath:@"from"];
+            NSString *rate  = [dictionary  valueForKeyPath:@"rate"];
+            NSString *toCode = [dictionary valueForKeyPath:@"to"];
+            
+            
+            //APIで取るべきデータがnilの時
+            if (fromCode ==nil) {
+                fromCode = @"usd";
+                rate = 0;
+                toCode= @"jpy";
+                
+            }else{
+                //ResultLabelに結果を表示する
+                self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",fromCode,rate,toCode];
+                
+            }
+
+        }
             break;
             
             
         case 2:
             //換算通貨設定
+        {
+            
+            //APIの呼び出し
+            NSString *orign =@"http://rate-exchange.appspot.com/currency";
+            
+            //アップデリゲートをインスタンス化(カプセル化)
+            AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
+            
+            //プロパティからデータを取り出して指定
+            NSString *from_cr_code = app._genchiCurrency;
+            NSString *to_cr_code = app._convertCurrency;
+            
+            //?以降の文字列を完成させる
+            NSString *url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
+            
+            //NSURLRequestを生成
+            NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+            
+            //サーバー（API)と通信を行い、JSON形式のデータを取得
+            NSData *json = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+            
+            //JSONをパース(データの設定)
+            NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
+            
+            NSString *fromCode = [dictionary valueForKeyPath:@"from"];
+            NSString *rate  = [dictionary  valueForKeyPath:@"rate"];
+            NSString *toCode = [dictionary valueForKeyPath:@"to"];
+            
+            
+            //APIで取るべきデータがnilの時
+            if (fromCode ==nil) {
+                fromCode = @"usd";
+                rate = 0;
+                toCode= @"jpy";
+                
+            }else{
+                //ResultLabelに結果を表示する
+                self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",fromCode,rate,toCode];
+                
+            }
+            
+        
             NSLog(@"%@",[_currencyInfo objectForKey:@"code"]);
             if (app._convertCurrency == nil){
                 app._convertCurrency = [NSString new];
@@ -164,6 +286,7 @@
 
             app._convertCurrency = [_currencyInfo objectForKey:@"Convert"];
             NSLog(@"Convert");
+        }
 
             
             default:
