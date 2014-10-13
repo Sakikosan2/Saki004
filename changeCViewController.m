@@ -97,8 +97,8 @@
     NSDictionary *currencyData = _currencyList[indexPath.row];
     
     //plistのnameのデータを取り出す
-    NSString *currencyName = [currencyData objectForKey:@"name"];
-    NSString *currencyCode = [currencyData objectForKey:@"code"];
+    NSString *currencyName = [currencyData objectForKey:@"Name"];
+    NSString *currencyCode = [currencyData objectForKey:@"Code"];
     
     
     
@@ -135,7 +135,7 @@
             AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
             
             //プロパティからデータを取り出して指定
-            NSString *from_cr_code = app._genchiCurrency;
+            NSString *from_cr_code = app._localCurrency;
             NSString *to_cr_code = app._convertCurrency;
             
             //?以降の文字列を完成させる
@@ -150,9 +150,9 @@
             //JSONをパース(データの設定)
             NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
             
-            NSString *fromCode = [dictionary valueForKeyPath:@"from"];
-            NSString *rate  = [dictionary  valueForKeyPath:@"rate"];
-            NSString *toCode = [dictionary valueForKeyPath:@"to"];
+            NSString *fromCode = [dictionary valueForKeyPath:@"From"];
+            NSString *rate  = [dictionary  valueForKeyPath:@"Rate"];
+            NSString *toCode = [dictionary valueForKeyPath:@"To"];
             
             
             //APIで取るべきデータがnilの時
@@ -169,13 +169,13 @@
         }
             //現地通貨設定
             //今の画面のどれを選んだか=indexPath.row
-            NSLog(@"%@",[_currencyInfo objectForKey:@"code"]);
+            NSLog(@"%@",[_currencyInfo objectForKey:@"Code"]);
             
-            if (app._genchiCurrency == nil){
-                app._genchiCurrency = [NSString new];
+            if (app._localCurrency == nil){
+                app._localCurrency = [NSString new];
             }
-            app._genchiCurrency = [_currencyInfo objectForKey:@"genchi"];
-            NSLog(@"Genchi");
+            app._localCurrency = [_currencyInfo objectForKey:@"Localcurrency"];
+            NSLog(@"Localcurrency");
 
         }
             
@@ -183,13 +183,13 @@
     
         case 1:
         {//手数料通貨設定
-            NSLog(@"%@",[_currencyInfo objectForKey:@"code"]);
+            NSLog(@"%@",[_currencyInfo objectForKey:@"Code"]);
             if (app._commitCurrency == nil){
                 app._commitCurrency = [NSString new];
             }
 
-            app._commitCurrency = [_currencyInfo objectForKey:@"Commit"];
-            NSLog(@"Commit");
+            app._commitCurrency = [_currencyInfo objectForKey:@"Commitcurrency"];
+            NSLog(@"Commitcurrency");
             
             
             //APIの呼び出し
@@ -199,7 +199,7 @@
             AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
             
             //プロパティからデータを取り出して指定
-            NSString *from_cr_code = app._genchiCurrency;
+            NSString *from_cr_code = app._localCurrency;
             NSString *to_cr_code = app._convertCurrency;
             
             //?以降の文字列を完成させる
@@ -246,7 +246,7 @@
             AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
             
             //プロパティからデータを取り出して指定
-            NSString *from_cr_code = app._genchiCurrency;
+            NSString *from_cr_code = app._localCurrency;
             NSString *to_cr_code = app._convertCurrency;
             
             //?以降の文字列を完成させる
@@ -261,9 +261,9 @@
             //JSONをパース(データの設定)
             NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
             
-            NSString *fromCode = [dictionary valueForKeyPath:@"from"];
-            NSString *rate  = [dictionary  valueForKeyPath:@"rate"];
-            NSString *toCode = [dictionary valueForKeyPath:@"to"];
+            NSString *fromCode = [dictionary valueForKeyPath:@"From"];
+            NSString *rate  = [dictionary  valueForKeyPath:@"Rate"];
+            NSString *toCode = [dictionary valueForKeyPath:@"To"];
             
             
             //APIで取るべきデータがnilの時
@@ -279,13 +279,13 @@
             }
             
         
-            NSLog(@"%@",[_currencyInfo objectForKey:@"code"]);
+            NSLog(@"%@",[_currencyInfo objectForKey:@"Code"]);
             if (app._convertCurrency == nil){
                 app._convertCurrency = [NSString new];
             }
 
-            app._convertCurrency = [_currencyInfo objectForKey:@"Convert"];
-            NSLog(@"Convert");
+            app._convertCurrency = [_currencyInfo objectForKey:@"Convertcurrency"];
+            NSLog(@"Convertcurrency");
         }
 
             

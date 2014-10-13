@@ -15,7 +15,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-//コアデータ
+//Coredata
 //NSManagedObjectContext　はデータの管理(データをの追加、削除)をするオブジェクト(①)
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
@@ -26,7 +26,7 @@
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 //currencyListのグローバル変数をつくる
-@property(strong,nonatomic) NSString *_genchiCurrency;
+@property(strong,nonatomic) NSString *_localCurrency;
 @property(strong,nonatomic) NSString *_convertCurrency;
 @property(strong,nonatomic) NSString *_commitCurrency;
 

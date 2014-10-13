@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "Entity.h"
+#import "Withdrawalmemo.h"
 
 
 @implementation AppDelegate

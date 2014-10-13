@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Withdrawmemo" representedClassName="Entity" syncable="YES">
-        <attribute name="after" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="before" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="cafter" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="cbefore" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="commission" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="credit" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="date" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="accountresult" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="commissionprice" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="commitcurrency" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="convertcurrency" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="localcurrency" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="rate" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="result" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="withdraw" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startdate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="withdrawaldate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="withdrawalprice" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Withdrawmemo" positionX="-63" positionY="-18" width="128" height="195"/>
+        <element name="Withdrawmemo" positionX="-63" positionY="-18" width="128" height="30"/>
     </elements>
 </model>

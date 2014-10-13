@@ -112,13 +112,15 @@
     NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
     
     //ハコからデータをとりだす
-    NSString *budget = [_budgetDefaults stringForKey:@"budget"];
-    NSString *income = [_budgetDefaults stringForKey:@"income"];
-    NSString *Kyuryoubi = [_budgetDefaults stringForKey:@"Kyuryoubi"];
-    NSString *Kaishibi = [_budgetDefaults stringForKey:@"Kaishibi"];
+    NSString *budget = [_budgetDefaults stringForKey:@"Budget"];
+    NSString *income = [_budgetDefaults stringForKey:@"Income"];
+    NSString *incomedate = [_budgetDefaults stringForKey:@"Incomedate"];
+    NSString *startdate = [_budgetDefaults stringForKey:@"Startdate"];
     
     //取り出したデータを%@に指定する
-    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"給与額(%@) %@",app._convertCurrency,income],[NSString stringWithFormat:@"給料日 %@",Kyuryoubi],[NSString stringWithFormat:@"開始日 %@",Kaishibi]];
+    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"給与額(%@) %@",app._convertCurrency,income],[NSString stringWithFormat:@"給料日 %@",incomedate],[NSString stringWithFormat:@"開始日 %@",startdate]];
+    
+    
     
     self.setBTableView.delegate = self;
     self.setBTableView.dataSource = self;
@@ -301,18 +303,16 @@
     
 }
 
-//セルが選択されたとき何を実行するか
 
+//セルが選択されたとき何を実行するか
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
+        //テキストフィールドに残った文字を空にする
+        _budgetTextField.text = @"";
     
-    //！金額設定用のViewを設定
-    int section = indexPath.section;
+
     
-    if (section ==0) {
-        //どこに移動するかを指定
-        
         //modalViewをにゅっとだすよ
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.3];
@@ -336,11 +336,7 @@
             _budgetFlag = NO;
             
         }
-    }
     
-    else
-    
-    {
         
         //modalViewをにゅっとだす
         [UIView beginAnimations:nil context:nil];
@@ -372,70 +368,16 @@
         [UIView commitAnimations];
         
         [self downObjects];
-        
-    }
     
     //ロング型の変数の中身を表示する文字列がld
     NSLog(@"%ld",(long)indexPath.section);
-    
-}
-
-
-////    画面遷移
-//    //①コードを使ってボタンオブジェクトを配置する
-//    //宣言と代入を一文で行っている
-//    //ボタン自体の高さが20あるので、568-20の高さにする。CGRectMakeのときはこの順番で座標書く
-//    _decideButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100, 0, 100, 40)];
-//    
-//    [_decideButton setTitle:@"Tap" forState:UIControlStateNormal];
-//    
-//    [_decideButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-//    
-//    //ボタンを押した時に、「tapBtn」のメソッドを実行する
-//    [_decideButton addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
-//    
-//    
-//    //これを忘れるとViewに表示されない
-//    [self.view addSubview:_decideButton];
 
     
-    
-    
-//    //テキストフィールドを作成
-//    //_myTextFieldはスカイビューの上に載せているので、(0.0)の位置は、全体のViewの真ん中らへんになる。
-//    _budgetTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
-//    
-//    _budgetTextField.backgroundColor = [UIColor colorWithRed:0.78 green:0.27 blue:0.99 alpha:0.2];
-//
-//    
-//    //キーボードを閉じるためのアクション。ストーリーボードでアクションつけたときと同じ
-//    [_budgetTextField addTarget:self action:@selector(tapReturn) forControlEvents:UIControlEventEditingDidEndOnExit];
-//    
-//    
-//    //ポイント！水色のViewの上に載せている！！
-//    [_skyView addSubview:_budgetTextField];
-//    
-
-
-
-    
+    }
     
 
 
-//キーボードのリターンキーが押された時に呼び出されるメソッド
-//-(void)tapReturn
-//{
-//    NSLog(@"tapReturn");
-//    
-//    //    //ボタンとViewが表示されてボタンが押された場合は全体が下がる処理
-//    //    _myButton.frame = CGRectMake(280, 400, 40, 20);
-//    //    _skyView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 250);
-//    //
-//    //    _viewFlag = NO;
-//    
-//    [self downObjects];
-//    
-//}
+
 
 
 //Viewを下げる自作メソッド
@@ -454,38 +396,6 @@
 
 
 
-
-
-////ボタンとビューが上がる自作メソッドをつくる！
-//-(void)upObjects
-//{
-//    //非表示で押されたら上がる処理
-//    _decideButton.frame = CGRectMake(280, 150, 40, 10);
-//    
-//    //引数でmyButtonを渡しているので、myButtonを使える。このmyButtonはローカル変数のmyButtonではない
-//    
-//    //水色のViewを上げる
-//    //その前に、メンバ変数でskyViewを宣言する
-//    _skyView.frame =CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width,250);
-//    _viewFlag = YES;
-//    
-//    
-//}
-//
-//
-//
-//
-//
-//
-
-
-
-    //アニメーションの最後にはこれが必要！
-//    [UIView commitAnimations];
-//    
-//    
-//    
-//}
 
 
 //広告
@@ -570,29 +480,29 @@
     if (_budgetFlag == YES) {
         
         NSString *_budget = _budgetTextField.text;
-        [_budgetDefaults setObject:_budget forKey:@"budget"];
+        [_budgetDefaults setObject:_budget forKey:@"Budget"];
     }
     else{
         NSString *_income = _budgetTextField.text;
-        [_budgetDefaults setObject:_income forKey:@"income"];
+        [_budgetDefaults setObject:_income forKey:@"Income"];
         
     }
     
     [_budgetDefaults synchronize];
     
-    NSLog(@"budget=%@",[_budgetDefaults objectForKey:@"budget"]);
-    NSLog(@"income=%@",[_budgetDefaults objectForKey:@"income"]);
+    NSLog(@"budget=%@",[_budgetDefaults objectForKey:@"Budget"]);
+    NSLog(@"income=%@",[_budgetDefaults objectForKey:@"Income"]);
     
     
     //ハコからデータをとりだす
-    NSString *budget = [_budgetDefaults stringForKey:@"budget"];
-    NSString *income = [_budgetDefaults stringForKey:@"income"];
-    NSString *Kyuryoubi = [_budgetDefaults stringForKey:@"Kyuryoubi"];
-    NSString *Kaishibi = [_budgetDefaults stringForKey:@"Kaishibi"];
+    NSString *budget = [_budgetDefaults stringForKey:@"Budget"];
+    NSString *income = [_budgetDefaults stringForKey:@"Income"];
+    NSString *incomedate = [_budgetDefaults stringForKey:@"Incomedate"];
+    NSString *startdate = [_budgetDefaults stringForKey:@"Startdate"];
     
     
     //取り出したデータを%@に指定する
-    _budgetArray =@[[NSString stringWithFormat:@"予算額 %@",budget],[NSString stringWithFormat:@"給与額 %@",income],[NSString stringWithFormat:@"給料日 %@",Kyuryoubi],[NSString stringWithFormat:@"開始日 %@",Kaishibi]];
+    _budgetArray =@[[NSString stringWithFormat:@"予算額 %@",budget],[NSString stringWithFormat:@"給与額 %@",income],[NSString stringWithFormat:@"給料日 %@",incomedate],[NSString stringWithFormat:@"開始日 %@",startdate]];
     
     
     //入力した内容を初期化する

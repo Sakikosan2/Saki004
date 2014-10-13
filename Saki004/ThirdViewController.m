@@ -129,7 +129,7 @@
     AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
     
     //プロパティからデータを取り出して指定
-    NSString *from_cr_code = app._genchiCurrency;
+    NSString *from_cr_code = app._localCurrency;
     NSString *to_cr_code = app._convertCurrency;
     
     //?以降の文字列を完成させる

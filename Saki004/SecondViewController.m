@@ -9,6 +9,7 @@
 #import "SecondViewController.h"
 #import "AppDelegate.h"
 #import "FourtthViewController.h"
+#import "Withdrawalmemo.h"
 
 //@implementation openview
 //@synthesize delegate;
@@ -82,85 +83,69 @@
                         
 }
 
+
+//画面が表示された時
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
+    //今日の日付をラベルに表示
+    self.todayLabel.text = self.selectedDate;
+    
     
     //TableView
     _withdrawalArray =@[@"引き出し額",@"手数料"];
     self.withdrawalTableView.delegate = self;
     self.withdrawalTableView.dataSource = self;
     
-    //今日の日付をラベルに表示
-    self.todayLabel.text = self.selectedDate;
-    
     
     //modalViewを作成
     _textView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 250)];
-    
-    
     //色の配合の仕方を調整
     _textView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:0.2];
-    
     //まだ隠れている状態＝NOとする
     _viewFlag = NO;
-    
     [self.view addSubview:_textView];
     
 
     
-    //テキストフィールドを作成
+    //テキストフィールドを_textVirwの上に作成
     _withdrawalTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width-100, 40)];
-    
     _withdrawalTextField.backgroundColor = [UIColor grayColor];
     _withdrawalTextField.keyboardType = UIKeyboardTypeNumberPad;
-    
     [_textView addSubview:_withdrawalTextField];
-    
     [self.view addSubview:_textView];
     
     
     //Doneボタンを作成
     _doneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100, 0, 100, 40)];
-    
     [_doneButton setTitle:@"Done" forState:UIControlStateNormal];
-    
     [_doneButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    
-    
     [_doneButton addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
-    
     [_textView addSubview:_doneButton];
     
 
-    
-
-    
     //バナーオブジェクト生成
     _adView = [[ADBannerView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, _adView.frame.size.width, _adView.frame.size.height)];
-    
     _adView.delegate = self;
-    
-    
     //アドビューをつくる
     [self.view addSubview:_adView];
-    
     //透明度を0にする
     _adView.alpha =0.0;
-
+    //フラグがNOの時にこの処理をする
     _isVisible = NO;
+    
+    
     
     //コアデータ
     self.managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
     
 
 
-    
-
 }
 
 //TableView
-
 //セクション数
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -223,18 +208,15 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     NSLog(@"おしたよー");
     
-    
-    //！金額設定用のViewを設定
-    
-    //どこに移動するかを指定
+    //テキストフィールドに残った文字を空にする
+    _withdrawalTextField.text = @"";
     
     //modalViewをにゅっとだすよ
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.3];
-    
+    //キーボードを下げる
     [self downObjects];
     
     _textView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
@@ -300,40 +282,7 @@
 //}
 
 
-//広告
--(void) bannerViewDidLoadAd:(ADBannerView *)banner
-{
-    
-    //if文をつくる.isVisibleの中がNOだったときにこの中の処理をする。
-    
-    if (!_isVisible) {
-        
-        
-        //バナーが表示されるアニメーション。落ちてくる。
-        
-        //「animateAdBannerOn」という名前のアニメーション
-        [UIView beginAnimations:@"animateAdBannerOn" context:nil];
-        
-        //アニメーションの時間の間隔。大きければ大きいほどゆっくり
-        [UIView setAnimationDuration:0.3];
-        
-        //「-(void) bannerViewDidLoadAd:(ADBannerView *)banner」のbannerと同じ
-        //banner.flame=「バナーの形」
-        banner.frame = CGRectOffset (banner.frame, 0,self.view.bounds.size.height - banner.frame.size.height);
-        //banner.frame = CGRectOffset(banner.frame, 0, 300);
-        
-        
-        //透明度を0から1にして、見えるようになった。
-        banner.alpha = 1.0;
-        
-        //beginAnimations に対して、　commitAnimations でここで終わり！って意味
-        [UIView commitAnimations];
-        
-        //表示したので、isVisibleをYESにする
-        _isVisible = YES;
-    }
 
-}
 
 
 //-(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -407,15 +356,48 @@
         
         _fechedResultController.delegate = self;
         return _fechedResultController;
-    
-
         
     }
 
 
 
 
-//バナー表示でエラーが発生した場合
+//広告
+-(void) bannerViewDidLoadAd:(ADBannerView *)banner
+{
+    
+    //if文をつくる.isVisibleの中がNOだったときにこの中の処理をする。
+    
+    if (!_isVisible) {
+        
+        
+        //バナーが表示されるアニメーション。落ちてくる。
+        
+        //「animateAdBannerOn」という名前のアニメーション
+        [UIView beginAnimations:@"animateAdBannerOn" context:nil];
+        
+        //アニメーションの時間の間隔。大きければ大きいほどゆっくり
+        [UIView setAnimationDuration:0.3];
+        
+        //「-(void) bannerViewDidLoadAd:(ADBannerView *)banner」のbannerと同じ
+        //banner.flame=「バナーの形」
+        banner.frame = CGRectOffset (banner.frame, 0,self.view.bounds.size.height - banner.frame.size.height);
+        //banner.frame = CGRectOffset(banner.frame, 0, 300);
+        
+        
+        //透明度を0から1にして、見えるようになった。
+        banner.alpha = 1.0;
+        
+        //beginAnimations に対して、　commitAnimations でここで終わり！って意味
+        [UIView commitAnimations];
+        
+        //表示したので、isVisibleをYESにする
+        _isVisible = YES;
+    }
+    
+}
+
+//広告でエラーが発生した場合
 -(void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
 {
     //エラーが発生したときに広告が表示されていたら、非表示にする
@@ -434,29 +416,6 @@
 }
 
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
-//????
-//- (void) push{
-//    NSLog(@"push!");
-//    [delegate dismissViewWillClose];
-//    
-//}
 
 
 
@@ -470,19 +429,13 @@
 //Doneボタンが押された時
 -(IBAction)tapBtn:(id)sender
 {
-
-    
-    
     //入力した金額をメンバ変数に保存
-    
     if (_withdrawalFlag == YES) {
         _withdrawalPrice = _withdrawalTextField.text;
         
     }
     else{
         _commisionprice = _withdrawalTextField.text;
-        
-        
     }
     
     //キーボードを下げる
@@ -493,71 +446,53 @@
     
     //入力した内容を初期化する
     [self.withdrawalTableView reloadData];
-    
-    
-    
-
-    
-   
 
 }
+    
+//Coredata
 //保存ボタンが押された時
-//- (IBAction)tapSave:(id)sender {
-//    
-//    //入力した金額をユーザーデフォルトに保存する
-//    NSUserDefaults *_hikidashigakuDefaults = [NSUserDefaults standardUserDefaults];
-//    if (_hikidashiFlag == YES) {
-//        
-//        NSString *_hikidashi = _hikidashiTextField.text;
-//        [_hikidashigakuDefaults setObject:_hikidashi forKey:@"hikidashi"];
-//    }
-//    else{
-//        NSString *_tesuryou = _tesuryouTextField.text;
-//        //？　_tesuryouがnil
-//        [_hikidashigakuDefaults setObject:_tesuryou forKey:@"tesuryou"];
-//        
-//        
-//    }
-//    
-//    [_hikidashigakuDefaults synchronize];
-//    
-//    
-//    NSLog(@"hikidashi=%@",[_hikidashigakuDefaults objectForKey:@"hikidashi"]);
-//    NSLog(@"tesuryou=%@",[_hikidashigakuDefaults objectForKey:@"tesuryou"]);
-//    
-//    
-//    
-//    //ハコからデータをとりだす
-//    NSString *hikidashi = [_hikidashigakuDefaults stringForKey:@"hikidashi"];
-//    NSString *tesuryou = [_hikidashigakuDefaults stringForKey:@"tesuryou"];
-//    
-//    
-//    //取り出したデータを%@に指定する
-//    NSArray *_kingakuArray = @[[NSString stringWithFormat:@"引き出し額 %@",hikidashi],[NSString stringWithFormat:@"手数料学 %@",tesuryou]];
-//    
-//    
-//    
-//    //入力した内容を初期化する
-//    //    [self.hikidashiTextField reloadData];
-//    
-//
-//    
-//    int d= 0;
-//    
-//    
-//    NSString *hikidashiString=@"";
-//    
-//
-//   self.hikidashiTextField.text=hikidashiString;
-//    
-//    //取り出したデータを%@に指定する
-////    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"給与額(%@) %@",app._convertCurrency,income],[NSString stringWithFormat:@"給料日 %@",Kyuryoubi],[NSString stringWithFormat:@"開始日 %@",Kaishibi],[NSString stringWithFormat:@"終了日 %@",Syuryoubi]];
-//    
-//    [self dismissViewControllerAnimated:YES completion:nil];
-//
-//    
-//    
-//    }
+-(IBAction)tapSave:(id)sender{
+
+    //大文字のWithdrawalmemoはkey
+    //小文字は変数名
+    NSManagedObjectContext *context = [self managedObjectContext];
+    
+    Withdrawalmemo *withdrawalmemo =[NSEntityDescription insertNewObjectForEntityForName:@"Withdrawalprice" inManagedObjectContext:context];
+    
+    withdrawalmemo.withdrawalprice = (NSNumber *)_withdrawalPrice;
+    withdrawalmemo.commissionprice = (NSNumber *)_commisionprice;
+        
+    
+    //データモデルにセットされたデータをCoreDataに保存
+    NSError *error =nil;
+    
+    //CoreDataにデータを追加している
+    if ([context save:&error] == NO) {
+            abort();
+    
+      }
+
+    
+}
+
+
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+ {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 
 
