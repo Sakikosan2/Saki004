@@ -122,7 +122,8 @@
     if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
         
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
+//        abort();
+        //コアデータに関するError？
     }
     
     return _persistentStoreCoordinator;

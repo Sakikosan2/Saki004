@@ -35,6 +35,7 @@
 	// Do any additional setup after loading the view, typically from a nib.
     [[self.navigationController navigationBar] setTranslucent:NO];
     
+    //カレンダーを読み込んで表示
     [[self calendarView] registerDayCellClass:[RDVDayCell class]];
     
     UIBarButtonItem *todayButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Today", nil)
@@ -79,6 +80,11 @@
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Second Scene" message:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Open!", nil];
     [alertView show];
 }
+
+//-(void) modalViewWillClose{
+//    NSLog(@"close");
+//    [self dismissModalViewControllerAnimated:YES];
+//}
 
 
 

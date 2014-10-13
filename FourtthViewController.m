@@ -28,8 +28,7 @@
     //ボタンをメンバ変数にする
     UIButton *_decideButton;
     //→ViewDidLoadのローカル変数を書き換える。データ型を削除して、置き換える
-    
-    UIDatePicker *_incomeDatePicker;
+    UIDatePicker *incomeDatePicker;
     
     
     
@@ -164,12 +163,6 @@
 {
     
     [super viewDidLoad];
-    
-    
-
-    
-    
-    
     
     
 //広告
@@ -342,49 +335,51 @@
         }
         else{
             _budgetFlag = NO;
+            
         }
     }
     
     else
-    {
-        _dateView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
-        
-        _viewFlag = YES;
-        
     
+    {
+        
+        //modalViewをにゅっとだす
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.3];
         
         [self downObjects];
         
+        _skyView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
         
-        [_incomeDatePicker setDatePickerMode:UIDatePickerModeDate];
-        NSDateFormatter *df = [[NSDateFormatter alloc]init];
-        [df setDateFormat:@"yyyy/MM/dd"];
-        NSDate *date = [df dateFromString:@"2014/01/01"];
-        [_incomeDatePicker setDate:date];
+        _viewFlag = YES;
         
-        //[self.view addSubview:_dateView];
+        //DatePickerをセット
         
-        [_dateView addSubview:_incomeDatePicker];
-    
+        // DatePickerをつくる
+        UIDatePicker *datePicker = [UIDatePicker new];
+        incomeDatePicker = datePicker;
+        [incomeDatePicker setDatePickerMode:UIDatePickerModeDate];
         
+        // デフォルトの日付を設定
+        NSDate *today = [NSDate date];
+        [incomeDatePicker setDate:today];
+        [incomeDatePicker becomeFirstResponder];
 
-    
+        // DatePickerをskyviewにセット
+        [_skyView addSubview:incomeDatePicker];
+        // skyviewをself.view(画面)にセット
+        [self.view addSubview:_skyView];
         
         [UIView commitAnimations];
         
-        
-        
-        
-
+        [self downObjects];
         
     }
     
     //ロング型の変数の中身を表示する文字列がld
     NSLog(@"%ld",(long)indexPath.section);
     
-
+}
 
 
 ////    画面遷移
@@ -426,24 +421,25 @@
 
     
     
-}
+
 
 //キーボードのリターンキーが押された時に呼び出されるメソッド
--(void)tapReturn
-{
-    NSLog(@"tapReturn");
-    
-    //    //ボタンとViewが表示されてボタンが押された場合は全体が下がる処理
-    //    _myButton.frame = CGRectMake(280, 400, 40, 20);
-    //    _skyView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 250);
-    //
-    //    _viewFlag = NO;
-    
-    [self downObjects];
-    
-}
+//-(void)tapReturn
+//{
+//    NSLog(@"tapReturn");
+//    
+//    //    //ボタンとViewが表示されてボタンが押された場合は全体が下がる処理
+//    //    _myButton.frame = CGRectMake(280, 400, 40, 20);
+//    //    _skyView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 250);
+//    //
+//    //    _viewFlag = NO;
+//    
+//    [self downObjects];
+//    
+//}
 
-//ビューが下がる自作メソッド
+
+//Viewを下げる自作メソッド
 -(void)downObjects
 {
     //ボタンとViewが表示されてボタンが押された場合は全体が下がる処理
@@ -452,30 +448,24 @@
     //キーボードを下げる
     [_budgetTextField resignFirstResponder];
 
-    
     _viewFlag = NO;
     
     
 }
 
-//ボタンTapされた時に呼び出されるメソッド
+//ボタンがTapされた時に何をするか
 -(void)tapBtn:(UIButton *)decideButton
 {
     NSLog(@"Tap!!!");
     
-
+    //viewを下げる
     [self downObjects];
     
     
-    
-    //キーボードを下げる
-    [_budgetTextField resignFirstResponder];
-    _viewFlag = NO;
-    
-    
-    //入力した金額をボタンがTapされた時にユーザーデフォルトに保存する
+    //入力した金額をユーザーデフォルトに保存する
     NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
     if (_budgetFlag == YES) {
+        
         NSString *_budget = _budgetTextField.text;
         [_budgetDefaults setObject:_budget forKey:@"budget"];
             }
@@ -488,7 +478,6 @@
             [_budgetDefaults synchronize];
     
     NSLog(@"budget=%@",[_budgetDefaults objectForKey:@"budget"]);
-    
     NSLog(@"income=%@",[_budgetDefaults objectForKey:@"income"]);
     
     
@@ -544,7 +533,7 @@
 //}
 
 
-
+//広告
 -(void) bannerViewDidLoadAd:(ADBannerView *)banner
 {
     
@@ -578,7 +567,7 @@
 }
 
 
-//バナー表示でエラーが発生した場合
+//広告：バナー表示でエラーが発生した場合
 -(void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
 {
     //エラーが発生したときに広告が表示されていたら、非表示にする

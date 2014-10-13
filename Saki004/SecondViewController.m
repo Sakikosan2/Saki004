@@ -10,6 +10,17 @@
 #import "AppDelegate.h"
 #import "FourtthViewController.h"
 
+//@implementation openview
+//@synthesize delegate;
+//
+//- (void)dealloc
+//{
+//    [super dealloc];
+//}
+//
+//
+//@end
+
 @interface SecondViewController ()
 {
     //バナー広告
@@ -18,13 +29,22 @@
     //テキストフィールドを乗せるView
     UIView *_textView;
     BOOL _viewFlag;
-//    UITextField *_hikidashiTextField;
-//    UITextField *_tesuryouTextField;
+    UITextField *hikidashiTextField;
+    UITextField *tesuryouTextField;
     
     
     
     
     BOOL _isVisible;
+    
+    //引き出し額をユーザーデフォルトに保存
+    BOOL _hikidashiFlag;
+    //手数料額をユーザーデフォルトに保存
+    BOOL _tesuryouFlag;
+    
+    NSArray *_kingakuArray;
+    
+    
     
 }
 
@@ -49,33 +69,8 @@
 {
     [super viewDidLoad];
     
-//    //②水色のビューを作成
-//    _textView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 250)];
-//    
-//    
-//    //色の配合の仕方を調整
-//    _textView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:1.0];
-//    
-//    //まだ隠れている状態＝NOとする
-//    _viewFlag = NO;
-//    
-//    [_textView addSubview:_textView];
-//    
-//    
-//    
-//    
-//    //テキストフィールドを作成
-//    _hikidashiTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
-//    
-//    _hikidashiTextField.backgroundColor = [UIColor colorWithRed:0.78 green:0.27 blue:0.99 alpha:0.6];
-//    
-//    [_hikidashiTextField addTarget:self action:@selector(tapReturn) forControlEvents:UIControlEventEditingDidEndOnExit];
-//    
-//    
-//    [_textView addSubview:_hikidashiTextField];
     
-    
-    
+
     
     //バナーオブジェクト生成
     _adView = [[ADBannerView alloc] initWithFrame:CGRectMake(0, -_adView.frame.size.height, _adView.frame.size.width, _adView.frame.size.height)];
@@ -141,6 +136,8 @@
 //    [self.navigationController dismissModalViewControllerAnimated:YES];
 //}
 
+
+//広告
 -(void) bannerViewDidLoadAd:(ADBannerView *)banner
 {
     
@@ -184,7 +181,8 @@
         return [sectionInfo numberOfObjects];
         
     }
-    
+
+
 -(UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
     {
         //定数を宣言
@@ -243,17 +241,7 @@
         
         
         _fechedResultController.delegate = self;
-        
-//        NSError *error = nil;
-//        
-//        if ([NSFetchedResultsController performFetch:&error]==NO)
-//        {
-//            
-//            abort();
-//            
-//        }
-//        
-    return _fechedResultController;
+        return _fechedResultController;
     
 
         
@@ -298,23 +286,28 @@
 }
 */
 
+//????
+//- (void) push{
+//    NSLog(@"push!");
+//    [delegate dismissViewWillClose];
+//    
+//}
 
+//キャンセルボタンがTapされたとき
 - (IBAction)tapCancel:(id)sender {
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
+//保存ボタンが押された時
 - (IBAction)tapSave:(id)sender {
-    //キーボードを閉じる
-    [self.hikidashiTextField resignFirstResponder];
-    [self.tesuryouTextField  resignFirstResponder];
-    
     
     //  10/7  入力した値をテキストフィールドに表示する
 //    NSLog(@"引き出し額は[%@]");
     
-    int d=0;
+    int d= 0;
+    
     
     NSString *hikidashiString=@"";
     
@@ -324,25 +317,114 @@
     //取り出したデータを%@に指定する
 //    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"給与額(%@) %@",app._convertCurrency,income],[NSString stringWithFormat:@"給料日 %@",Kyuryoubi],[NSString stringWithFormat:@"開始日 %@",Kaishibi],[NSString stringWithFormat:@"終了日 %@",Syuryoubi]];
     
+    [self dismissViewControllerAnimated:YES completion:nil];
+
+    
     
     }
 
+//決定ボタンが押された時
+- (IBAction)tapDecideAmount:(id)sender {
+    
+    NSLog(@"引き出し額確定");
+    
+    //キーボードを閉じる
+    [self.hikidashiTextField resignFirstResponder];
+    [self.tesuryouTextField  resignFirstResponder];
+
+    //入力した金額をユーザーデフォルトに保存する
+    NSUserDefaults *_hikidashigakuDefaults = [NSUserDefaults standardUserDefaults];
+    if (_hikidashiFlag == YES) {
+        
+        NSString *_hikidashi = _hikidashiTextField.text;
+        [_hikidashigakuDefaults setObject:_hikidashi forKey:@"hikidashi"];
+    }
+    else{
+        NSString *_tesuryou = _tesuryouTextField.text;
+        //？　_tesuryouがnil
+        [_hikidashigakuDefaults setObject:_tesuryou forKey:@"tesuryou"];
+        
+        
+    }
+    
+    [_hikidashigakuDefaults synchronize];
+    
+    
+    NSLog(@"hikidashi=%@",[_hikidashigakuDefaults objectForKey:@"hikidashi"]);
+    NSLog(@"tesuryou=%@",[_hikidashigakuDefaults objectForKey:@"tesuryou"]);
+    
+    
+    
+    //ハコからデータをとりだす
+    NSString *hikidashi = [_hikidashigakuDefaults stringForKey:@"hikidashi"];
+    NSString *tesuryou = [_hikidashigakuDefaults stringForKey:@"tesuryou"];
+    
+    
+    //取り出したデータを%@に指定する
+     NSArray *_kingakuArray = @[[NSString stringWithFormat:@"引き出し額 %@",hikidashi],[NSString stringWithFormat:@"手数料学 %@",tesuryou]];
+    
+    
+    
+    //入力した内容を初期化する
+//    [self.hikidashiTextField reloadData];
+    
+    
+    
+
+    
+    
+}
 
 
 
 
-//引き出し額と手数料の入力
+//!!!!!modalViewが出ない
+//引き出し額の入力
 - (IBAction)insertHikidashi:(id)sender {
-     self.hikidashiTextField.keyboardType = UIKeyboardTypeNumberPad;
     
     [self.hikidashiTextField setKeyboardType:UIKeyboardTypeNumberPad];
     
-     [_textView addSubview:_hikidashiTextField];
+    [self.hikidashiTextField addSubview:_hikidashiTextField];
+
+    
+    
+    //modalViewをにゅっとだすよ
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.3];
+            
+    //   [self downObjects];
+            
+    _textView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
+            
+    _viewFlag = YES;
+    
+    [self.view addSubview:_textView];
+
+
+    
+    [UIView commitAnimations];
+    
+    
 }
 
 
 - (IBAction)insertTesuryou:(id)sender {
      self.tesuryouTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    //modalViewをにゅっとだすよ
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.3];
+    
+    //   [self downObjects];
+    
+    _textView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
+    
+    _viewFlag = YES;
+    
+    [UIView commitAnimations];
+    [_tesuryouTextField addSubview:_tesuryouTextField];
+    
+    [self.view addSubview:_textView];
 }
 @end
 
