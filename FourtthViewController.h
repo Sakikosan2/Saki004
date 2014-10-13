@@ -14,9 +14,17 @@
 
 
 
-@property(weak,nonatomic) IBOutlet UITableView *setBTableView;//ユーザーデフォルト
+@property(weak,nonatomic) IBOutlet UITableView *setBTableView;
+
+//ユーザーデフォルト
 @property(strong,nonatomic) NSUserDefaults *_currencyDefaults;
 
+@property (weak, nonatomic) IBOutlet UIButton *cancelBtn;
+
+@property (weak, nonatomic) IBOutlet UIButton *SaveBtn;
+- (IBAction)tapCancel:(id)sender;
+
+- (IBAction)tapSave:(id)sender;
 
 
 

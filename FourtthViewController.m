@@ -25,8 +25,8 @@
     
     UITextField *_budgetTextField;
     
-    //ボタンをメンバ変数にする
-    UIButton *_decideButton;
+    //Doneボタンをメンバ変数にする
+    UIButton *_doneButton;
     //→ViewDidLoadのローカル変数を書き換える。データ型を削除して、置き換える
     UIDatePicker *incomeDatePicker;
     
@@ -116,20 +116,19 @@
     NSString *income = [_budgetDefaults stringForKey:@"income"];
     NSString *Kyuryoubi = [_budgetDefaults stringForKey:@"Kyuryoubi"];
     NSString *Kaishibi = [_budgetDefaults stringForKey:@"Kaishibi"];
-    NSString *Syuryoubi = [_budgetDefaults stringForKey:@"Syuryoubi"];
     
     //取り出したデータを%@に指定する
-    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"給与額(%@) %@",app._convertCurrency,income],[NSString stringWithFormat:@"給料日 %@",Kyuryoubi],[NSString stringWithFormat:@"開始日 %@",Kaishibi],[NSString stringWithFormat:@"終了日 %@",Syuryoubi]];
+    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"給与額(%@) %@",app._convertCurrency,income],[NSString stringWithFormat:@"給料日 %@",Kyuryoubi],[NSString stringWithFormat:@"開始日 %@",Kaishibi]];
     
     self.setBTableView.delegate = self;
     self.setBTableView.dataSource = self;
     
+//    //入力した内容を初期化する
+//    [self.setBTableView reloadData];
     
     
-    
-    
-    
-    
+
+
     
     
 }
@@ -158,7 +157,8 @@
     }
 }
 
-//TableViewに設定画面を設定する
+
+
 - (void)viewDidLoad
 {
     
@@ -183,10 +183,10 @@
     //NOでなくてはいけない。
     _isVisible = NO;
     
-    //金額用のViewを作成
-    //②水色のビューを作成
-    _skyView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 250)];
     
+    
+    //modalViewを作成
+    _skyView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 250)];
     
     //色の配合の仕方を調整
     _skyView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:0.2];
@@ -209,28 +209,26 @@
     [self.view addSubview:_skyView];
     
     
-    //決定ボタンを作成
+    //Doneボタンを作成
+    _doneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100, 0, 100, 40)];
     
-    _decideButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100, 0, 100, 40)];
+    [_doneButton setTitle:@"Done" forState:UIControlStateNormal];
     
-    [_decideButton setTitle:@"Tap" forState:UIControlStateNormal];
-    
-    [_decideButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_doneButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     
 
-    [_decideButton addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [_doneButton addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
     
-    [_skyView addSubview:_decideButton];
-
-    
+    [_skyView addSubview:_doneButton];
 
 
     
 }
 
 
-//TableView
 
+
+//TableView
 //セクション数
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -294,9 +292,10 @@
         
     }else{
         
-        cell.textLabel.text = _budgetArray[indexPath.row+2];
+        cell.textLabel.text = _budgetArray[indexPath.row+1];
         
     }
+    
     
     return cell;
     
@@ -453,51 +452,7 @@
     
 }
 
-//ボタンがTapされた時に何をするか
--(void)tapBtn:(UIButton *)decideButton
-{
-    NSLog(@"Tap!!!");
-    
-    //viewを下げる
-    [self downObjects];
-    
-    
-    //入力した金額をユーザーデフォルトに保存する
-    NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
-    if (_budgetFlag == YES) {
-        
-        NSString *_budget = _budgetTextField.text;
-        [_budgetDefaults setObject:_budget forKey:@"budget"];
-            }
-    else{
-        NSString *_income = _budgetTextField.text;
-        [_budgetDefaults setObject:_income forKey:@"income"];
-        
-        }
-    
-            [_budgetDefaults synchronize];
-    
-    NSLog(@"budget=%@",[_budgetDefaults objectForKey:@"budget"]);
-    NSLog(@"income=%@",[_budgetDefaults objectForKey:@"income"]);
-    
-    
-    //ハコからデータをとりだす
-    NSString *budget = [_budgetDefaults stringForKey:@"budget"];
-    NSString *income = [_budgetDefaults stringForKey:@"income"];
-    NSString *Kyuryoubi = [_budgetDefaults stringForKey:@"Kyuryoubi"];
-    NSString *Kaishibi = [_budgetDefaults stringForKey:@"Kaishibi"];
-    NSString *Syuryoubi = [_budgetDefaults stringForKey:@"Syuryoubi"];
-    
-    
-    
-    //取り出したデータを%@に指定する
-    _budgetArray =@[[NSString stringWithFormat:@"予算額 %@",budget],[NSString stringWithFormat:@"給与額 %@",income],[NSString stringWithFormat:@"給料日 %@",Kyuryoubi],[NSString stringWithFormat:@"開始日 %@",Kaishibi],[NSString stringWithFormat:@"終了日 %@",Syuryoubi]];
-    
 
-    //入力した内容を初期化する
-    [self.setBTableView reloadData];
-    
-    }
 
 
 
@@ -595,4 +550,64 @@
 }
 
 
+
+//DoneボタンがTapされた時に何をするか
+-(void)tapBtn:(UIButton *)doneButton
+{
+    NSLog(@"Done");
+    
+    //viewを下げる
+    [self downObjects];
+    
+}
+
+
+//SaveボタンがTapされた時
+- (IBAction)tapSave:(id)sender {
+    
+    //入力した金額をユーザーデフォルトに保存する
+    NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
+    if (_budgetFlag == YES) {
+        
+        NSString *_budget = _budgetTextField.text;
+        [_budgetDefaults setObject:_budget forKey:@"budget"];
+    }
+    else{
+        NSString *_income = _budgetTextField.text;
+        [_budgetDefaults setObject:_income forKey:@"income"];
+        
+    }
+    
+    [_budgetDefaults synchronize];
+    
+    NSLog(@"budget=%@",[_budgetDefaults objectForKey:@"budget"]);
+    NSLog(@"income=%@",[_budgetDefaults objectForKey:@"income"]);
+    
+    
+    //ハコからデータをとりだす
+    NSString *budget = [_budgetDefaults stringForKey:@"budget"];
+    NSString *income = [_budgetDefaults stringForKey:@"income"];
+    NSString *Kyuryoubi = [_budgetDefaults stringForKey:@"Kyuryoubi"];
+    NSString *Kaishibi = [_budgetDefaults stringForKey:@"Kaishibi"];
+    
+    
+    //取り出したデータを%@に指定する
+    _budgetArray =@[[NSString stringWithFormat:@"予算額 %@",budget],[NSString stringWithFormat:@"給与額 %@",income],[NSString stringWithFormat:@"給料日 %@",Kyuryoubi],[NSString stringWithFormat:@"開始日 %@",Kaishibi]];
+    
+    
+    //入力した内容を初期化する
+    [self.setBTableView reloadData];
+    
+
+}
+
+//Cancelボタンが押された時
+- (IBAction)tapCancel:(id)sender {
+    
+    //キーボードを下げる
+    [self downObjects];
+    
+}
 @end
+                    
+                    

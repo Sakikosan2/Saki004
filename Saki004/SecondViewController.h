@@ -12,11 +12,12 @@
 //広告バナー追加
 #import <iAd/iAd.h>
 
-@interface SecondViewController : UIViewController<ADBannerViewDelegate,UITableViewDataSource,UITabBarDelegate,NSFetchedResultsControllerDelegate>
-
-
 //コアデータ
 #import <CoreData/CoreData.h>
+
+@interface SecondViewController : UIViewController<ADBannerViewDelegate,UITableViewDataSource,UITableViewDelegate,UITabBarDelegate,NSFetchedResultsControllerDelegate>
+
+
 
 //
 //@protocol SecondViewDelegate <NSObject>
@@ -41,18 +42,14 @@
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
-@property (weak, nonatomic) IBOutlet UIButton *decideAmountButton;
 
 - (IBAction)tapCancel:(id)sender;
 - (IBAction)tapSave:(id)sender;
-- (IBAction)tapDecideAmount:(id)sender;
 
 
-@property (weak, nonatomic) IBOutlet UITextField *hikidashiTextField;
-
-@property (weak, nonatomic) IBOutlet UITextField *tesuryouTextField;
-- (IBAction)insertHikidashi:(id)sender;
-- (IBAction)insertTesuryou:(id)sender;
+@property (weak, nonatomic) IBOutlet UITableView *withdrawalTableView;
+@property (weak, nonatomic) IBOutlet UILabel *todayLabel;
+@property (strong,nonatomic) NSString *selectedDate;
 
 
 

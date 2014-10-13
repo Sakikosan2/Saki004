@@ -44,14 +44,40 @@
                                                                    action:@selector(showCurrentMonth)];
     [self.navigationItem setRightBarButtonItem:todayButton];
 
+
+
+    //口座残高と前回引き出し日のラベルを表示させる
+    UILabel *balanceLabal = [[UILabel alloc]init];
+    
+    balanceLabal.frame = CGRectMake(20, self.view.bounds.size.height -90, 200, 20);
+    
+    balanceLabal.text = @"口座残高";
+    
+    [[self calendarView] addSubview:balanceLabal];
+    
+    UILabel *lastwithdrawalLabel = [[UILabel alloc] init];
+    lastwithdrawalLabel.frame = CGRectMake(20, self.view.bounds.size.height -60, 200, 20);
+    
+    lastwithdrawalLabel.text = @"前回引き出し日";
+    
+    [[self calendarView] addSubview:lastwithdrawalLabel];
+    
 }
 
+
 //カレンダーから画面遷移する
+//選んだ日付を*dateに入れる
 -(void)calendarView:(RDVCalendarView *)calendarView didSelectDate:(NSDate *)date
 {
     NSLog(@"%@",date);
     
     SecondViewController *svc = [self.storyboard instantiateViewControllerWithIdentifier:@"SecondViewController"];
+    
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    
+    [df setDateFormat:@"MM/dd"];
+    
+    svc.selectedDate = [df stringFromDate:date];
     
     
     [self presentViewController:svc animated:YES completion:nil];

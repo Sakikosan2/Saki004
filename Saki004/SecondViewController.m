@@ -28,22 +28,24 @@
     
     //テキストフィールドを乗せるView
     UIView *_textView;
+    //引き出し額を入力するテキストフィールド
+    UITextField *_withdrawalTextField;
+    
+    //Doneボタンをメンバ変数にする
+    UIButton *_doneButton;
+    
+    //引き出し額と手数料額のメンバ変数
+    NSString *_withdrawalPrice;
+    NSString *_commisionprice;
+    
+
     BOOL _viewFlag;
-    UITextField *hikidashiTextField;
-    UITextField *tesuryouTextField;
-    
-    
-    
-    
     BOOL _isVisible;
+    BOOL _withdrawalFlag;
+
     
-    //引き出し額をユーザーデフォルトに保存
-    BOOL _hikidashiFlag;
-    //手数料額をユーザーデフォルトに保存
-    BOOL _tesuryouFlag;
-    
-    NSArray *_kingakuArray;
-    
+    //TableView
+    NSArray *_withdrawalArray;
     
     
 }
@@ -64,16 +66,78 @@
 }
 
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    //取り出した引き出し額と手数料のメンバ変数を%@に指定する
+    _withdrawalArray =@[[NSString stringWithFormat:@"引き出し額 %@",_withdrawalPrice],[NSString stringWithFormat:@"手数料 %@",_commisionprice]];
+    
+    self.withdrawalTableView.delegate = self;
+    self.withdrawalTableView.dataSource = self;
+    
+    //入力した内容を初期化する
+    [self.withdrawalTableView reloadData];
+    
+    
+    
+                        
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    //TableView
+    _withdrawalArray =@[@"引き出し額",@"手数料"];
+    self.withdrawalTableView.delegate = self;
+    self.withdrawalTableView.dataSource = self;
+    
+    //今日の日付をラベルに表示
+    self.todayLabel.text = self.selectedDate;
+    
+    
+    //modalViewを作成
+    _textView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 250)];
+    
+    
+    //色の配合の仕方を調整
+    _textView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:0.2];
+    
+    //まだ隠れている状態＝NOとする
+    _viewFlag = NO;
+    
+    [self.view addSubview:_textView];
+    
+
+    
+    //テキストフィールドを作成
+    _withdrawalTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width-100, 40)];
+    
+    _withdrawalTextField.backgroundColor = [UIColor grayColor];
+    _withdrawalTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    [_textView addSubview:_withdrawalTextField];
+    
+    [self.view addSubview:_textView];
+    
+    
+    //Doneボタンを作成
+    _doneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100, 0, 100, 40)];
+    
+    [_doneButton setTitle:@"Done" forState:UIControlStateNormal];
+    
+    [_doneButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    
+    
+    [_doneButton addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [_textView addSubview:_doneButton];
+    
+
     
 
     
     //バナーオブジェクト生成
-    _adView = [[ADBannerView alloc] initWithFrame:CGRectMake(0, -_adView.frame.size.height, _adView.frame.size.width, _adView.frame.size.height)];
+    _adView = [[ADBannerView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, _adView.frame.size.width, _adView.frame.size.height)];
     
     _adView.delegate = self;
     
@@ -89,17 +153,116 @@
     //コアデータ
     self.managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
     
-    
-    self.hikidashiTextField.delegate = self;
-//    self.hikidashiTextField.dataSource = self;
-    
+
 
     
 
 }
 
+//TableView
+
+//セクション数
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+
+//セクションのタイトル文字
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return @"引き出し額入力";
+    
+}
+
+
+//行数を返す
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return _withdrawalArray.count;
+    
+}
+
+
+//セルに内容を表示するメソッド
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifer = @"cell";
+    
+    //セルの再利用
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifer];
+    
+    //セルの初期化とスタイルの決定
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifer];
+        
+    }
+    
+    cell.textLabel.text = [NSString stringWithFormat:@"行番号=%d",indexPath.row];
+    cell.textLabel.text = _withdrawalArray[indexPath.row];
+    
+    
+    return cell;
+    
+}
+
+//Viewを下げる自作メソッド
+-(void)downObjects
+{
+    //ボタンとViewが表示されてボタンが押された場合は全体が下がる処理
+    _textView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 250);
+    
+    //キーボードを下げる
+    [_withdrawalTextField resignFirstResponder];
+    
+    _viewFlag = NO;
+    
+    
+}
+
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    NSLog(@"おしたよー");
+    
+    
+    //！金額設定用のViewを設定
+    
+    //どこに移動するかを指定
+    
+    //modalViewをにゅっとだすよ
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.3];
+    
+    [self downObjects];
+    
+    _textView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
+    
+    _viewFlag = YES;
+    
+    
+    
+    [UIView commitAnimations];
+    
+    //キーボードを最初から表示する
+    [_withdrawalTextField becomeFirstResponder];
+    
+
+    
+    if (indexPath.row ==0) {
+        
+        _withdrawalFlag = YES;
+    }
+    else
+    {
+        _withdrawalFlag = NO;
+    }
+
+
+
 //コアデータ
-- (void)cancel:(id)sender {
+//- (void)cancel:(id)sender {
 //    if(tapCancel) {
 //        // 新規オブジェクトのキャンセルなので、呼び出し元で挿入したオブジェクトを削除します。
 //        NSManagedObjectContext *context = editingObject.managedObjectContext;
@@ -156,7 +319,9 @@
         
         //「-(void) bannerViewDidLoadAd:(ADBannerView *)banner」のbannerと同じ
         //banner.flame=「バナーの形」
-        banner.frame = CGRectOffset (banner.frame, 0, 20);
+        banner.frame = CGRectOffset (banner.frame, 0,self.view.bounds.size.height - banner.frame.size.height);
+        //banner.frame = CGRectOffset(banner.frame, 0, 300);
+        
         
         //透明度を0から1にして、見えるようになった。
         banner.alpha = 1.0;
@@ -166,49 +331,49 @@
         
         //表示したので、isVisibleをYESにする
         _isVisible = YES;
-        
     }
+
 }
 
 
--(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-    {
-        //<>が付くのはプロトコル→idの詳細を説明
-        //[[self.fechedResultsController sections]objectAtIndex:section]は｛(1+1)×２｝と一緒
-        id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fechedResultsController sections]objectAtIndex:section];
-        
-        //コアデータに入ってるデータの数
-        return [sectionInfo numberOfObjects];
-        
-    }
-
-
--(UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-    {
-        //定数を宣言
-        static NSString *cellIdentifier = @"cell";
-        
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        
-        if (cell==nil){
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            
-        }
-        
-        //コアデータの中身をTableViewに表示する
-        cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
+//-(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+//    {
+//        //<>が付くのはプロトコル→idの詳細を説明
+//        //[[self.fechedResultsController sections]objectAtIndex:section]は｛(1+1)×２｝と一緒
+//        id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fechedResultsController sections]objectAtIndex:section];
 //        
-//        //placeというコアデータの0番目のデータをとってきて返す
-//        Place *place = [self.fechedResultsController objectAtIndexPath:indexPath];
+//        //コアデータに入ってるデータの数
+//        return [sectionInfo numberOfObjects];
 //        
-//        //メッセージ構文の中身を返す
-//        cell.textLabel.text = [place.name description];
+//    }
+//
+//
+//-(UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+//    {
+//        //定数を宣言
+//        static NSString *cellIdentifier = @"cell";
 //        
-        return cell;
-        
-        
-    }
-    
+//        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+//        
+//        if (cell==nil){
+//            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+//            
+//        }
+//        
+//        //コアデータの中身をTableViewに表示する
+//        cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
+////        
+////        //placeというコアデータの0番目のデータをとってきて返す
+////        Place *place = [self.fechedResultsController objectAtIndexPath:indexPath];
+////        
+////        //メッセージ構文の中身を返す
+////        cell.textLabel.text = [place.name description];
+////        
+//        return cell;
+//        
+//        
+//    }
+//    
 //FetchedResultsControllerのデータセット
 -(NSFetchedResultsController *) fechedResultsController{
         
@@ -293,6 +458,8 @@
 //    
 //}
 
+
+
 //キャンセルボタンがTapされたとき
 - (IBAction)tapCancel:(id)sender {
     
@@ -300,131 +467,100 @@
 }
 
 
-//保存ボタンが押された時
-- (IBAction)tapSave:(id)sender {
-    
-    //  10/7  入力した値をテキストフィールドに表示する
-//    NSLog(@"引き出し額は[%@]");
-    
-    int d= 0;
-    
-    
-    NSString *hikidashiString=@"";
-    
-
-   self.hikidashiTextField.text=hikidashiString;
-    
-    //取り出したデータを%@に指定する
-//    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"給与額(%@) %@",app._convertCurrency,income],[NSString stringWithFormat:@"給料日 %@",Kyuryoubi],[NSString stringWithFormat:@"開始日 %@",Kaishibi],[NSString stringWithFormat:@"終了日 %@",Syuryoubi]];
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
+//Doneボタンが押された時
+-(IBAction)tapBtn:(id)sender
+{
 
     
     
-    }
-
-//決定ボタンが押された時
-- (IBAction)tapDecideAmount:(id)sender {
+    //入力した金額をメンバ変数に保存
     
-    NSLog(@"引き出し額確定");
-    
-    //キーボードを閉じる
-    [self.hikidashiTextField resignFirstResponder];
-    [self.tesuryouTextField  resignFirstResponder];
-
-    //入力した金額をユーザーデフォルトに保存する
-    NSUserDefaults *_hikidashigakuDefaults = [NSUserDefaults standardUserDefaults];
-    if (_hikidashiFlag == YES) {
+    if (_withdrawalFlag == YES) {
+        _withdrawalPrice = _withdrawalTextField.text;
         
-        NSString *_hikidashi = _hikidashiTextField.text;
-        [_hikidashigakuDefaults setObject:_hikidashi forKey:@"hikidashi"];
     }
     else{
-        NSString *_tesuryou = _tesuryouTextField.text;
-        //？　_tesuryouがnil
-        [_hikidashigakuDefaults setObject:_tesuryou forKey:@"tesuryou"];
+        _commisionprice = _withdrawalTextField.text;
         
         
     }
     
-    [_hikidashigakuDefaults synchronize];
+    //キーボードを下げる
+    [self downObjects];
     
-    
-    NSLog(@"hikidashi=%@",[_hikidashigakuDefaults objectForKey:@"hikidashi"]);
-    NSLog(@"tesuryou=%@",[_hikidashigakuDefaults objectForKey:@"tesuryou"]);
-    
-    
-    
-    //ハコからデータをとりだす
-    NSString *hikidashi = [_hikidashigakuDefaults stringForKey:@"hikidashi"];
-    NSString *tesuryou = [_hikidashigakuDefaults stringForKey:@"tesuryou"];
-    
-    
-    //取り出したデータを%@に指定する
-     NSArray *_kingakuArray = @[[NSString stringWithFormat:@"引き出し額 %@",hikidashi],[NSString stringWithFormat:@"手数料学 %@",tesuryou]];
-    
-    
+    //取り出した引き出し額と手数料のメンバ変数を%@に指定する
+    _withdrawalArray =@[[NSString stringWithFormat:@"引き出し額 %@",_withdrawalPrice],[NSString stringWithFormat:@"手数料 %@",_commisionprice]];
     
     //入力した内容を初期化する
-//    [self.hikidashiTextField reloadData];
+    [self.withdrawalTableView reloadData];
     
     
     
 
     
-    
+   
+
 }
+//保存ボタンが押された時
+//- (IBAction)tapSave:(id)sender {
+//    
+//    //入力した金額をユーザーデフォルトに保存する
+//    NSUserDefaults *_hikidashigakuDefaults = [NSUserDefaults standardUserDefaults];
+//    if (_hikidashiFlag == YES) {
+//        
+//        NSString *_hikidashi = _hikidashiTextField.text;
+//        [_hikidashigakuDefaults setObject:_hikidashi forKey:@"hikidashi"];
+//    }
+//    else{
+//        NSString *_tesuryou = _tesuryouTextField.text;
+//        //？　_tesuryouがnil
+//        [_hikidashigakuDefaults setObject:_tesuryou forKey:@"tesuryou"];
+//        
+//        
+//    }
+//    
+//    [_hikidashigakuDefaults synchronize];
+//    
+//    
+//    NSLog(@"hikidashi=%@",[_hikidashigakuDefaults objectForKey:@"hikidashi"]);
+//    NSLog(@"tesuryou=%@",[_hikidashigakuDefaults objectForKey:@"tesuryou"]);
+//    
+//    
+//    
+//    //ハコからデータをとりだす
+//    NSString *hikidashi = [_hikidashigakuDefaults stringForKey:@"hikidashi"];
+//    NSString *tesuryou = [_hikidashigakuDefaults stringForKey:@"tesuryou"];
+//    
+//    
+//    //取り出したデータを%@に指定する
+//    NSArray *_kingakuArray = @[[NSString stringWithFormat:@"引き出し額 %@",hikidashi],[NSString stringWithFormat:@"手数料学 %@",tesuryou]];
+//    
+//    
+//    
+//    //入力した内容を初期化する
+//    //    [self.hikidashiTextField reloadData];
+//    
+//
+//    
+//    int d= 0;
+//    
+//    
+//    NSString *hikidashiString=@"";
+//    
+//
+//   self.hikidashiTextField.text=hikidashiString;
+//    
+//    //取り出したデータを%@に指定する
+////    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"給与額(%@) %@",app._convertCurrency,income],[NSString stringWithFormat:@"給料日 %@",Kyuryoubi],[NSString stringWithFormat:@"開始日 %@",Kaishibi],[NSString stringWithFormat:@"終了日 %@",Syuryoubi]];
+//    
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//
+//    
+//    
+//    }
 
 
 
 
-//!!!!!modalViewが出ない
-//引き出し額の入力
-- (IBAction)insertHikidashi:(id)sender {
-    
-    [self.hikidashiTextField setKeyboardType:UIKeyboardTypeNumberPad];
-    
-    [self.hikidashiTextField addSubview:_hikidashiTextField];
-
-    
-    
-    //modalViewをにゅっとだすよ
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.3];
-            
-    //   [self downObjects];
-            
-    _textView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
-            
-    _viewFlag = YES;
-    
-    [self.view addSubview:_textView];
-
-
-    
-    [UIView commitAnimations];
-    
-    
-}
-
-
-- (IBAction)insertTesuryou:(id)sender {
-     self.tesuryouTextField.keyboardType = UIKeyboardTypeNumberPad;
-    
-    //modalViewをにゅっとだすよ
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.3];
-    
-    //   [self downObjects];
-    
-    _textView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
-    
-    _viewFlag = YES;
-    
-    [UIView commitAnimations];
-    [_tesuryouTextField addSubview:_tesuryouTextField];
-    
-    [self.view addSubview:_textView];
-}
 @end
 
