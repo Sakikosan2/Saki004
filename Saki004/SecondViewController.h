@@ -39,12 +39,7 @@
 
 @property(strong,nonatomic)NSFetchedResultsController *fechedResultController;
 
-@property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 
-@property (weak, nonatomic) IBOutlet UIButton *saveButton;
-
-- (IBAction)tapCancel:(id)sender;
-- (IBAction)tapSave:(id)sender;
 
 
 @property (weak, nonatomic) IBOutlet UITableView *withdrawalTableView;

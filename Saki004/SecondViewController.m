@@ -77,10 +77,6 @@
     
     //入力した内容を初期化する
     [self.withdrawalTableView reloadData];
-    
-    
-    
-                        
 }
 
 
@@ -101,7 +97,7 @@
     
     
     //modalViewを作成
-    _textView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 250)];
+    _textView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 50)];
     //色の配合の仕方を調整
     _textView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:0.2];
     //まだ隠れている状態＝NOとする
@@ -110,7 +106,7 @@
     
 
     
-    //テキストフィールドを_textVirwの上に作成
+    //テキストフィールドを_textViewの上に作成
     _withdrawalTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width-100, 40)];
     _withdrawalTextField.backgroundColor = [UIColor grayColor];
     _withdrawalTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -127,7 +123,7 @@
     
 
     //バナーオブジェクト生成
-    _adView = [[ADBannerView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, _adView.frame.size.width, _adView.frame.size.height)];
+    _adView = [[ADBannerView alloc] initWithFrame:CGRectMake(0, 0, _adView.frame.size.width, _adView.frame.size.height)];
     _adView.delegate = self;
     //アドビューをつくる
     [self.view addSubview:_adView];
@@ -135,7 +131,6 @@
     _adView.alpha =0.0;
     //フラグがNOの時にこの処理をする
     _isVisible = NO;
-    
     
     
     //コアデータ
@@ -242,87 +237,8 @@
     }
 
 
-
-//コアデータ
-//- (void)cancel:(id)sender {
-//    if(tapCancel) {
-//        // 新規オブジェクトのキャンセルなので、呼び出し元で挿入したオブジェクトを削除します。
-//        NSManagedObjectContext *context = editingObject.managedObjectContext;
-//        [context deleteObject:editingObject];
-//        NSError *error = nil;
-//        if (![context save:&error]) {
-//            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-//            abort();
-//        }
-//    }
-//    [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
-//- (void)save:(id)sender {
-//    // テキストフィールドの内容をキー"name"にセットして変更を保存します。
-//    [editingObject setValue:textField.text forKey:@"name"];
-//    if(newObject&&[editingObject.entity.name isEqualToString:@"SecondLevel"]) {
-//        // SecondLevelでは新規作成のオブジェクトを上位のRootLevelと関連をさせる必要があります。
-//        FirstCoreDataAppDelegate *appDelegate =
-//        (FirstCoreDataAppDelegate *)[[UIApplication sharedApplication] delegate];
-//        // このビューの呼び出し元はアプリケーションデリゲートで作ったナビゲーションコントローラーで
-//        // 現在一番上に表示されています。
-//        SecondLevelViewController *controller =
-//        (SecondLevelViewController *)[appDelegate.navigationController topViewController];
-//        //呼び出し元のRootLevelのsecondLevelsにeditingObjectを追加します。
-//        [controller.rootLevel addSecondLevelsObject:editingObject];
-//    }
-//    NSManagedObjectContext *context = editingObject.managedObjectContext;
-//    NSError *error = nil;
-//    if (![context save:&error]) {
-//        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-//        abort();
-//    }
-//    [self.navigationController dismissModalViewControllerAnimated:YES];
-//}
-
-
-
-
-
-//-(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-//    {
-//        //<>が付くのはプロトコル→idの詳細を説明
-//        //[[self.fechedResultsController sections]objectAtIndex:section]は｛(1+1)×２｝と一緒
-//        id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fechedResultsController sections]objectAtIndex:section];
-//        
-//        //コアデータに入ってるデータの数
-//        return [sectionInfo numberOfObjects];
-//        
-//    }
-//
-//
-//-(UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-//    {
-//        //定数を宣言
-//        static NSString *cellIdentifier = @"cell";
-//        
-//        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-//        
-//        if (cell==nil){
-//            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-//            
-//        }
-//        
-//        //コアデータの中身をTableViewに表示する
-//        cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
-////        
-////        //placeというコアデータの0番目のデータをとってきて返す
-////        Place *place = [self.fechedResultsController objectAtIndexPath:indexPath];
-////        
-////        //メッセージ構文の中身を返す
-////        cell.textLabel.text = [place.name description];
-////        
-//        return cell;
-//        
-//        
-//    }
-//    
 //FetchedResultsControllerのデータセット
 -(NSFetchedResultsController *) fechedResultsController{
         
@@ -360,17 +276,11 @@
     }
 
 
-
-
 //広告
 -(void) bannerViewDidLoadAd:(ADBannerView *)banner
 {
-    
     //if文をつくる.isVisibleの中がNOだったときにこの中の処理をする。
-    
     if (!_isVisible) {
-        
-        
         //バナーが表示されるアニメーション。落ちてくる。
         
         //「animateAdBannerOn」という名前のアニメーション
@@ -381,7 +291,7 @@
         
         //「-(void) bannerViewDidLoadAd:(ADBannerView *)banner」のbannerと同じ
         //banner.flame=「バナーの形」
-        banner.frame = CGRectOffset (banner.frame, 0,self.view.bounds.size.height - banner.frame.size.height);
+        banner.frame = CGRectOffset(banner.frame, 0, self.view.bounds.size.height - banner.frame.size.height);
         //banner.frame = CGRectOffset(banner.frame, 0, 300);
         
         
@@ -409,14 +319,10 @@
         banner.frame = CGRectOffset(banner.frame, 0, -CGRectGetHeight(banner.frame));
         
         banner.alpha = 0.0;
-        
+
         [UIView commitAnimations];
-        
     }
 }
-
-
-
 
 
 //キャンセルボタンがTapされたとき
@@ -452,30 +358,27 @@
 //Coredata
 //保存ボタンが押された時
 -(IBAction)tapSave:(id)sender{
-
+    
+    
+    
     //大文字のWithdrawalmemoはkey
     //小文字は変数名
-    NSManagedObjectContext *context = [self managedObjectContext];
+    NSManagedObjectContext *context = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
     
-    Withdrawalmemo *withdrawalmemo =[NSEntityDescription insertNewObjectForEntityForName:@"Withdrawalprice" inManagedObjectContext:context];
-    
-    withdrawalmemo.withdrawalprice = (NSNumber *)_withdrawalPrice;
-    withdrawalmemo.commissionprice = (NSNumber *)_commisionprice;
-        
-    
+    Withdrawalmemo *withdrawalmemo =[NSEntityDescription insertNewObjectForEntityForName:@"Withdrawalmemo" inManagedObjectContext:context];
+
+    // withdrawalpriceがNSNumberでないといけないので、_withdrawlPriceの文字列を一度Integerにして、NSNumber numberWithIntでNSNumber化
+    withdrawalmemo.withdrawalprice = [NSNumber numberWithInt:[_withdrawalPrice integerValue]];
+    withdrawalmemo.commissionprice = [NSNumber numberWithInt:[_commisionprice integerValue]];
+
     //データモデルにセットされたデータをCoreDataに保存
     NSError *error =nil;
     
     //CoreDataにデータを追加している
     if ([context save:&error] == NO) {
             abort();
-    
-      }
-
-    
+    }
 }
-
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -493,9 +396,6 @@
  // Pass the selected object to the new view controller.
  }
  */
-
-
-
 
 @end
 

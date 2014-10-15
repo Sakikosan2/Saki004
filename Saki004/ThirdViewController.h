@@ -26,8 +26,12 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *setTableView;
 
+@property (weak, nonatomic) IBOutlet UIButton *cancel;
+@property (weak, nonatomic) IBOutlet UIButton *Save;
 
+- (IBAction)tapCancel:(id)sender;
 
+- (IBAction)tapSave:(id)sender;
                   
 
 

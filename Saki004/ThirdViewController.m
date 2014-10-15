@@ -33,7 +33,7 @@
 {
     [super viewDidLoad];
     
-    _currencyArray =@[@"現地通貨設定",@"手数料通貨設定",@"換算通貨設定"];
+    _currencyArray =@[@"現地通貨設定",@"換算通貨設定"];
     self.setTableView.delegate = self;
     self.setTableView.dataSource = self;
     
@@ -42,7 +42,15 @@
     
     
     //バナーオブジェクト生成
-    _adView = [[ADBannerView alloc] initWithFrame:CGRectMake(0, -_adView.frame.size.height, _adView.frame.size.width, _adView.frame.size.height)];
+    CGFloat tabBarHeight = self.tabBarController.tabBar.bounds.size.height;
+    CGFloat addViewHeight =_adView.frame.size.height;
+NSLog(@"%f", tabBarHeight);
+NSLog(@"%f", addViewHeight);
+    
+    _adView = [[ADBannerView alloc] initWithFrame:CGRectMake(0, 460, _adView.frame.size.width, _adView.frame.size.height)];
+    
+
+//    0, -_adView.frame.size.height, _adView.frame.size.width, _adView.frame.size.height
     _adView.delegate = self;
     [self.view addSubview:_adView];
     _adView.alpha =0.0;
@@ -53,7 +61,7 @@
 
 //TableView
 
-//セクション数
+//セクション数r
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -341,4 +349,9 @@
 
 
 
+- (IBAction)tapCancel:(id)sender {
+}
+
+- (IBAction)tapSave:(id)sender {
+}
 @end

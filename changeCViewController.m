@@ -95,12 +95,10 @@
     
 //Plistからデータを取り出す。 ※Dictionary型の部分全体を取り出す
     NSDictionary *currencyData = _currencyList[indexPath.row];
-    
+
     //plistのnameのデータを取り出す
     NSString *currencyName = [currencyData objectForKey:@"Name"];
     NSString *currencyCode = [currencyData objectForKey:@"Code"];
-    
-    
     
     //表示する文字列を作成
     cell.textLabel.text = [NSString stringWithFormat:@"%@(%@)",currencyName,currencyCode];

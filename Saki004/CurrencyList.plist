@@ -5,147 +5,147 @@
 	<key>CurrencyList</key>
 	<array>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>AUD</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>オーストラリアドル</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>KRW</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>韓国ウォン</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>JPY</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>日本円</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>CNY</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>人民元</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>ILS</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>新シュケル</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>HKD</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>香港ドル</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>RUB</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>ロシアルーブル</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>BRL</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>レアル</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>EUR</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>ユーロ</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>JOD</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>ヨルダン・ディナール</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>MAD</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>モロッコディルハム</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>UKP</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>ポンド</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>BOB</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>ボリビアーノ</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>PHP</string>
-			<key>cname</key>
+			<key>Name</key>
 			<string>フィリピンペソ</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>PEN</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>ヌエボ・ソル</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>NZD</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>ニュージーランドドル</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>TRL</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>トルコリラ</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>THB</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>タイバーツ</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>CHF</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>スイス・フラン</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>CAD</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>カナダドル</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>EGP</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>エジプト・ポンド</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>USD</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>アメリカドル</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>ARS</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>アルゼンチンペソ</string>
 		</dict>
 		<dict>
-			<key>code</key>
+			<key>Code</key>
 			<string>INR</string>
-			<key>name</key>
+			<key>Name</key>
 			<string>インド・ルピー</string>
 		</dict>
 	</array>

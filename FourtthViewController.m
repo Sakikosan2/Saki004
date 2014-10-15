@@ -14,7 +14,8 @@
 
 @interface FourtthViewController ()
 {
-    UIView *_skyView;
+    UIView *_textView;
+    UIView *_datePickerView;
     UIView *_dateView;
     
     BOOL _viewFlag;
@@ -27,13 +28,10 @@
     
     //Doneボタンをメンバ変数にする
     UIButton *_doneButton;
+    UIButton *_datePickerDoneButton;
     //→ViewDidLoadのローカル変数を書き換える。データ型を削除して、置き換える
-    UIDatePicker *incomeDatePicker;
+    UIDatePicker *_datePicker;
     
-    
-    
-
-
     NSArray *_budgetArray;
     
     //広告
@@ -46,6 +44,14 @@
     
     //Alertを一回しか出さない
     BOOL _alertFlag;
+    
+    
+    
+    
+    //予算額と開始日をメンバ変数に設定
+    NSString *_budgetPrice;
+    NSString *_startdate;
+    
     
 }
 
@@ -113,12 +119,10 @@
     
     //ハコからデータをとりだす
     NSString *budget = [_budgetDefaults stringForKey:@"Budget"];
-    NSString *income = [_budgetDefaults stringForKey:@"Income"];
-    NSString *incomedate = [_budgetDefaults stringForKey:@"Incomedate"];
     NSString *startdate = [_budgetDefaults stringForKey:@"Startdate"];
     
     //取り出したデータを%@に指定する
-    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"給与額(%@) %@",app._convertCurrency,income],[NSString stringWithFormat:@"給料日 %@",incomedate],[NSString stringWithFormat:@"開始日 %@",startdate]];
+    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"開始日 %@",startdate]];
     
     
     
@@ -143,17 +147,14 @@
         {
             //「いいえ」が選択されたとき
             NSLog(@"いいえ");
-//            ThirdViewController *thd = [self.storyboard instantiateViewControllerWithIdentifier:@"ThirdViewController"];
-//            [self presentViewController:thd animated:YES completion:nil];
+
             self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
             
             break;
         }
         case 1:
         {
-//            //「はい」が選択されたとき
-//            NSLog(@"はい");
-//        
+     
             break;
         }
     }
@@ -188,43 +189,53 @@
     
     
     //modalViewを作成
-    _skyView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 250)];
-    
+    _textView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 50)];
     //色の配合の仕方を調整
-    _skyView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:0.2];
-    
+    _textView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:0.2];
     //まだ隠れている状態＝NOとする
     _viewFlag = NO;
-    
-    [self.view addSubview:_skyView];
+    [self.view addSubview:_textView];
     
     //テキストフィールドを作成
     _budgetTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width-100, 40)];
-    
     _budgetTextField.backgroundColor = [UIColor grayColor];
     _budgetTextField.keyboardType = UIKeyboardTypeNumberPad;
-    
     [_budgetTextField addTarget:self action:@selector(tapReturn) forControlEvents:UIControlEventEditingDidEndOnExit];
-    
-    [_skyView addSubview:_budgetTextField];
-    
-    [self.view addSubview:_skyView];
+    [_textView addSubview:_budgetTextField];
+    [self.view addSubview:_textView];
     
     
     //Doneボタンを作成
     _doneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100, 0, 100, 40)];
-    
     [_doneButton setTitle:@"Done" forState:UIControlStateNormal];
-    
     [_doneButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    
-
     [_doneButton addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [_skyView addSubview:_doneButton];
+    [_textView addSubview:_doneButton];
 
-
+    // DatePicker表示用のmodalViewを作成
+    _datePickerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 50)];
+    //色の配合の仕方を調整
+    _datePickerView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:0.2];
+    //まだ隠れている状態＝NOとする
+    _viewFlag = NO;
+    [self.view addSubview:_datePickerView];
+ 
+    // DatePickerをセット
+    _datePicker = [UIDatePicker new];
+    [_datePicker setDatePickerMode:UIDatePickerModeDate];
     
+    // デフォルトの日付を設定
+    NSDate *today = [NSDate date];
+    [_datePicker setDate:today];
+    [_datePicker becomeFirstResponder];
+    [_datePickerView addSubview:_datePicker];
+
+    // DatePickerビューにDoneボタンを追加
+    _datePickerDoneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100, 0, 100, 40)];
+    [_datePickerDoneButton setTitle:@"Done" forState:UIControlStateNormal];
+    [_datePickerDoneButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_datePickerDoneButton addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [_datePickerView addSubview:_datePickerDoneButton];
 }
 
 
@@ -234,7 +245,7 @@
 //セクション数
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 1;
 }
 
 
@@ -242,17 +253,10 @@
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if (section == 0) {
-        return @"予算設定";
-        
-    }
-    if (section == 1) {
-        return @"日付設定";
-        
+        return @"予算・日付設定";
     }
     return 0;
-    
-    
-    
+
 }
 
 
@@ -264,10 +268,6 @@
     if (section == 0) {
         return 2;
     }
-    if (section == 1) {
-        return 3;
-    }
-    
     return 0;
 }
 
@@ -291,14 +291,9 @@
     if (indexPath.section == 0) {
         
         cell.textLabel.text = _budgetArray[indexPath.row];
-        
-    }else{
-        
-        cell.textLabel.text = _budgetArray[indexPath.row+1];
-        
     }
     
-    
+
     return cell;
     
 }
@@ -308,93 +303,70 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-        //テキストフィールドに残った文字を空にする
-        _budgetTextField.text = @"";
-    
+    //テキストフィールドに残った文字を空にする
+    _budgetTextField.text = @"";
 
-    
+    if (indexPath.row == 0) {
+        [self closeDatePickerView];
+        
+        NSLog(@"おしたよー");
+
+        _budgetFlag = YES;
+        _viewFlag = YES;
+
         //modalViewをにゅっとだすよ
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.3];
-        
-        [self downObjects];
-        
-        _skyView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
-        
-        _viewFlag = YES;
-        
+        _textView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 50);
         [UIView commitAnimations];
         
         //キーボードを最初から表示する
         [_budgetTextField becomeFirstResponder];
+    } else {
+        [self closeTextView];
         
-        
-        if (indexPath.row == 0) {
-            _budgetFlag = YES;
-        }
-        else{
-            _budgetFlag = NO;
-            
-        }
-    
-        
+        _budgetFlag = NO;
+        _viewFlag = YES;
+
         //modalViewをにゅっとだす
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.3];
-        
-        [self downObjects];
-        
-        _skyView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
-        
-        _viewFlag = YES;
-        
-        //DatePickerをセット
-        
-        // DatePickerをつくる
-        UIDatePicker *datePicker = [UIDatePicker new];
-        incomeDatePicker = datePicker;
-        [incomeDatePicker setDatePickerMode:UIDatePickerModeDate];
-        
-        // デフォルトの日付を設定
-        NSDate *today = [NSDate date];
-        [incomeDatePicker setDate:today];
-        [incomeDatePicker becomeFirstResponder];
-
-        // DatePickerをskyviewにセット
-        [_skyView addSubview:incomeDatePicker];
-        // skyviewをself.view(画面)にセット
-        [self.view addSubview:_skyView];
-        
+        _datePickerView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
         [UIView commitAnimations];
-        
-        [self downObjects];
-    
+    }
+
+
     //ロング型の変数の中身を表示する文字列がld
     NSLog(@"%ld",(long)indexPath.section);
 
     
-    }
+}
     
 
-
+- (void)closeDatePickerView
+{
+    //ボタンとViewが表示されてボタンが押された場合は全体が下がる処理
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.3];
+    _datePickerView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 250);
+    [UIView commitAnimations];
+    
+    _viewFlag = NO;
+}
 
 
 
 //Viewを下げる自作メソッド
--(void)downObjects
+-(void)closeTextView
 {
     //ボタンとViewが表示されてボタンが押された場合は全体が下がる処理
-    _skyView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 250);
+    _textView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 250);
     
     //キーボードを下げる
     [_budgetTextField resignFirstResponder];
 
     _viewFlag = NO;
-    
-    
 }
-
-
 
 
 
@@ -467,8 +439,31 @@
     NSLog(@"Done");
     
     //viewを下げる
-    [self downObjects];
+    [self closeTextView];
+    [self closeDatePickerView];
     
+    //入力されたデータをTableViewに表示する
+    //入力されたデータをメンバ変数に保存
+    if (_budgetFlag == YES) {
+        _budgetPrice = _budgetTextField.text;
+        
+    }
+    else{
+        NSDateFormatter *df = [[NSDateFormatter alloc] init];
+        
+        [df setDateFormat:@"yyyy/MM/dd"];
+        
+        _startdate = [df stringFromDate:_datePicker.date];
+        
+    }
+    
+   //取り出した予算額と開始日のメンバ変数を%@に指定する
+    _budgetArray =@[[NSString stringWithFormat:@"予算額 %@",_budgetPrice],[NSString stringWithFormat:@"開始日 %@",_startdate]];
+    
+    //入力した内容を初期化する
+    [self.setBTableView reloadData];
+    
+
 }
 
 
@@ -477,33 +472,23 @@
     
     //入力した金額をユーザーデフォルトに保存する
     NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
-    if (_budgetFlag == YES) {
-        
-        NSString *_budget = _budgetTextField.text;
-        [_budgetDefaults setObject:_budget forKey:@"Budget"];
-    }
-    else{
-        NSString *_income = _budgetTextField.text;
-        [_budgetDefaults setObject:_income forKey:@"Income"];
-        
-    }
+    
+    
+    [_budgetDefaults setObject:_budgetPrice forKey:@"Budget"];
+    [_budgetDefaults setObject:_startdate forKey:@"Startdate"];
     
     [_budgetDefaults synchronize];
     
     NSLog(@"budget=%@",[_budgetDefaults objectForKey:@"Budget"]);
-    NSLog(@"income=%@",[_budgetDefaults objectForKey:@"Income"]);
-    
+    NSLog(@"stardate=%@",[_budgetDefaults objectForKey:@"Startdate"]);
+ 
     
     //ハコからデータをとりだす
     NSString *budget = [_budgetDefaults stringForKey:@"Budget"];
-    NSString *income = [_budgetDefaults stringForKey:@"Income"];
-    NSString *incomedate = [_budgetDefaults stringForKey:@"Incomedate"];
     NSString *startdate = [_budgetDefaults stringForKey:@"Startdate"];
     
-    
     //取り出したデータを%@に指定する
-    _budgetArray =@[[NSString stringWithFormat:@"予算額 %@",budget],[NSString stringWithFormat:@"給与額 %@",income],[NSString stringWithFormat:@"給料日 %@",incomedate],[NSString stringWithFormat:@"開始日 %@",startdate]];
-    
+    _budgetArray =@[[NSString stringWithFormat:@"予算額 %@",budget],[NSString stringWithFormat:@"開始日 %@",startdate]];
     
     //入力した内容を初期化する
     [self.setBTableView reloadData];
@@ -511,12 +496,13 @@
 
 }
 
+
 //Cancelボタンが押された時
 - (IBAction)tapCancel:(id)sender {
     
     //キーボードを下げる
-    [self downObjects];
-    
+    [self closeDatePickerView];
+    [self closeTextView];
 }
 @end
                     
