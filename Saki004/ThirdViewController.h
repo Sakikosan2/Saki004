@@ -12,25 +12,23 @@
 
 @interface ThirdViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,ADBannerViewDelegate>
 
-
-
-//APIで取得したデータをラベルに返す
+//現地通貨/換算通貨を設定するTableView
+@property (weak, nonatomic) IBOutlet UITableView *setTableView;
+//APIで取得したレートを表示するLabel
 @property (weak,nonatomic)IBOutlet UILabel *resultLabel;
-
-//selectnamに行番号を格納して、スイッチ文で振り分けている
+//Cancelボタン
+@property (weak, nonatomic) IBOutlet UIButton *cancel;
+//Saveボタン
+@property (weak, nonatomic) IBOutlet UIButton *Save;
+//TableViewの行番号を格納するselectnum
 @property(nonatomic,assign) NSInteger selectnum;
 
 
+//再取得ボタンがTapされた時
 -(IBAction)tapBtn:(id)sender;
-
-
-@property (weak, nonatomic) IBOutlet UITableView *setTableView;
-
-@property (weak, nonatomic) IBOutlet UIButton *cancel;
-@property (weak, nonatomic) IBOutlet UIButton *Save;
-
+//CancelボタンがTapされた時
 - (IBAction)tapCancel:(id)sender;
-
+//SaveボタンがTapされた時
 - (IBAction)tapSave:(id)sender;
                   
 

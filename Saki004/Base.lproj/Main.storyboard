@@ -65,6 +65,26 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qDf-gt-h0P">
+                                <rect key="frame" x="20" y="34" width="48" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="tapCancel:" destination="69R-Hf-t2w" eventType="touchUpInside" id="M6y-QL-XEd"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OwV-UX-4zV">
+                                <rect key="frame" x="254" y="34" width="34" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Save">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="tapSave:" destination="69R-Hf-t2w" eventType="touchUpInside" id="MVp-n9-HWg"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -72,6 +92,8 @@
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="Cancel" destination="qDf-gt-h0P" id="Pvh-Z0-DXY"/>
+                        <outlet property="Save" destination="OwV-UX-4zV" id="TO5-kF-LuT"/>
                         <outlet property="todayLabel" destination="YPZ-4E-x7X" id="s3h-Pp-EDX"/>
                         <outlet property="withdrawalTableView" destination="d1Q-7J-xUL" id="SkL-aJ-tSD"/>
                     </connections>
@@ -197,7 +219,7 @@
                     <connections>
                         <outlet property="Save" destination="BNT-hI-nv2" id="SSW-OU-rr5"/>
                         <outlet property="cancel" destination="mOO-DS-BdJ" id="wJH-ty-3O0"/>
-                        <outlet property="resultLabel" destination="jLI-If-4dT" id="yn9-dZ-BVn"/>
+                        <outlet property="resultLabel" destination="jLI-If-4dT" id="BxK-Yg-JU0"/>
                         <outlet property="setTableView" destination="u5m-1Q-Nya" id="d7K-sa-saL"/>
                     </connections>
                 </viewController>

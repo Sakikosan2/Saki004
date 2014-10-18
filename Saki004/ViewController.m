@@ -101,6 +101,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+//??
 - (IBAction)openSecondScene:(id)sender
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Second Scene" message:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Open!", nil];

@@ -21,21 +21,17 @@
 //メンバ変数
 //selectnumに行番号を格納。スイッチ文で振り分ける
 @property(nonatomic,assign) NSInteger selectnum;
-
 @property(weak,nonatomic)IBOutlet UILabel *resultLabel;
 
+// 現地通貨設定か換算通貨設定かのフラグを受け取る
+@property(nonatomic) BOOL isSettingLocalCurrency;
 
 //
 //@property(weak,nonatomic) NSDictionary *CurrencyList;
 @property (weak, nonatomic) IBOutlet UITableView *currencyTableView;
 
 //ユーザーデフォルト
-@property(strong,nonatomic) NSUserDefaults *_currencyDefaults;
-
-
-
-
-
+@property(strong,nonatomic) NSUserDefaults *_currencyDefault;
 
 
 @end

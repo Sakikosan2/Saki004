@@ -19,7 +19,6 @@
     
     //広告
     ADBannerView *_adView;
-    
     BOOL _isVisible;
 }
 
@@ -33,24 +32,22 @@
 {
     [super viewDidLoad];
     
+    //現地通貨設定、換算通貨設定を配列に入れる
     _currencyArray =@[@"現地通貨設定",@"換算通貨設定"];
     self.setTableView.delegate = self;
     self.setTableView.dataSource = self;
     
-    //API
+    //API取得の自作メソッドを実行
     [self getRate];
     
-    
-    //バナーオブジェクト生成
+    ///広告
+    //タブバーのサイズを調べる
     CGFloat tabBarHeight = self.tabBarController.tabBar.bounds.size.height;
     CGFloat addViewHeight =_adView.frame.size.height;
-NSLog(@"%f", tabBarHeight);
-NSLog(@"%f", addViewHeight);
-    
+    NSLog(@"%f", tabBarHeight);
+    NSLog(@"%f", addViewHeight);
+    //バナーオブジェクト生成
     _adView = [[ADBannerView alloc] initWithFrame:CGRectMake(0, 460, _adView.frame.size.width, _adView.frame.size.height)];
-    
-
-//    0, -_adView.frame.size.height, _adView.frame.size.width, _adView.frame.size.height
     _adView.delegate = self;
     [self.view addSubview:_adView];
     _adView.alpha =0.0;
@@ -59,8 +56,7 @@ NSLog(@"%f", addViewHeight);
     
 }
 
-//TableView
-
+///TableViewの設定
 //セクション数r
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -72,7 +68,6 @@ NSLog(@"%f", addViewHeight);
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     return @"通貨設定";
-    
 }
 
 
@@ -80,67 +75,67 @@ NSLog(@"%f", addViewHeight);
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return _currencyArray.count;
-    
 }
 
 
-//セルに内容を表示するメソッド
+//TableViewのセル(Cell)に内容を表示する
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //
     static NSString *CellIdentifer = @"cell";
-    
     //セルの再利用
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifer];
-    
     //セルの初期化とスタイルの決定
     if (cell == nil) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifer];
-        
     }
-    
     cell.textLabel.text = [NSString stringWithFormat:@"行番号=%d",indexPath.row];
     cell.textLabel.text = _currencyArray[indexPath.row];
-    
-    
     return cell;
     
 }
 
 
-//セルが選択するときに何を実行するか
+//セルが選択されたときに何を実行するか
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+
     //画面オブジェクトのインスタンス化(カプセル化)
-    changeCViewController *dvc = [self.storyboard instantiateViewControllerWithIdentifier:@"changeCViewController"];
-    
-    
-    //行番号を保存
-    dvc.selectnum = indexPath.row;
-    
-    
-    //modalで画面遷移
-    [self presentViewController:dvc animated:YES completion:nil];
+    changeCViewController *cvc = [self.storyboard instantiateViewControllerWithIdentifier:@"changeCViewController"];
+    //行番号をcvcのselectnumに保存
+    cvc.selectnum = indexPath.row;
+    if (indexPath.row == 0) {
+        //TableViewの一行目が選択された時　= isSettingLocalCurrencyフラグはYES
+        cvc.isSettingLocalCurrency = YES;
+        //modalで画面遷移
+        [self presentViewController:cvc animated:YES completion:nil];
+        
+    } else if (indexPath.row == 1) {
+        //TableViewの二行目が選択された時　= isSettingLocalCurrencyフラグはNO
+        cvc.isSettingLocalCurrency = NO;
+        //modalで画面遷移
+        [self presentViewController:cvc animated:YES completion:nil];
+    }
     
 }
 
 
 
-//API 
+//再取得ボタンがTapされた時　APIでデータをとってくる
 -(IBAction)tapBtn:(id)sender
 {
     
-    //APIの呼び出し
+    //APIの元のURLの呼び出し
     NSString *orign =@"http://rate-exchange.appspot.com/currency";
     
     //アップデリゲートをインスタンス化(カプセル化)
     AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
     
-    //プロパティからデータを取り出して指定
+    //? プロパティからデータを取り出して指定
     NSString *from_cr_code = app._localCurrency;
     NSString *to_cr_code = app._convertCurrency;
     
-    //?以降の文字列を完成させる
+    //http://rate-exchange.appspot.com/currency/現地通貨/換算通貨.jsonとなるように生成
     NSString *url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
     
     //NSURLRequestを生成
@@ -159,26 +154,29 @@ NSLog(@"%f", addViewHeight);
     
     //APIで取るべきデータがnilの時
     if (fromCode ==nil) {
-        fromCode = @"usd";
+        fromCode = @"USD";
         rate = 0;
-        toCode= @"jpy";
+        toCode= @"JPY";
         
         }else{
    //ResultLabelに結果を表示する
-    self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",fromCode,rate,toCode];
+    self.resultLabel.text = [NSString stringWithFormat:@"1%@ = %@%@",fromCode,rate,toCode];
 
     }
 
     
 }
 
-
+//APIを読み出すためのメソッド
 -(void)getRate
 {
-    //APIの呼び出し
+    //APIの元のURLの呼び出し
     NSString *orign =@"http://rate-exchange.appspot.com/currency";
+    NSLog(@"元のURlは%@",orign);
+    
     
     //プロパティからデータを取り出して指定
+    //? jpyとphpに指定してるから、ずっと0.4ていう値なのかも？？
     NSString *from_cr_code = @"jpy";
     NSString *to_cr_code = @"php";
     
@@ -195,7 +193,7 @@ NSLog(@"%f", addViewHeight);
     
     
     @try {
-        //?以降の文字列を完成させる
+        //http://rate-exchange.appspot.com/currency/現地通貨/換算通貨.jsonとなるようにURLを生成
         url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
         
         //NSURLRequestを生成
@@ -246,6 +244,7 @@ NSLog(@"%f", addViewHeight);
         
         NSLog(@"rate=%@",[myDefaults objectForKey:@"rate"]);
         
+        
         //    NSDictionary *appDefaults = [NSDictionary
         //                                 dictionaryWithObject:@"default value" forKey:@"KEY0"];
         //
@@ -257,7 +256,7 @@ NSLog(@"%f", addViewHeight);
         
     }
     
-    self.resultLabel.text = [NSString stringWithFormat:@"1%@のレート換算は、%@%@",toCode,rate,fromCode];
+    self.resultLabel.text = [NSString stringWithFormat:@"1%@ = %@%@",fromCode,rate,toCode];
 
 }
 
@@ -350,6 +349,8 @@ NSLog(@"%f", addViewHeight);
 
 
 - (IBAction)tapCancel:(id)sender {
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)tapSave:(id)sender {

@@ -45,7 +45,11 @@
 @property (weak, nonatomic) IBOutlet UITableView *withdrawalTableView;
 @property (weak, nonatomic) IBOutlet UILabel *todayLabel;
 @property (strong,nonatomic) NSString *selectedDate;
+@property (weak, nonatomic) IBOutlet UIButton *Cancel;
+@property (weak, nonatomic) IBOutlet UIButton *Save;
 
+- (IBAction)tapCancel:(id)sender;
+- (IBAction)tapSave:(id)sender;
 
 
 

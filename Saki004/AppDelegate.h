@@ -28,7 +28,6 @@
 //currencyListのグローバル変数をつくる
 @property(strong,nonatomic) NSString *_localCurrency;
 @property(strong,nonatomic) NSString *_convertCurrency;
-@property(strong,nonatomic) NSString *_commitCurrency;
 
 
 - (void)saveContext;

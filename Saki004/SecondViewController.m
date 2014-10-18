@@ -37,7 +37,7 @@
     
     //引き出し額と手数料額のメンバ変数
     NSString *_withdrawalPrice;
-    NSString *_commisionprice;
+    NSString *_commissionPrice;
     
 
     BOOL _viewFlag;
@@ -70,7 +70,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     //取り出した引き出し額と手数料のメンバ変数を%@に指定する
-    _withdrawalArray =@[[NSString stringWithFormat:@"引き出し額 %@",_withdrawalPrice],[NSString stringWithFormat:@"手数料 %@",_commisionprice]];
+    _withdrawalArray =@[[NSString stringWithFormat:@"引き出し額 %@",_withdrawalPrice],[NSString stringWithFormat:@"手数料 %@",_commissionPrice]];
     
     self.withdrawalTableView.delegate = self;
     self.withdrawalTableView.dataSource = self;
@@ -278,7 +278,8 @@
 
 //広告
 -(void) bannerViewDidLoadAd:(ADBannerView *)banner
-{
+{// 広告をビューの一番下に表示する場合
+    
     //if文をつくる.isVisibleの中がNOだったときにこの中の処理をする。
     if (!_isVisible) {
         //バナーが表示されるアニメーション。落ちてくる。
@@ -327,10 +328,11 @@
 
 //キャンセルボタンがTapされたとき
 - (IBAction)tapCancel:(id)sender {
+
     
     [self dismissViewControllerAnimated:YES completion:nil];
-}
 
+}
 
 //Doneボタンが押された時
 -(IBAction)tapBtn:(id)sender
@@ -341,14 +343,14 @@
         
     }
     else{
-        _commisionprice = _withdrawalTextField.text;
+        _commissionPrice = _withdrawalTextField.text;
     }
     
     //キーボードを下げる
     [self downObjects];
     
     //取り出した引き出し額と手数料のメンバ変数を%@に指定する
-    _withdrawalArray =@[[NSString stringWithFormat:@"引き出し額 %@",_withdrawalPrice],[NSString stringWithFormat:@"手数料 %@",_commisionprice]];
+    _withdrawalArray =@[[NSString stringWithFormat:@"引き出し額 %@",_withdrawalPrice],[NSString stringWithFormat:@"手数料 %@",_commissionPrice]];
     
     //入力した内容を初期化する
     [self.withdrawalTableView reloadData];
@@ -359,17 +361,14 @@
 //保存ボタンが押された時
 -(IBAction)tapSave:(id)sender{
     
-    
-    
     //大文字のWithdrawalmemoはkey
     //小文字は変数名
     NSManagedObjectContext *context = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
-    
     Withdrawalmemo *withdrawalmemo =[NSEntityDescription insertNewObjectForEntityForName:@"Withdrawalmemo" inManagedObjectContext:context];
 
     // withdrawalpriceがNSNumberでないといけないので、_withdrawlPriceの文字列を一度Integerにして、NSNumber numberWithIntでNSNumber化
     withdrawalmemo.withdrawalprice = [NSNumber numberWithInt:[_withdrawalPrice integerValue]];
-    withdrawalmemo.commissionprice = [NSNumber numberWithInt:[_commisionprice integerValue]];
+    withdrawalmemo.commissionprice = [NSNumber numberWithInt:[_commissionPrice integerValue]];
 
     //データモデルにセットされたデータをCoreDataに保存
     NSError *error =nil;
@@ -378,6 +377,8 @@
     if ([context save:&error] == NO) {
             abort();
     }
+    
+     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -396,6 +397,7 @@
  // Pass the selected object to the new view controller.
  }
  */
+
 
 @end
 
