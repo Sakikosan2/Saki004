@@ -26,28 +26,22 @@
 {
     //バナー広告
     ADBannerView *_adView;
-    
     //テキストフィールドを乗せるView
     UIView *_textView;
     //引き出し額を入力するテキストフィールド
     UITextField *_withdrawalTextField;
-    
     //Doneボタンをメンバ変数にする
     UIButton *_doneButton;
-    
     //引き出し額と手数料額のメンバ変数
     NSString *_withdrawalPrice;
     NSString *_commissionPrice;
     
-
-    BOOL _viewFlag;
-    BOOL _isVisible;
-    BOOL _withdrawalFlag;
-
-    
     //TableView
     NSArray *_withdrawalArray;
     
+    BOOL _viewFlag;
+    BOOL _isVisible;
+    BOOL _withdrawalFlag;
     
 }
 
@@ -191,10 +185,8 @@
 {
     //ボタンとViewが表示されてボタンが押された場合は全体が下がる処理
     _textView.frame = CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 250);
-    
     //キーボードを下げる
     [_withdrawalTextField resignFirstResponder];
-    
     _viewFlag = NO;
     
     
@@ -213,14 +205,10 @@
     [UIView setAnimationDuration:0.3];
     //キーボードを下げる
     [self downObjects];
-    
     _textView.frame = CGRectMake(0, self.view.bounds.size.height-250, self.view.bounds.size.width, 250);
     
-    _viewFlag = YES;
-    
-    
-    
     [UIView commitAnimations];
+    
     
     //キーボードを最初から表示する
     [_withdrawalTextField becomeFirstResponder];
@@ -235,6 +223,7 @@
     {
         _withdrawalFlag = NO;
     }
+    _viewFlag = YES;
 
 
 }
@@ -249,20 +238,20 @@
         }
         
         //nilのとき
-        NSEntityDescription *entity = [NSEntityDescription entityForName:@"Place" inManagedObjectContext:self.managedObjectContext];
+        NSEntityDescription *Withdrawalmemo = [NSEntityDescription entityForName:@"withdrawalprice" inManagedObjectContext:self.managedObjectContext];
         
         //一行ずつデータを取得する
         NSFetchRequest *fetchRequest = [NSFetchRequest new];
         
         //なんのモデルを取り出すのかを指定。FetchRequestはEntityじゃないとだめ。
-        [fetchRequest setEntity:entity];
+        [fetchRequest setEntity:Withdrawalmemo];
         
         //一度にコアデータの中から何データをとってくるか（コアデータから何件ずつとってくるかをかくだけ）
         [fetchRequest setFetchBatchSize:20];
         
         //そのリストをどんな順序で並べるのか　ascending:並べ方　Yes:昇順、No:降順
         //条件を複数個指定できるため、配列型
-        [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"name" ascending:NO],]];
+        [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"withdrawalprice" ascending:NO],]];
         
         
         //fechedResultControllerの初期化

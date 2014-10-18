@@ -8,7 +8,7 @@
 
 #import "ThirdViewController.h"
 #import "changeCViewController.h"
-#import "AppDelegate.h"
+
 
 
 
@@ -20,6 +20,7 @@
     //広告
     ADBannerView *_adView;
     BOOL _isVisible;
+    
 }
 
 
@@ -117,6 +118,8 @@
         [self presentViewController:cvc animated:YES completion:nil];
     }
     
+
+    
 }
 
 
@@ -124,48 +127,9 @@
 //再取得ボタンがTapされた時　APIでデータをとってくる
 -(IBAction)tapBtn:(id)sender
 {
-    
-    //APIの元のURLの呼び出し
-    NSString *orign =@"http://rate-exchange.appspot.com/currency";
-    
-    //アップデリゲートをインスタンス化(カプセル化)
-    AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
-    
-    //? プロパティからデータを取り出して指定
-    NSString *from_cr_code = app._localCurrency;
-    NSString *to_cr_code = app._convertCurrency;
-    
-    //http://rate-exchange.appspot.com/currency/現地通貨/換算通貨.jsonとなるように生成
-    NSString *url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
-    
-    //NSURLRequestを生成
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    
-    //サーバー（API)と通信を行い、JSON形式のデータを取得
-    NSData *json = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    
-    //JSONをパース(データの設定)
-    NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
-    
-    NSString *fromCode = [dictionary valueForKeyPath:@"from"];
-    NSString *rate  = [dictionary  valueForKeyPath:@"rate"];
-    NSString *toCode = [dictionary valueForKeyPath:@"to"];
-    
-    
-    //APIで取るべきデータがnilの時
-    if (fromCode ==nil) {
-        fromCode = @"USD";
-        rate = 0;
-        toCode= @"JPY";
-        
-        }else{
-   //ResultLabelに結果を表示する
-    self.resultLabel.text = [NSString stringWithFormat:@"1%@ = %@%@",fromCode,rate,toCode];
-
-    }
-
-    
+    [self getRate];
 }
+
 
 //APIを読み出すためのメソッド
 -(void)getRate
@@ -176,7 +140,7 @@
     
     
     //プロパティからデータを取り出して指定
-    //? jpyとphpに指定してるから、ずっと0.4ていう値なのかも？？
+    //? jpyとphpに指定してるから、ずっと0.4ていう値なの?
     NSString *from_cr_code = @"jpy";
     NSString *to_cr_code = @"php";
     
@@ -204,7 +168,7 @@
         
         //JSONをパース(データの設定)
         dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
-        
+        //? fromCodeには何がはいるの？？
         fromCode = [dictionary valueForKeyPath:@"from"];
         rate  = [dictionary  valueForKeyPath:@"rate"];
         toCode = [dictionary valueForKeyPath:@"to"];
@@ -217,71 +181,40 @@
     
     
     //JSONをパースで取れなかった時→前回保存したデータから取り出す
-    //APIで取るべきデータがnilの時
-    NSUserDefaults *myDefaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *apiDefaults = [NSUserDefaults standardUserDefaults];
     
     if (fromCode ==nil) {
         
         //UserDefaultsにデータが存在するかチェック
-        if ([myDefaults objectForKey:@"rate"]==nil) {
+        if ([apiDefaults objectForKey:@"rate"]==nil) {
             //UserDefaultsにも入っていない場合は暫定の値をセット
             fromCode = @"usd";
             rate = @"100";
-            toCode= @"jpy";
+            toCode =@"jpy";
             
         }else{
-            fromCode = [myDefaults objectForKey:@"from"];
-            rate  = [myDefaults  objectForKey:@"rate"];
-            toCode = [myDefaults objectForKey:@"to"];
+            fromCode = [apiDefaults objectForKey:@"from"];
+            rate  = [apiDefaults  objectForKey:@"rate"];
+            toCode = [apiDefaults objectForKey:@"to"];
+            
         }
         
         
     }else{
       //APIで値がとれたのでUserDefaultsに保存
-        [myDefaults setObject:rate forKey:@"rate"];
-        [myDefaults setObject:fromCode forKey:@"from"];
-        [myDefaults setObject:toCode forKey:@"to"];
+        [apiDefaults setObject:rate forKey:@"rate"];
+        [apiDefaults setObject:fromCode forKey:@"from"];
+        [apiDefaults setObject:toCode forKey:@"to"];
         
-        NSLog(@"rate=%@",[myDefaults objectForKey:@"rate"]);
+        NSLog(@"rate=%@",[apiDefaults objectForKey:@"rate"]);
         
-        
-        //    NSDictionary *appDefaults = [NSDictionary
-        //                                 dictionaryWithObject:@"default value" forKey:@"KEY0"];
-        //
-        //    [defaults registerDefaults:appDefaults];
-        
-        //
-    
-        [myDefaults synchronize];
+        [apiDefaults synchronize];
         
     }
-    
+    //結果ラベルにレートを表示
     self.resultLabel.text = [NSString stringWithFormat:@"1%@ = %@%@",fromCode,rate,toCode];
 
 }
-
-//- (void)applicationWillTerminate:(UIApplication *)application
-//    {
-//    // Saves changes in the application's managed object context before the application terminates.
-//        [self saveContext];
-//    }
-
-//    - (void)saveContext
-//    {
-//        NSError *error = nil;
-//        NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-//        if (managedObjectContext != nil) {
-//            if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-//                // Replace this implementation with code to handle the error appropriately.
-//                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//                NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-//                abort();
-//            } 
-//        }
-//    }
-
-    
-
 
 
 

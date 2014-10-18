@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "changeCViewController.h"
 #import <iAd/iAd.h>
+#import "AppDelegate.h"
 
 @interface ThirdViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,ADBannerViewDelegate>
 

@@ -64,10 +64,6 @@
     NSUserDefaults *_currencyDefaults = [NSUserDefaults standardUserDefaults];
     
     
-    
-    
-    
-    
     //?
     _alertFlag = [_currencyDefaults boolForKey:@"isShownCurrencySelectAlert"];
     

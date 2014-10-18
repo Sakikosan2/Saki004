@@ -53,12 +53,7 @@
     
     self.currencyTableView.delegate=self;
     self.currencyTableView.dataSource=self;
-    
-//    選択した通貨をユーザーデフォルトに保存
-    NSUserDefaults *_currencyDefaults = [NSUserDefaults standardUserDefaults];
-    
-    
-    
+
     
 }
 
@@ -102,157 +97,102 @@
 //TableViewのセルが選択された時に何をするか
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //アップデリゲートをインスタンス化(カプセル化)
-    AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
-    
-    //プロパティリストの中身のデータをNSDictionaryにいれる
-    NSDictionary *_currencyInfo = _currencyList[indexPath.row];
-    //APIの呼び出し
-    NSString *orign =@"http://rate-exchange.appspot.com/currency";
-    //プロパティからデータを取り出して指定
-    NSString *from_cr_code = app._localCurrency;
-    NSString *to_cr_code = app._convertCurrency;
-    NSLog(@"%@", from_cr_code);
-    NSLog(@"%@", to_cr_code);
-    // ?以降の文字列を完成させる
-    NSString *url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
-    NSLog(@"%@", url);
-    //NSURLRequestを生成
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    //サーバー（API)と通信を行い、JSON形式のデータを取得
-    NSData *json = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    //JSONをパース(データの設定)
-    NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
-    NSLog(@"%@", json);
-    NSLog(@"%@", dictionary);
-    //?
-    NSString *_localCurrency = [dictionary valueForKeyPath:@"Localcurrency"];
-    NSString *_convertCurrency = [dictionary valueForKeyPath:@"Convertcurrency"];
-    NSString *_rate  = [dictionary  valueForKeyPath:@"Rate"];
-//    NSString *fromCode = [dictionary valueForKeyPath:@"From"];
-//    NSString *rate  = [dictionary  valueForKeyPath:@"Rate"];
-//    NSString *toCode = [dictionary valueForKeyPath:@"To"];
-
-    //APIで取るべきデータがnilの時
-        if (_localCurrency ==nil) {
-            _localCurrency = @"USD";
-            _rate = @"100";
-            _convertCurrency= @"JPY";
-                
-        }else{
-            // レートを元に換算通貨における金額を計算
-            CGFloat priceOfConvertCurrency = 1 / [_rate floatValue];
-                
-            //ResultLabelに結果を表示する
-            self.resultLabel.text = [NSString stringWithFormat:@"1%@ = %f%@",_localCurrency, priceOfConvertCurrency, _convertCurrency];
-                
-        }
-    
-
-    
-    
     //dismissViewControllerAnimatedで親画面に遷移
     NSLog(@"dismiss");
     [self dismissViewControllerAnimated:YES completion:nil];
-
+    
+    //
+    [self getRate];
+ 
+    
+}
+//APIを読み出すためのメソッド
+-(void)getRate
+{
+    //APIの元のURLの呼び出し
+    NSString *orign =@"http://rate-exchange.appspot.com/currency";
+    NSLog(@"元のURlは%@",orign);
     
     
-    if (self.isSettingLocalCurrency) {
-        // 現地通貨設定の場合の処理
+    //プロパティからデータを取り出して指定
+    //? jpyとphpに指定してるから、ずっと0.4ていう値なの?
+    NSString *from_cr_code = @"jpy";
+    NSString *to_cr_code = @"php";
+    
+    
+    //エラーが起こりそうな処理を@tryで囲む
+    //@tryの前に宣言文出す
+    NSString *url;
+    NSURLRequest *request;
+    NSData *json;
+    NSDictionary *dictionary;
+    NSString *fromCode;
+    NSString *rate;
+    NSString *toCode;
+    
+    
+    @try {
+        //http://rate-exchange.appspot.com/currency/現地通貨/換算通貨.jsonとなるようにURLを生成
+        url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
         
-        if ([__currencyDefault objectForKey:@"Loculcurrency"]==nil) {
-            //UserDefaultに換算通貨が設定されていないとき暫定の値をセット
-            _localCurrency = @"USD";
-            _rate = @"100";
-            _convertCurrency= @"JPY";
-            //現地通貨設定
-            NSLog(@"%@",[_currencyInfo objectForKey:@"Code"]);
-            if (app._localCurrency == nil){
-                app._localCurrency = [NSString new];
-            }
-            app._localCurrency = [_currencyInfo objectForKey:@"Localcurrency"];
-            NSLog(@"Localcurrency");
+        //NSURLRequestを生成
+        request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
         
+        //サーバー（API)と通信を行い、JSON形式のデータを取得
+        json = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
         
-            
-            //? UserDefaultに現地通貨、換算通貨を保存する
-            NSUserDefaults *_currencyDefaults = [NSUserDefaults standardUserDefaults];
-            //現地通貨をUserDefaultに保存
-            [_currencyDefaults setObject:self.currencyTableView.indexPathForSelectedRow forKey:@"Loculcurrency"];
-            
-            NSLog(@"Loculcurrency = %@",[_currencyDefaults objectForKey:@"Loculcurrency"]);
+        //JSONをパース(データの設定)
+        dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
+        //? 
+        fromCode = [dictionary valueForKeyPath:@"from"];
+        rate  = [dictionary  valueForKeyPath:@"rate"];
+        toCode = [dictionary valueForKeyPath:@"to"];
+    }
+    //エラーが起きた時どうするか
+    @catch (NSException *exception) {
+        fromCode = nil;
+    }
+    
+    
+    
+    //JSONをパースで取れなかった時→前回保存したデータから取り出す
+    NSUserDefaults *apiDefaults = [NSUserDefaults standardUserDefaults];
+    
+    if (fromCode ==nil) {
         
+        //UserDefaultsにデータが存在するかチェック
+        if ([apiDefaults objectForKey:@"rate"]==nil) {
+            //UserDefaultsにも入っていない場合は暫定の値をセット
+            fromCode = @"usd";
+            rate = @"100";
+            toCode =@"jpy";
             
         }else{
-            
-
-            //現地通貨設定
-            NSLog(@"%@",[_currencyInfo objectForKey:@"Code"]);
-            if (app._localCurrency == nil){
-                app._localCurrency = [NSString new];
-            }
-            app._localCurrency = [_currencyInfo objectForKey:@"Localcurrency"];
-            NSLog(@"Localcurrency");
-            
-            
-            //UserDefaultに現地通貨を保存する
-            NSUserDefaults *_currencyDefaults = [NSUserDefaults standardUserDefaults];
-            //現地通貨と換算通貨をUserDefaultに保存
-            [_currencyDefaults setObject:self.currencyTableView.indexPathForSelectedRow forKey:@"Loculcurrency"];
-            NSLog(@"Loculcurrency = %@",[_currencyDefaults objectForKey:@"Loculcurrency"]);
-            
-            
+            fromCode = [apiDefaults objectForKey:@"from"];
+            rate  = [apiDefaults  objectForKey:@"rate"];
+            toCode = [apiDefaults objectForKey:@"to"];
             
         }
-        
         
         
     }else{
-        // 換算通貨設定の場合の処理
-        if ([__currencyDefault objectForKey:@"from"]==nil) {
-            //UserDefaultに換算通貨が設定されていないときは暫定の値をセット
-            _localCurrency = @"USD";
-            _rate = @"100";
-            _convertCurrency= @"JPY";
-            
-            //換算通貨設定
-            NSLog(@"%@",[_currencyInfo objectForKey:@"Code"]);
-            if (app._convertCurrency == nil){
-                app._convertCurrency = [NSString new];
-            }
-            app._convertCurrency = [_currencyInfo objectForKey:@"Convertcurrency"];
-            NSLog(@"Convertcurrency");
-            
-            
-            //UserDefaultに換算通貨を保存する
-            NSUserDefaults *_currencyDefaults = [NSUserDefaults standardUserDefaults];
-            [_currencyDefaults setObject:self.currencyTableView.indexPathForSelectedRow forKey:@"Convertcurrency"];
-            NSLog(@"Convertcurrency = %@",[_currencyDefaults objectForKey:@"Convertcurrency"]);
-
-            
-        }else{
-            
-            
-            //換算通貨設定
-            NSLog(@"%@",[_currencyInfo objectForKey:@"Code"]);
-            if (app._convertCurrency == nil){
-                app._localCurrency = [NSString new];
-            }
-            app._convertCurrency = [_currencyInfo objectForKey:@"Convertcurrency"];
-            NSLog(@"Convertcurrency");
-            
-            //UserDefaultに換算通貨を保存する
-            NSUserDefaults *_currencyDefaults = [NSUserDefaults standardUserDefaults];
-            [_currencyDefaults setObject:self.currencyTableView.indexPathForSelectedRow forKey:@"Convertcurrency"];
-            NSLog(@"Convertcurrency = %@",[_currencyDefaults objectForKey:@"Convertcurrency"]);
-
-        }
-    }
+        //APIで値がとれたのでUserDefaultsに保存
+        [apiDefaults setObject:rate forKey:@"rate"];
+        [apiDefaults setObject:fromCode forKey:@"from"];
+        [apiDefaults setObject:toCode forKey:@"to"];
         
-
+        NSLog(@"ユーザーデフォルトに保存するレートは=%@",[apiDefaults objectForKey:@"rate"]);
+        NSLog(@"ユーザーデフォルトに保存する現地通貨は=%@",[apiDefaults objectForKey:@"from"]);
+        NSLog(@"ユーザーデフォルトに保存する換算通貨は=%@",[apiDefaults objectForKey:@"to"]);
+    
+        
+        [apiDefaults synchronize];
+        
     }
+    
+}
 
-
+    
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
