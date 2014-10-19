@@ -13,9 +13,6 @@
 
 {
     NSArray *_currencyArray;
-
-    
-    
 }
 
 //メンバ変数

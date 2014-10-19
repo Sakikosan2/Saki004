@@ -39,7 +39,7 @@
     self.setTableView.dataSource = self;
     
     //API取得の自作メソッドを実行
-    [self getRate];
+//    [self getRate];
     
     ///広告
     //タブバーのサイズを調べる
@@ -127,38 +127,28 @@
 //再取得ボタンがTapされた時　APIでデータをとってくる
 -(IBAction)tapBtn:(id)sender
 {
-    [self getRate];
 }
 
-
 //APIを読み出すためのメソッド
--(void)getRate
+-(NSMutableDictionary *)getRate:(NSString *)localCurrencyCode convertCurrencyCode:(NSString *)convertCurrencyCode
 {
-    //APIの元のURLの呼び出し
-    NSString *orign =@"http://rate-exchange.appspot.com/currency";
-    NSLog(@"元のURlは%@",orign);
-    
-    
-    //プロパティからデータを取り出して指定
-    //? jpyとphpに指定してるから、ずっと0.4ていう値なの?
-    NSString *from_cr_code = @"jpy";
-    NSString *to_cr_code = @"php";
-    
-    
-    //エラーが起こりそうな処理を@tryで囲む
-    //@tryの前に宣言文出す
+    // 必要なパラメータの初期化
+    NSString *rate = [NSString new];
     NSString *url;
     NSURLRequest *request;
     NSData *json;
     NSDictionary *dictionary;
-    NSString *fromCode;
-    NSString *rate;
-    NSString *toCode;
     
+    
+    // APIにアクセスしてレートの情報を取得する
+    //APIの元のURLの呼び出し
+    NSString *origin =@"http://rate-exchange.appspot.com/currency";
+    
+    //エラーが起こりそうな処理を@tryで囲む
     
     @try {
         //http://rate-exchange.appspot.com/currency/現地通貨/換算通貨.jsonとなるようにURLを生成
-        url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
+        url = [NSString stringWithFormat:@"%@?from=%@&to=%@",origin ,localCurrencyCode, convertCurrencyCode];
         
         //NSURLRequestを生成
         request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
@@ -168,53 +158,24 @@
         
         //JSONをパース(データの設定)
         dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
-        //? fromCodeには何がはいるの？？
-        fromCode = [dictionary valueForKeyPath:@"from"];
-        rate  = [dictionary  valueForKeyPath:@"rate"];
-        toCode = [dictionary valueForKeyPath:@"to"];
+        
+        // レートの情報を格納(APIから欲しかったのはレートだけ)
+        rate = [dictionary  valueForKeyPath:@"rate"];
     }
     //エラーが起きた時どうするか
     @catch (NSException *exception) {
-        fromCode = nil;
+        rate = nil;
     }
     
+    // 取得したレートを含めてユーザデフォルトにデータを保存
+    NSMutableDictionary *currencySettings = [NSMutableDictionary new];
+    [currencySettings setObject:localCurrencyCode forKey:@"localCurrencyCode"];
+    [currencySettings setObject:convertCurrencyCode forKey:@"convertCurrencyCode"];
+    [currencySettings setObject:rate forKey:@"rate"];
     
-    
-    //JSONをパースで取れなかった時→前回保存したデータから取り出す
-    NSUserDefaults *apiDefaults = [NSUserDefaults standardUserDefaults];
-    
-    if (fromCode ==nil) {
-        
-        //UserDefaultsにデータが存在するかチェック
-        if ([apiDefaults objectForKey:@"rate"]==nil) {
-            //UserDefaultsにも入っていない場合は暫定の値をセット
-            fromCode = @"usd";
-            rate = @"100";
-            toCode =@"jpy";
-            
-        }else{
-            fromCode = [apiDefaults objectForKey:@"from"];
-            rate  = [apiDefaults  objectForKey:@"rate"];
-            toCode = [apiDefaults objectForKey:@"to"];
-            
-        }
-        
-        
-    }else{
-      //APIで値がとれたのでUserDefaultsに保存
-        [apiDefaults setObject:rate forKey:@"rate"];
-        [apiDefaults setObject:fromCode forKey:@"from"];
-        [apiDefaults setObject:toCode forKey:@"to"];
-        
-        NSLog(@"rate=%@",[apiDefaults objectForKey:@"rate"]);
-        
-        [apiDefaults synchronize];
-        
-    }
-    //結果ラベルにレートを表示
-    self.resultLabel.text = [NSString stringWithFormat:@"1%@ = %@%@",fromCode,rate,toCode];
-
+    return currencySettings;
 }
+
 
 
 

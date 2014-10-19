@@ -94,7 +94,7 @@
     //ユーザーデフォルトを取得
     NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
     
-    //値とキーをセットで書き込む
+    //キーを指定して値を読み出す
     NSString *budget = [_budgetDefaults stringForKey:@"Budget"];
     NSString *startdate = [_budgetDefaults stringForKey:@"Startdate"];
 

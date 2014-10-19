@@ -25,13 +25,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "changeCViewController.m"
-            timestampString = "435309869.765951"
+            filePath = "Saki004/SecondViewController.m"
+            timestampString = "435407685.508258"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "159"
-            endingLineNumber = "159"
-            landmarkName = "-getRate"
+            startingLineNumber = "371"
+            endingLineNumber = "371"
+            landmarkName = "-tapSave:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -41,13 +41,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "changeCViewController.m"
-            timestampString = "435312673.044065"
+            filePath = "Saki004/SecondViewController.m"
+            timestampString = "435402311.304836"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "111"
-            endingLineNumber = "111"
-            landmarkName = "-getRate"
+            startingLineNumber = "352"
+            endingLineNumber = "352"
+            landmarkName = "-tapSave:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -57,13 +57,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "changeCViewController.m"
-            timestampString = "435312778.044245"
+            filePath = "Saki004/SecondViewController.m"
+            timestampString = "435407685.508258"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "178"
-            endingLineNumber = "178"
-            landmarkName = "-getRate"
+            startingLineNumber = "410"
+            endingLineNumber = "410"
+            landmarkName = "-tapSave:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Saki004/SecondViewController.m"
+            timestampString = "435407419.843739"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "419"
+            endingLineNumber = "419"
+            landmarkName = "-tapSave:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

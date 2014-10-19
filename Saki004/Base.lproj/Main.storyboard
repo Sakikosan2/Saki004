@@ -218,6 +218,7 @@
                     <navigationItem key="navigationItem" id="Bjm-ul-uGb"/>
                     <connections>
                         <outlet property="Save" destination="BNT-hI-nv2" id="SSW-OU-rr5"/>
+                        <outlet property="againButton" destination="SFP-Av-BwR" id="pls-o2-X0t"/>
                         <outlet property="cancel" destination="mOO-DS-BdJ" id="wJH-ty-3O0"/>
                         <outlet property="resultLabel" destination="jLI-If-4dT" id="BxK-Yg-JU0"/>
                         <outlet property="setTableView" destination="u5m-1Q-Nya" id="d7K-sa-saL"/>

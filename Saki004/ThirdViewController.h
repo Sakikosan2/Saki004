@@ -24,6 +24,10 @@
 //TableViewの行番号を格納するselectnum
 @property(nonatomic,assign) NSInteger selectnum;
 
+@property (weak, nonatomic) IBOutlet UIButton *againButton;
+
+// 現地通貨設定か換算通貨設定かのフラグを受け取る
+@property(nonatomic) BOOL isSettingLocalCurrency;
 
 //再取得ボタンがTapされた時
 -(IBAction)tapBtn:(id)sender;

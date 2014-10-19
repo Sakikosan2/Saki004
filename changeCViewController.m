@@ -66,7 +66,7 @@
 
 
 
-//セルに内容を表示するメソッド
+//セルに内容を表示する
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifer = @"cell";
@@ -97,43 +97,75 @@
 //TableViewのセルが選択された時に何をするか
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    // データを格納するユーザデフォルトを取得
+    NSUserDefaults *currencyDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *settings = [currencyDefaults objectForKey:@"currencyDefault"];// currencyDefaultのデータを取得
+    
+    if (self.isSettingLocalCurrency) { // 現地通貨設定をしている時の処理
+        // 必要なパラメータの初期値を取得
+        NSDictionary *localCurrency = _currencyList[indexPath.row]; // ユーザが今選択した現地通貨情報
+        NSString *localCurrencyCode = localCurrency[@"Code"];
+        NSString *convertCurrencyCode = [NSString new];
+
+        // ユーザデフォルトから既に設定されているパラメータがあれば取得
+        if ([settings objectForKey:@"convertCurrencyCode"]) {  // 換算通貨設定が既になされていれば、それをconvertCurrencyにセット
+            convertCurrencyCode = [settings objectForKey:@"convertCurrencyCode"];
+        } else {    // 換算通貨設定がされていなかった場合、デフォルト値として"JPY"をセット
+            convertCurrencyCode = @"JPY";
+        }
+        
+        // apiでレートを取得
+        NSMutableDictionary *currencySettings = [self getRate:localCurrencyCode convertCurrencyCode:convertCurrencyCode];
+        
+        // ユーザデフォルトに、通貨・レートの情報を"currencyDefault"という名前で保存
+        [currencyDefaults setObject:currencySettings forKey:@"currencyDefault"];
+        [currencyDefaults synchronize];
+        
+    } else {    // 換算通貨設定をしている時の処理
+        // 必要なパラメータの初期値を取得
+        NSDictionary *convertCurrency = _currencyList[indexPath.row]; // ユーザが今選択した換算通貨情報
+        NSString *convertCurrencyCode = convertCurrency[@"Code"];
+        NSString *localCurrencyCode = [NSString new];
+        
+        // ユーザデフォルトから既に設定されているパラメータがあれば取得
+        if ([settings objectForKey:@"localCurrencyCode"]) {  // 現地通貨設定が既になされていれば、それをconvertCurrencyにセット
+            localCurrencyCode = [settings objectForKey:@"localCurrencyCode"];
+        } else {    // 現地通貨設定がされていなかった場合、デフォルト値として"JPY"をセット
+            localCurrencyCode = @"USD";
+        }
+        
+        // apiでレートを取得
+        NSMutableDictionary *currencySettings = [self getRate:localCurrencyCode convertCurrencyCode:convertCurrencyCode];
+        
+        // ユーザデフォルトに、通貨・レートの情報を"currencyDefault"という名前で保存
+        [currencyDefaults setObject:currencySettings forKey:@"currencyDefault"];
+        [currencyDefaults synchronize];
+    }
+
     //dismissViewControllerAnimatedで親画面に遷移
-    NSLog(@"dismiss");
     [self dismissViewControllerAnimated:YES completion:nil];
-    
-    //
-    [self getRate];
- 
-    
 }
+
 //APIを読み出すためのメソッド
--(void)getRate
+-(NSMutableDictionary *)getRate:(NSString *)localCurrencyCode convertCurrencyCode:(NSString *)convertCurrencyCode
 {
-    //APIの元のURLの呼び出し
-    NSString *orign =@"http://rate-exchange.appspot.com/currency";
-    NSLog(@"元のURlは%@",orign);
-    
-    
-    //プロパティからデータを取り出して指定
-    //? jpyとphpに指定してるから、ずっと0.4ていう値なの?
-    NSString *from_cr_code = @"jpy";
-    NSString *to_cr_code = @"php";
-    
-    
-    //エラーが起こりそうな処理を@tryで囲む
-    //@tryの前に宣言文出す
+    // 必要なパラメータの初期化
+    NSString *rate = [NSString new];
     NSString *url;
     NSURLRequest *request;
     NSData *json;
     NSDictionary *dictionary;
-    NSString *fromCode;
-    NSString *rate;
-    NSString *toCode;
+
     
+    // APIにアクセスしてレートの情報を取得する
+    //APIの元のURLの呼び出し
+    NSString *origin =@"http://rate-exchange.appspot.com/currency";
+    
+    //エラーが起こりそうな処理を@tryで囲む
     
     @try {
         //http://rate-exchange.appspot.com/currency/現地通貨/換算通貨.jsonとなるようにURLを生成
-        url = [NSString stringWithFormat:@"%@?from=%@&to=%@",orign,from_cr_code,to_cr_code];
+        url = [NSString stringWithFormat:@"%@?from=%@&to=%@",origin ,localCurrencyCode, convertCurrencyCode];
         
         //NSURLRequestを生成
         request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
@@ -143,56 +175,25 @@
         
         //JSONをパース(データの設定)
         dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
-        //? 
-        fromCode = [dictionary valueForKeyPath:@"from"];
-        rate  = [dictionary  valueForKeyPath:@"rate"];
-        toCode = [dictionary valueForKeyPath:@"to"];
+        
+        // レートの情報を格納(APIから欲しかったのはレートだけ)
+        rate = [dictionary  valueForKeyPath:@"rate"];
     }
     //エラーが起きた時どうするか
     @catch (NSException *exception) {
-        fromCode = nil;
+        rate = nil;
     }
     
-    
-    
-    //JSONをパースで取れなかった時→前回保存したデータから取り出す
-    NSUserDefaults *apiDefaults = [NSUserDefaults standardUserDefaults];
-    
-    if (fromCode ==nil) {
-        
-        //UserDefaultsにデータが存在するかチェック
-        if ([apiDefaults objectForKey:@"rate"]==nil) {
-            //UserDefaultsにも入っていない場合は暫定の値をセット
-            fromCode = @"usd";
-            rate = @"100";
-            toCode =@"jpy";
-            
-        }else{
-            fromCode = [apiDefaults objectForKey:@"from"];
-            rate  = [apiDefaults  objectForKey:@"rate"];
-            toCode = [apiDefaults objectForKey:@"to"];
-            
-        }
-        
-        
-    }else{
-        //APIで値がとれたのでUserDefaultsに保存
-        [apiDefaults setObject:rate forKey:@"rate"];
-        [apiDefaults setObject:fromCode forKey:@"from"];
-        [apiDefaults setObject:toCode forKey:@"to"];
-        
-        NSLog(@"ユーザーデフォルトに保存するレートは=%@",[apiDefaults objectForKey:@"rate"]);
-        NSLog(@"ユーザーデフォルトに保存する現地通貨は=%@",[apiDefaults objectForKey:@"from"]);
-        NSLog(@"ユーザーデフォルトに保存する換算通貨は=%@",[apiDefaults objectForKey:@"to"]);
-    
-        
-        [apiDefaults synchronize];
-        
-    }
-    
+    // 取得したレートを含めてユーザデフォルトにデータを保存
+    NSMutableDictionary *currencySettings = [NSMutableDictionary new];
+    [currencySettings setObject:localCurrencyCode forKey:@"localCurrencyCode"];
+    [currencySettings setObject:convertCurrencyCode forKey:@"convertCurrencyCode"];
+    [currencySettings setObject:rate forKey:@"rate"];
+
+    return currencySettings;
 }
 
-    
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
