@@ -29,7 +29,6 @@
 @property(strong,nonatomic) NSString *_localCurrency;
 @property(strong,nonatomic) NSString *_convertCurrency;
 
-@property(strong,nonatomic) NSUserDefaults *apiDefaultsls;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

@@ -38,8 +38,6 @@
     self.setTableView.delegate = self;
     self.setTableView.dataSource = self;
     
-    //API取得の自作メソッドを実行
-//    [self getRate];
     
     ///広告
     //タブバーのサイズを調べる
@@ -53,7 +51,6 @@
     [self.view addSubview:_adView];
     _adView.alpha =0.0;
     _isVisible = NO;
-    
     
 }
 
@@ -124,12 +121,27 @@
 
 
 
-//再取得ボタンがTapされた時　APIでデータをとってくる
+//再取得ボタンがTapされた時　APIデータを再取得して、ラベル(resultLabel)に表示
 -(IBAction)tapBtn:(id)sender
 {
+    
+    //? パラメータをUserDefaultからとってくる
+    // データを格納するユーザデフォルトを取得
+    NSUserDefaults *currencyDefaults = [NSUserDefaults standardUserDefaults];
+    //
+    NSMutableDictionary *currencySettings = [NSMutableDictionary new];
+    NSDictionary *currencyDictionary = [currencyDefaults objectForKey:@"currencyDefaults"];
+    currencySettings = currencyDictionary.mutableCopy;
+    NSString *rate =[NSString new];
+    rate = [currencySettings objectForKey:@"rate"];
+    NSLog(@"%@",rate);
+    
+//    self.resultLabel.text = currencySettings;
+    
+
 }
 
-//APIを読み出すためのメソッド
+//APIを呼び出すためのメソッド
 -(NSMutableDictionary *)getRate:(NSString *)localCurrencyCode convertCurrencyCode:(NSString *)convertCurrencyCode
 {
     // 必要なパラメータの初期化

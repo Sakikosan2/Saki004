@@ -40,6 +40,9 @@
     //TableView
     NSArray *_withdrawalArray;
     
+    //
+    NSString *selectedDate;
+    
     BOOL _viewFlag;
     BOOL _isVisible;
     BOOL _withdrawalFlag;
@@ -80,6 +83,7 @@
 {
     [super viewDidLoad];
     
+    NSLog(@"%@",self.selectedDate);
     
     //今日の日付をラベルに表示
     self.todayLabel.text = self.selectedDate;
@@ -351,103 +355,120 @@
 //保存ボタンが押された時
 -(IBAction)tapSave:(id)sender{
     
-    //大文字のWithdrawalmemoはkey
-    //小文字は変数名
-    NSManagedObjectContext *context = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
-    Withdrawalmemo *withdrawalmemo =[NSEntityDescription insertNewObjectForEntityForName:@"Withdrawalmemo" inManagedObjectContext:context];
-
-    // withdrawalpriceがNSNumberでないといけないので、_withdrawlPriceの文字列を一度Integerにして、NSNumber numberWithIntでNSNumber化
-    withdrawalmemo.withdrawalprice = [NSNumber numberWithInt:[_withdrawalPrice integerValue]];
-    withdrawalmemo.commissionprice = [NSNumber numberWithInt:[_commissionPrice integerValue]];
-
-    //データモデルにセットされたデータをCoreDataに保存
-    NSError *error =nil;
     
-    //CoreDataにデータを追加している
-    if ([context save:&error] == NO) {
-            abort();
-    }
-    
-    //!
     //UserDefaultに保存したデータを使って口座残高を計算
     //_budgetdefaultから_budgetPriceを読み出す
     //ユーザーデフォルトを取得
     NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
     //キーを指定して値を読み出す
     NSString *budget = [_budgetDefaults stringForKey:@"Budget"];
-    NSLog(@"---------------------");
-    NSLog(@"%@",budget);
-    NSLog(@"---------------------");
-    
-    
+ 
     //_currencySettinsの中からrateを取り出す
-    // データを格納するユーザデフォルトを取得
-    NSUserDefaults *currencySettings = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *currencySettings = [userDefaults objectForKey:@"currencyDefault"];
     NSString *rate = [currencySettings objectForKey:@"rate"];
-    NSLog(@"---------------------");
-    NSLog(@"%@",rate);
-    NSLog(@"---------------------");
+  
     
     
+    // withdrawalpriceとcommissionpriceをfloat型に変換
+    CGFloat calculateWithdrawalPrice = [_withdrawalPrice floatValue];
+    CGFloat calculateCommissionPrice = [_commissionPrice floatValue];
+    //rateをfloat型に変換
+    CGFloat calculateRate = [rate floatValue];
+    //*budgetをfloat型に変換
+    CGFloat calculateBudget = [budget floatValue];
     
-    //計算する
-    // withdrawalpriceがNSNumberでないといけないので、_withdrawlPriceの文字列を一度Integerにして、NSNumber numberWithIntでNSNumber化
-    withdrawalmemo.withdrawalprice = [NSNumber numberWithInt:[_withdrawalPrice integerValue]];
-    withdrawalmemo.commissionprice = [NSNumber numberWithInt:[_commissionPrice integerValue]];
-    
-    //? 文字列*budgetをNSIntegerに変換
-    NSNumber *calculateBudget = [NSNumber numberWithInt:[budget integerValue]];
-    //? 文字列*budgetをNSIntegerに変換
-    //dictionary型→Number型へ変化
-    NSNumber *calculateRate = [NSNumber numberWithInt:[rate integerValue]];
-    
-    
-    
+
+    //計算
     //口座残高 = {(引き出し額×レート)+(手数料額×レート)}
     //NSString *acountResult = [calculateBudget- ((_withdrawalPrice * calculateRate) + (_commissionPrice * calculateRate))];
-    //? Number型にしなくてもいけるかも？？
-    //引き出し額×レート　＝*calcurateWithdrawalPriceにする
-    NSString *calculateWithdrawalPrice = [NSString stringWithFormat:@"%@ * %@", _withdrawalPrice, calculateRate];
-    NSLog(@"引き出し額×レート = %@",calculateWithdrawalPrice);
-    //手数料額×レート = *calculateCommissionPriceにする
-    NSString *calculateCommissionPrice = [NSString stringWithFormat:@"%@ * %@", _commissionPrice, calculateRate];
-    NSLog(@"手数料額×レート = %@",calculateCommissionPrice);
-    //calcurateWithdrawalPrice + calculateCommissionPrice = calculateWholeWithdrawalPriceにする
-    NSString *calculateWholeWithdrawalPrice = [NSString stringWithFormat:@"%@ + %@",calculateWithdrawalPrice,calculateCommissionPrice];
-    NSLog(@"a + b =%@",calculateWholeWithdrawalPrice);
-    //予算額budge - calculateWholeWithdrawalPrice = acountResultにする
-    NSString *acountResult = [NSString stringWithFormat:@"%@-%@",budget,calculateWholeWithdrawalPrice];
-    NSLog(@"予算額-引き出し総額 = %@",acountResult);
+    //引き出し額×レート
+    CGFloat a = calculateWithdrawalPrice * calculateRate;
+    NSLog(@"引き出し額×レート= %f",a);
+    //手数料×レート
+    CGFloat b = calculateCommissionPrice * calculateRate;
+    NSLog(@"手数料×レート = %f",b);
     
+    //a + b = calculateWholeWithdrawalPrice
+    //ceilfで小数点以下を切り上げ/floorfで切り捨て/roundfで四捨五入
+    CGFloat calculateWholeWithdrawalPrice = ceilf(a + b);
+    NSLog(@"a+b = %f",calculateWholeWithdrawalPrice);
     
+    //予算額budge - calculateWholeWithdrawalPrice = calculateResult
+    CGFloat accountResult = calculateBudget - calculateWholeWithdrawalPrice;
+    NSLog(@"口座残高は = %f",accountResult);
+
+
+    //CoreData
+   
+    //CoreDataにセットするデータが呼び出せるかを確認
     
+    NSLog(@"acountresult = %f",accountResult);
+    NSLog(@"rate = %f",calculateRate);
+    NSLog(@"withdrawalprice = %@",_withdrawalPrice);
     
+    NSString *withdrawalcurrency = [currencySettings objectForKey:@"localCurrencyCode"];
+    NSLog(@"withdrawalcurrency = %@",withdrawalcurrency);
     
+    NSLog(@"withdrawaldate = %@",self.selectedDate);
+    NSLog(@"commissionprice = %@",_commissionPrice);
     
+    NSString *convertcurrency = [currencySettings objectForKey:@"convertCurrency"];
+    NSLog(@"convertcurrency = %@",convertcurrency);
     
-    //? コアデータの口座残高のパラメータに計算結果を代入
-    //大文字のWithdrawalmemoはkey
-    //小文字は変数名
+    NSString *startdate = [_budgetDefaults stringForKey:@"Startdate"];
+    NSLog(@"startdate = %@",startdate);
     
-    // withdrawalpriceがNSNumberでないといけないので、_withdrawlPriceの文字列を一度Integerにして、NSNumber numberWithIntでNSNumber化
-    withdrawalmemo.withdrawalprice = [NSNumber numberWithInt:[_withdrawalPrice integerValue]];
-    withdrawalmemo.commissionprice = [NSNumber numberWithInt:[_commissionPrice integerValue]];
+                             
     
-    //データモデルにセットされたデータをCoreDataに保存
-//    NSError *error =nil;
+
+    //データの管理
+    NSManagedObjectContext *context = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
     
-    //CoreDataにデータを追加している
-    if ([context save:&error] == NO) {
-        abort();
+    Withdrawalmemo *withdrawalmemo =[NSEntityDescription insertNewObjectForEntityForName:@"Withdrawalmemo" inManagedObjectContext:context];
+    
+    //?
+    for (NSDictionary; *coadataDoctonary) {
+        
     }
     
+   
+//    
+//    for (NSDictionary *placeDictionary in places) {
+//        Place *place =[NSEntityDescription insertNewObjectForEntityForName:@"Place" inManagedObjectContext:context];
+//        
+//        place.name = placeDictionary[@"name"];
+//        place.number = placeDictionary[@"number"];
+//        
+//    }
+
+    
+ 
     
     
+
+    //データモデルにセットされたデータをCoreDataに保存
+    NSError *error =nil;
     
+    //「＝＝NO：エラーが出た場合」
+    if ([context save:&error] == NO) {      //&error:プログラムでエラーが発生したときに、エラー情報を保存する
+        abort();                            //abort() は「破棄する」という意味
+    }
     
-    
-    
+    //親画面(ViewController)に戻る→ホントはdelegateメソッドでやりたい
      [self dismissViewControllerAnimated:YES completion:nil];
+    
+    //計算結果を親画面のラベル(balanceLabel)に表示する
+    
+//    //コアデータの中身をTableViewに表示する
+//    cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
+//    
+//    //placeというコアデータの0番目のデータをとってきて返す
+//    Place *place = [self.fechedResultsController objectAtIndexPath:indexPath];
+//    
+//    //メッセージ構文の中身を返す
+//    cell.textLabel.text = [place.name description];
+//    
 }
 
 - (void)didReceiveMemoryWarning

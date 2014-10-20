@@ -13,8 +13,8 @@
 @interface Withdrawalmemo : NSManagedObject
 
 @property (nonatomic, retain) NSString * convertcurrency;
-@property (nonatomic, retain) NSString * localcurrency;
-@property (nonatomic, retain) NSString * commitcurrency;
+@property (nonatomic, retain) NSString * withdrawalcurrency;
+@property (nonatomic, retain) NSString * commissioncurrency;
 @property (nonatomic, retain) NSNumber * commissionprice;
 @property (nonatomic, retain) NSNumber * rate;
 @property (nonatomic, retain) NSNumber * accountresult;

@@ -12,8 +12,8 @@
 @implementation Withdrawalmemo
 
 @dynamic convertcurrency;
-@dynamic localcurrency;
-@dynamic commitcurrency;
+@dynamic withdrawalcurrency;
+@dynamic commissioncurrency;
 @dynamic commissionprice;
 @dynamic rate;
 @dynamic accountresult;

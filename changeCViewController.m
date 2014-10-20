@@ -174,6 +174,7 @@
         json = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
         
         //JSONをパース(データの設定)
+        dictionary=[NSDictionary new];
         dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
         
         // レートの情報を格納(APIから欲しかったのはレートだけ)

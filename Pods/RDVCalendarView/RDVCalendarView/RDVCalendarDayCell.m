@@ -120,6 +120,7 @@
 
 - (void)setSelected:(BOOL)selected {
     [self setSelected:selected animated:NO];
+
 }
 
 - (BOOL)isHighlighted {

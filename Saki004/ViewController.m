@@ -70,17 +70,16 @@
 -(void)calendarView:(RDVCalendarView *)calendarView didSelectDate:(NSDate *)date
 {
     NSLog(@"%@",date);
-    
+
+    //画面オブジェクトのインスタンス化(カプセル化)
     SecondViewController *svc = [self.storyboard instantiateViewControllerWithIdentifier:@"SecondViewController"];
-    
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    
     [df setDateFormat:@"MM/dd"];
-    
     svc.selectedDate = [df stringFromDate:date];
     
     
     [self presentViewController:svc animated:YES completion:nil];
+    
     
     
     
