@@ -25,6 +25,7 @@
 
 @interface RDVDayCell : RDVCalendarDayCell
 
+//カレンダーの日付を指す印
 @property (nonatomic) UIView *notificationView;
 
 @end

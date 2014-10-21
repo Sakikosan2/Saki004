@@ -17,8 +17,6 @@
 
 @interface SecondViewController : UIViewController<ADBannerViewDelegate,UITableViewDataSource,UITableViewDelegate,UITabBarDelegate,NSFetchedResultsControllerDelegate>
 
-
-
 //
 //@protocol SecondViewDelegate <NSObject>
 //-(void) modalViewWillClose;
@@ -37,15 +35,12 @@
 
 
 @property(strong,nonatomic)NSManagedObjectContext *managedObjectContext;
-
-@property(strong,nonatomic)NSFetchedResultsController *fechedResultController;
-
-
+@property(strong,nonatomic)NSFetchedResultsController *fetchedResultController;
 
 
 @property (weak, nonatomic) IBOutlet UITableView *withdrawalTableView;
 @property (weak, nonatomic) IBOutlet UILabel *todayLabel;
-@property (strong,nonatomic) NSString *selectedDate;
+@property (strong,nonatomic) NSDate *selectedDate;
 @property (weak, nonatomic) IBOutlet UIButton *Cancel;
 @property (weak, nonatomic) IBOutlet UIButton *Save;
 

@@ -458,15 +458,11 @@
     }
 }
 
-
-//?
 - (NSDate *)selectedDate {
     if ([self selectedDay]) {
         return [[self calendar] dateFromComponents:[self selectedDay]];
     }
     return nil;
-    
-    
 }
 
 #pragma mark - Accessing day cells

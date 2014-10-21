@@ -65,6 +65,8 @@
     return [self initWithReuseIdentifier:@""];
 }
 
+
+//カレンダーの日付を指す印の位置と色を指定
 - (void)layoutSubviews {
     CGSize frameSize = self.frame.size;
     CGSize titleSize = [[self textLabel] sizeThatFits:CGSizeMake(frameSize.width, frameSize.height)];

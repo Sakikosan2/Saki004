@@ -17,7 +17,6 @@
 
 @implementation ViewController
 
-
 //カレンダーライブラリを追加する
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -33,6 +32,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
     [[self.navigationController navigationBar] setTranslucent:NO];
     
     //カレンダーを読み込んで表示
@@ -59,7 +59,7 @@
     lastwithdrawalLabel.frame = CGRectMake(20, self.view.bounds.size.height -60, 200, 20);
     
     lastwithdrawalLabel.text = @"前回引き出し日";
-    
+    //表示されてない！
     [[self calendarView] addSubview:lastwithdrawalLabel];
     
 }
@@ -73,9 +73,10 @@
 
     //画面オブジェクトのインスタンス化(カプセル化)
     SecondViewController *svc = [self.storyboard instantiateViewControllerWithIdentifier:@"SecondViewController"];
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"MM/dd"];
-    svc.selectedDate = [df stringFromDate:date];
+    //日付はdata型だからそのままでいい　→保存するときはフルのデータで保存！
+//    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+//    [df setDateFormat:@"MM/dd"];
+    svc.selectedDate = date;
     
     
     [self presentViewController:svc animated:YES completion:nil];
@@ -85,11 +86,11 @@
     
     }
     
-
+//カレンダーの日付の印を表示するかどうか
 - (void)calendarView:(RDVCalendarView *)calendarView configureDayCell:(RDVCalendarDayCell *)dayCell
              atIndex:(NSInteger)index {
     RDVDayCell *exampleDayCell = (RDVDayCell *)dayCell;
-    if (index % 5 == 0) {
+    if (index % 3) {
         [[exampleDayCell notificationView] setHidden:NO];
     }
 }

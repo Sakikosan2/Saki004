@@ -8,13 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "RDVCalendarViewController.h"
+#import <CoreData/CoreData.h>
 
-
-@interface ViewController : RDVCalendarViewController
-
+@interface ViewController : RDVCalendarViewController<NSFetchedResultsControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *balanceLabel;
-
 @property (weak, nonatomic) IBOutlet UILabel *lastwithdrawalLabel;
+@property (strong, nonatomic)NSFetchedResultsController *fetchedResultController;
 
 @end

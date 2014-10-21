@@ -67,7 +67,6 @@
 //コアデータ
 -(void)saveContext
 {
-    
     NSError *error = nil;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext != nil) {
@@ -122,7 +121,7 @@
     if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
         
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-//        abort();
+        abort();
         //コアデータに関するError？
     }
     

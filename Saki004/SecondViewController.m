@@ -40,8 +40,8 @@
     //TableView
     NSArray *_withdrawalArray;
     
-    //
-    NSString *selectedDate;
+//    //
+//    NSString *selectedDate;
     
     BOOL _viewFlag;
     BOOL _isVisible;
@@ -83,10 +83,48 @@
 {
     [super viewDidLoad];
     
+NSLog(@"=====================");
+//コアデータ
+self.managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
+    
+//nilのとき
+NSEntityDescription *Withdrawalmemo = [NSEntityDescription entityForName:@"Withdrawalmemo" inManagedObjectContext:self.managedObjectContext];
+
+//一行ずつデータを取得する
+NSFetchRequest *fetchRequest = [NSFetchRequest new];
+
+//なんのモデルを取り出すのかを指定。FetchRequestはEntityじゃないとだめ。
+[fetchRequest setEntity:Withdrawalmemo];
+
+//一度にコアデータの中から何データをとってくるか（コアデータから何件ずつとってくるかをかくだけ）
+[fetchRequest setFetchBatchSize:20];
+
+//そのリストをどんな順序で並べるのか　ascending:並べ方　Yes:昇順、No:降順
+//条件を複数個指定できるため、配列型
+[fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"withdrawaldate" ascending:NO]]];
+
+//fechedResultControllerの初期化
+//「cache」同じキャッシュの場合、削除する。cachenemaはなんでも可。
+_fetchedResultController = [[NSFetchedResultsController alloc]initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    
+NSError *error = nil;
+if ([_fetchedResultController performFetch:&error]) {
+    abort();
+}
+
+NSLog(@"%@", _fetchedResultController);
+    
+NSLog(@"=====================");
+    
     NSLog(@"%@",self.selectedDate);
     
     //今日の日付をラベルに表示
-    self.todayLabel.text = self.selectedDate;
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"MM/dd"];
+
+    self.todayLabel.text = [df stringFromDate:self.selectedDate];
+    
+    
     
     
     //TableView
@@ -132,8 +170,6 @@
     _isVisible = NO;
     
     
-    //コアデータ
-    self.managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
     
 
 
@@ -234,17 +270,19 @@
 }
 
 //FetchedResultsControllerのデータセット
--(NSFetchedResultsController *) fechedResultsController{
-        
+-(NSFetchedResultsController *)fetchedResultsController{
+    
+NSLog(@"hogehogehoge");
+    
         //データが入っているとき = そのデータをそのまま返す
-        if (_fechedResultController) {
-            return _fechedResultController;
+        if (_fetchedResultController) {
+            return _fetchedResultController;
             
         }
         
         //nilのとき
-        NSEntityDescription *Withdrawalmemo = [NSEntityDescription entityForName:@"withdrawalprice" inManagedObjectContext:self.managedObjectContext];
-        
+        NSEntityDescription *Withdrawalmemo = [NSEntityDescription entityForName:@"Withdrawalmemo" inManagedObjectContext:self.managedObjectContext];
+    
         //一行ずつデータを取得する
         NSFetchRequest *fetchRequest = [NSFetchRequest new];
         
@@ -256,18 +294,16 @@
         
         //そのリストをどんな順序で並べるのか　ascending:並べ方　Yes:昇順、No:降順
         //条件を複数個指定できるため、配列型
-        [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"withdrawalprice" ascending:NO],]];
-        
-        
+        [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"withdrawaldate" ascending:NO],]];
+    
         //fechedResultControllerの初期化
         //「cache」同じキャッシュの場合、削除する。cachenemaはなんでも可。
-        _fechedResultController = [[NSFetchedResultsController alloc]initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:@"ViewController"];
+        _fetchedResultController = [[NSFetchedResultsController alloc]initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:@"ViewController"];
         
         
-        _fechedResultController.delegate = self;
-        return _fechedResultController;
-        
-    }
+        _fetchedResultController.delegate = self;
+        return _fetchedResultController;
+}
 
 
 //広告
@@ -413,7 +449,7 @@
     NSLog(@"withdrawaldate = %@",self.selectedDate);
     NSLog(@"commissionprice = %@",_commissionPrice);
     
-    NSString *convertcurrency = [currencySettings objectForKey:@"convertCurrency"];
+    NSString *convertcurrency = [currencySettings objectForKey:@"convertCurrencyCode"];
     NSLog(@"convertcurrency = %@",convertcurrency);
     
     NSString *startdate = [_budgetDefaults stringForKey:@"Startdate"];
@@ -423,52 +459,81 @@
     
 
     //データの管理
-    NSManagedObjectContext *context = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    // 新規にNSManagedObjectを生成する
+//    NSManagedObjectContext *context = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    //AppDelegateで宣言してるからいらない？
     
-    Withdrawalmemo *withdrawalmemo =[NSEntityDescription insertNewObjectForEntityForName:@"Withdrawalmemo" inManagedObjectContext:context];
+    //生成時にEntitiy名を指定して、どのEntity（テーブル）に登録するのかを指定
+    Withdrawalmemo *withdrawalmemo =[NSEntityDescription insertNewObjectForEntityForName:@"Withdrawalmemo" inManagedObjectContext:_managedObjectContext];
     
-    //?
-    for (NSDictionary; *coadataDoctonary) {
-        
-    }
+
+    //dictionary型に入れたほうがいいのかも？
     
-   
+    
+    // 作成したNSManagedObjectインスタンス(withdrawalmemo)に値を設定する
+    //int型float型はNSNumber型に保存してからでないとNSManagedObjectに保存できない
+    //float型の変数→Number型に変換
+    NSNumber *accountResultNew = [NSNumber numberWithFloat:accountResult];  //?変換できてないーー
+    NSNumber *calculateRateNew = [NSNumber numberWithFloat:calculateRate];
+    //string型→Number型の時は一度int型に変換してからNumber型にする
+    NSNumber *withdrawalPriceNew  = [NSNumber numberWithInt:[@"withdrawalprice" intValue]];
+    NSNumber *commissionPriceNew  = [NSNumber numberWithInt:[@"commissionprice" intValue]];
+    //date型→string型　（date型の時はそのまま突っ込んでOK）
+    
+    //withdrawalmemoにキーを指定して値をセット
+    [withdrawalmemo setValue:accountResultNew   forKey:@"accountresult"];
+    [withdrawalmemo setValue:calculateRateNew forKey:@"rate"];
+    [withdrawalmemo setValue:withdrawalPriceNew forKey:@"withdrawalprice"];
+    [withdrawalmemo setValue:commissionPriceNew forKey:@"commissionprice"];
+    [withdrawalmemo setValue:convertcurrency forKey:@"convertcurrency"];
+    [withdrawalmemo setValue:convertcurrency forKey:@"commissioncurrency"];
+    [withdrawalmemo setValue:self.selectedDate forKey:@"withdrawaldate"];
+    [withdrawalmemo setValue:withdrawalcurrency forKey:@"withdrawalcurrency"];
+    [withdrawalmemo setValue:startdate forKey:@"startdate"];
+    
+
+//
+//    //
+//    Withdrawalmemo.accountresult = accountResult;
+//    Withdrawalmemo.
 //    
-//    for (NSDictionary *placeDictionary in places) {
-//        Place *place =[NSEntityDescription insertNewObjectForEntityForName:@"Place" inManagedObjectContext:context];
-//        
-//        place.name = placeDictionary[@"name"];
-//        place.number = placeDictionary[@"number"];
-//        
-//    }
-
-    
- 
     
     
-
-    //データモデルにセットされたデータをCoreDataに保存
-    NSError *error =nil;
-    
-    //「＝＝NO：エラーが出た場合」
-    if ([context save:&error] == NO) {      //&error:プログラムでエラーが発生したときに、エラー情報を保存する
-        abort();                            //abort() は「破棄する」という意味
+    // 作成したNSManagedObjectをDBに保存
+    NSError *error = nil;
+    if (![_managedObjectContext save:&error]) {
+        NSLog(@"error = %@", error);
+    } else {
+        NSLog(@"Insert Completed.");
     }
+    NSLog(@"コアデータに保存したよー！");
     
-    //親画面(ViewController)に戻る→ホントはdelegateメソッドでやりたい
-     [self dismissViewControllerAnimated:YES completion:nil];
+    
+    //CoreDataに保存されたデータを使って計算
+    //口座残高 = {(引き出し額×レート)+(手数料額×レート)}
+    //NSString *acountResult = [calculateBudget- ((_withdrawalPrice * calculateRate) + (_commissionPrice * calculateRate))];
+    //CoreDataを呼び出す
+
+    
     
     //計算結果を親画面のラベル(balanceLabel)に表示する
     
-//    //コアデータの中身をTableViewに表示する
-//    cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
-//    
-//    //placeというコアデータの0番目のデータをとってきて返す
-//    Place *place = [self.fechedResultsController objectAtIndexPath:indexPath];
-//    
-//    //メッセージ構文の中身を返す
-//    cell.textLabel.text = [place.name description];
-//    
+    //    //コアデータの中身をTableViewに表示する
+    //    cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
+    //
+    //    //placeというコアデータの0番目のデータをとってきて返す
+    //    Place *place = [self.fechedResultsController objectAtIndexPath:indexPath];
+    //
+    //    //メッセージ構文の中身を返す
+    //    cell.textLabel.text = [place.name description];
+    //
+    
+ 
+   
+   
+    //親画面(ViewController)に戻る→ホントはdelegateメソッドでやりたい
+     [self dismissViewControllerAnimated:YES completion:nil];
+ 
 }
 
 - (void)didReceiveMemoryWarning
