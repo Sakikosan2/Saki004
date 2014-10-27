@@ -10,8 +10,19 @@
 //コアデータ
 #import <CoreData/CoreData.h>
 
-
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
+{
+    UITabBarController *tabBarController;
+}
+
+#pragma mark method prototype
+- (void)switchTabBarController:(NSInteger)selectedViewIndex;
+
+
+//日付取得用
+@property (nonatomic, assign) long year;
+@property (nonatomic, assign) long month;
+@property (nonatomic, assign) long day;
 
 @property (strong, nonatomic) UIWindow *window;
 

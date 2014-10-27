@@ -29,6 +29,7 @@
 // 現地通貨設定か換算通貨設定かのフラグを受け取る
 @property(nonatomic) BOOL isSettingLocalCurrency;
 
+
 //再取得ボタンがTapされた時
 -(IBAction)tapBtn:(id)sender;
 //CancelボタンがTapされた時

@@ -15,10 +15,10 @@
 @property (nonatomic, retain) NSString * convertcurrency;
 @property (nonatomic, retain) NSString * withdrawalcurrency;
 @property (nonatomic, retain) NSString * commissioncurrency;
+@property (nonatomic, retain) NSString * startdate;
 @property (nonatomic, retain) NSNumber * commissionprice;
 @property (nonatomic, retain) NSNumber * rate;
 @property (nonatomic, retain) NSNumber * accountresult;
-@property (nonatomic, retain) NSDate   * startdate;
 @property (nonatomic, retain) NSDate   * withdrawaldate;
 @property (nonatomic, retain) NSNumber * withdrawalprice;
 

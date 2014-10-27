@@ -26,16 +26,88 @@
     
     //0.コアデータを扱うためにpersistentStoreCoodinaterを呼び出す
     [self persistentStoreCoordinator];
-    
     [self managedObjectContext];
+
+    //window初期化
+//    CGRect bounds = [[UIScreen mainScreen] bounds];
+//    _window = [[UIWindow alloc] initWithFrame:bounds];
+    
+    //UITabBarController初期化
+//    [self initTabBarController];
+    
     
     return YES;
-    
 }
 
+////UITabBarController初期化
+//- (void)initTabBarController
+//{
+////    //基点となる Controller生成
+////    tabBarController_ = [[UITabBarController alloc] init];
+//    
+////    //タブの背景画像と選択時の背景画像を設定
+////    [[UITabBar appearance] setBackgroundImage:[UIImage imageNamed:@"tab_background.png"]];
+////    [[UITabBar appearance] setSelectionIndicatorImage:[UIImage imageNamed:@"tab_selection_indicator.png"]];
+//    
+//    //タブメニュー選択時のビュー生成
+//    UIViewController *viewcontroller =[UIViewController new];
+////    
+////    
+////    FirstViewController  *tabFirstVC  = [[FirstViewController alloc] init];
+////    SecondViewController *tabSecondVC = [[SecondViewController alloc] init];
+////    ThirdViewController  *tabThirdVC  = [[ThirdViewController alloc] init];
+////    FourthViewController *tabFourthVC = [[FourthViewController alloc] init];
+////    FifthViewController  *tabFifthVC  = [[FifthViewController alloc] init];
+////    
+////    //タブのアイコン指定
+////    [tabFirstVC.tabBarItem setFinishedSelectedImage:[UIImage imageNamed:@"tab_icon1-o.png"]
+////                        withFinishedUnselectedImage:[UIImage imageNamed:@"tab_icon1.png"]];
+////    [tabSecondVC.tabBarItem setFinishedSelectedImage:[UIImage imageNamed:@"tab_icon2-o.png"]
+////                         withFinishedUnselectedImage:[UIImage imageNamed:@"tab_icon2.png"]];
+////    [tabThirdVC.tabBarItem setFinishedSelectedImage:[UIImage imageNamed:@"tab_icon3-o.png"]
+////                        withFinishedUnselectedImage:[UIImage imageNamed:@"tab_icon3.png"]];
+////    [tabFourthVC.tabBarItem setFinishedSelectedImage:[UIImage imageNamed:@"tab_icon4-o.png"]
+////                         withFinishedUnselectedImage:[UIImage imageNamed:@"tab_icon4.png"]];
+////    [tabFifthVC.tabBarItem setFinishedSelectedImage:[UIImage imageNamed:@"tab_icon5-o.png"]
+////                        withFinishedUnselectedImage:[UIImage imageNamed:@"tab_icon5.png"]];
+////    
+////    //タブのタイトル指定
+////    [tabFirstVC setTitle:@"First"];
+////    [tabSecondVC setTitle:@"Second"];
+////    [tabThirdVC setTitle:@"Third"];
+////    [tabFourthVC setTitle:@"Fourth"];
+////    [tabFifthVC setTitle:@"Fifth"];
+//    
+//    //タブのタイトル位置設定
+//    [[UITabBarItem appearance] setTitlePositionAdjustment:UIOffsetMake(0, -1)];
+//    
+//    
+//    //タブのフォントを指定
+//    UIFont *font = [UIFont systemFontOfSize:10.0f];
+//    
+//    //タブのタイトル色指定
+//    [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor grayColor], UITextAttributeTextColor,nil] forState:UIControlStateNormal];
+//
+//    
+//    //タブのタイトル色指定(選択中)
+//    [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:0.180 green:0.925 blue:0.443 alpha:1.0], UITextAttributeTextColor,nil] forState:UIControlStateSelected];
+//    
+////    //ビューを Controllerに追加
+////    NSArray *controllers = [NSArray arrayWithObjects:viewcontroller, tabSecondVC, tabThirdVC, tabFourthVC, tabFifthVC, nil];
+////    [(UITabBarController *)tabBarController_ setViewControllers:controllers animated:NO];
+////    
+////    //windowに Controllerのビュー追加
+////    [_window addSubview:tabBarController_.view];
+////    [_window makeKeyAndVisible];
+//}
 
+//タブ切り替え
+//- (void)switchTabBarController:(NSInteger)selectedViewIndex
+//{
+//    UITabBarController *controller = (UITabBarController *)tabBarController;
+//    controller.selectedViewController = [controller.viewControllers objectAtIndex:selectedViewIndex];
+//}
 
-    
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -44,6 +116,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }

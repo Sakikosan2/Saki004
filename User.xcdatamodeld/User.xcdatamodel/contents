@@ -6,7 +6,7 @@
         <attribute name="commissionprice" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="convertcurrency" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="rate" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="startdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="startdate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="withdrawalcurrency" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="withdrawaldate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="withdrawalprice" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>

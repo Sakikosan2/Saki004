@@ -15,6 +15,8 @@
 {
     NSArray *_currencyList;
     NSString *_currency;
+    
+    
 
 }
 
@@ -46,14 +48,14 @@
     NSDictionary *dic = [NSDictionary dictionaryWithContentsOfFile:path];
     
     _currencyList = [dic objectForKey:@"CurrencyList"];
-    NSLog(@"List");
     
     [NSArray arrayWithContentsOfFile:path];
-    
     
     self.currencyTableView.delegate=self;
     self.currencyTableView.dataSource=self;
 
+   
+    
     
 }
 
@@ -116,10 +118,18 @@
         
         // apiでレートを取得
         NSMutableDictionary *currencySettings = [self getRate:localCurrencyCode convertCurrencyCode:convertCurrencyCode];
-        
-        // ユーザデフォルトに、通貨・レートの情報を"currencyDefault"という名前で保存
-        [currencyDefaults setObject:currencySettings forKey:@"currencyDefault"];
-        [currencyDefaults synchronize];
+        if ([currencySettings count]) {
+            // ユーザデフォルトに、通貨・レートの情報を"currencyDefault"という名前で保存
+            [currencyDefaults setObject:currencySettings forKey:@"currencyDefault"];
+            [currencyDefaults synchronize];
+            //dismissViewControllerAnimatedで親画面に遷移
+            [self dismissViewControllerAnimated:YES completion:nil];
+            
+            
+        } else {
+            [self showAlert :nil];
+            
+        }
         
     } else {    // 換算通貨設定をしている時の処理
         // 必要なパラメータの初期値を取得
@@ -136,15 +146,37 @@
         
         // apiでレートを取得
         NSMutableDictionary *currencySettings = [self getRate:localCurrencyCode convertCurrencyCode:convertCurrencyCode];
+        NSLog(@"%@", currencySettings[@"rate"]);
+        if ([currencySettings count]) {
+            // ユーザデフォルトに、通貨・レートの情報を"currencyDefault"という名前で保存
+            [currencyDefaults setObject:currencySettings forKey:@"currencyDefault"];
+            [currencyDefaults synchronize];
+            //dismissViewControllerAnimatedで親画面に遷移
+            [self dismissViewControllerAnimated:YES completion:nil];
+        } else {
+            [self showAlert :nil];
+        }
         
-        // ユーザデフォルトに、通貨・レートの情報を"currencyDefault"という名前で保存
-        [currencyDefaults setObject:currencySettings forKey:@"currencyDefault"];
-        [currencyDefaults synchronize];
+
     }
 
-    //dismissViewControllerAnimatedで親画面に遷移
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+
+//API通信エラーの際に「再試行」のアラートを表示
+- (void)showAlert:(NSString*)text
+{
+
+        // UIAlertViewを使ってアラートを表示
+        UIAlertView *apiAlert = [[UIAlertView alloc] initWithTitle:@"再試行してください"
+                                                        message:text
+                                                       delegate:nil
+                                              cancelButtonTitle:nil
+                                              otherButtonTitles:@"OK", nil];
+        [apiAlert show];
+
+}
+
 
 //APIを読み出すためのメソッド
 -(NSMutableDictionary *)getRate:(NSString *)localCurrencyCode convertCurrencyCode:(NSString *)convertCurrencyCode
@@ -164,6 +196,7 @@
     //エラーが起こりそうな処理を@tryで囲む
     
     @try {
+        
         //http://rate-exchange.appspot.com/currency/現地通貨/換算通貨.jsonとなるようにURLを生成
         url = [NSString stringWithFormat:@"%@?from=%@&to=%@",origin ,localCurrencyCode, convertCurrencyCode];
         
@@ -172,7 +205,7 @@
         
         //サーバー（API)と通信を行い、JSON形式のデータを取得
         json = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-        
+
         //JSONをパース(データの設定)
         dictionary=[NSDictionary new];
         dictionary = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:nil];
@@ -183,16 +216,23 @@
     //エラーが起きた時どうするか
     @catch (NSException *exception) {
         rate = nil;
+        
+        
+    
     }
     
     // 取得したレートを含めてユーザデフォルトにデータを保存
     NSMutableDictionary *currencySettings = [NSMutableDictionary new];
-    [currencySettings setObject:localCurrencyCode forKey:@"localCurrencyCode"];
-    [currencySettings setObject:convertCurrencyCode forKey:@"convertCurrencyCode"];
-    [currencySettings setObject:rate forKey:@"rate"];
+    if (rate) {
+        [currencySettings setObject:localCurrencyCode forKey:@"localCurrencyCode"];
+        [currencySettings setObject:convertCurrencyCode forKey:@"convertCurrencyCode"];
+        [currencySettings setObject:rate forKey:@"rate"];
+    }
 
     return currencySettings;
 }
+
+
 
 
 - (void)didReceiveMemoryWarning
@@ -203,4 +243,9 @@
 
 
 
+- (IBAction)tapBackButton:(id)sender {
+    
+    //dismissViewControllerAnimatedで親画面に遷移
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 @end

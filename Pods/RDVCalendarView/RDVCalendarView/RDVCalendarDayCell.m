@@ -72,6 +72,9 @@
     CGSize titleSize = [[self textLabel] sizeThatFits:CGSizeMake(frameSize.width, frameSize.height)];
     
     [[self backgroundView] setFrame:self.bounds];
+    
+
+    //? カレンダー選択された日付の反転を丸くする
     [[self selectedBackgroundView] setFrame:self.bounds];
     [[self contentView] setFrame:self.bounds];
     

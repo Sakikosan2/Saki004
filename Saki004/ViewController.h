@@ -9,11 +9,17 @@
 #import <UIKit/UIKit.h>
 #import "RDVCalendarViewController.h"
 #import <CoreData/CoreData.h>
+#import "SecondViewController.h"
+#import "Withdrawalmemo.h"
 
 @interface ViewController : RDVCalendarViewController<NSFetchedResultsControllerDelegate>
 
-@property (weak, nonatomic) IBOutlet UILabel *balanceLabel;
-@property (weak, nonatomic) IBOutlet UILabel *lastwithdrawalLabel;
+@property (strong, nonatomic) UILabel *balanceLabel;
+@property (strong, nonatomic) UILabel *lastwithdrawalLabel;
+
+//NSManagedObjectContext　はデータの管理(データをの追加、削除)をするオブジェクト(①)
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+
 @property (strong, nonatomic)NSFetchedResultsController *fetchedResultController;
 
 @end

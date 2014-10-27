@@ -62,9 +62,11 @@
         _separators = [[NSMutableArray alloc] initWithCapacity:12];
         
         // Setup defaults
+        //今日の日付をグリーンにする
+        _currentDayColor = [UIColor colorWithRed:0.400 green:1.000 blue:0.600 alpha:0.8];
         
-        _currentDayColor = [UIColor colorWithRed:80/255.0 green:200/255.0 blue:240/255.0 alpha:1.0];
-        _selectedDayColor = [UIColor grayColor];
+        //選択された日付のセルを薄いグレーにする(#66FF99)
+        _selectedDayColor = [UIColor colorWithRed:0.663 green:0.663 blue:0.663 alpha:0.8];
         _separatorColor = [UIColor lightGrayColor];
         
         _separatorEdgeInsets = UIEdgeInsetsZero;
@@ -76,21 +78,23 @@
         
         // Setup header view
         
+        //月表示の色をグレーにする
         _monthLabel = [[UILabel alloc] init];
         [_monthLabel setFont:[UIFont systemFontOfSize:22]];
-        [_monthLabel setTextColor:[UIColor blackColor]];
+        [_monthLabel setTextColor:[UIColor colorWithRed:0.388 green:0.396 blue:0.416 alpha:1.0]];
         [_monthLabel setTextAlignment:NSTextAlignmentCenter];
         [self addSubview:_monthLabel];
         
+        //buckButtonとforwarButtonをグリーンにする
         _backButton = [[UIButton alloc] init];
-        [_backButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        [_backButton setTitleColor:[UIColor colorWithRed:0.235 green:0.835 blue:0.686 alpha:1.0] forState:UIControlStateNormal];
         [_backButton setTitle:@"Prev" forState:UIControlStateNormal];
         [_backButton addTarget:self action:@selector(showPreviousMonth)
               forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_backButton];
         
         _forwardButton = [[UIButton alloc] init];
-        [_forwardButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        [_forwardButton setTitleColor:[UIColor colorWithRed:0.235 green:0.835 blue:0.686 alpha:1.0] forState:UIControlStateNormal];
         [_forwardButton setTitle:@"Next" forState:UIControlStateNormal];
         [_forwardButton addTarget:self action:@selector(showNextMonth)
                  forControlEvents:UIControlEventTouchUpInside];

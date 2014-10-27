@@ -28,13 +28,42 @@
 
 @implementation ThirdViewController
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    //選択した通貨を表示する
+    //Userdefaultにある現地通貨を呼び出す
+    //Userdefaultにある換算通貨を呼び出す
+  
+    
+    // データを格納するユーザデフォルトを取得
+    NSUserDefaults *currencyDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *settings = [currencyDefaults objectForKey:@"currencyDefault"];// currencyDefaultのデータを取得
+
+    //キーを指定して値を読み出す
+    NSString *localCurrencyName = [settings objectForKey:@"localCurrencyCode"];
+    NSString *convertCurrencyName = [settings objectForKey:@"convertCurrencyCode"];
+    NSString *rate = [settings objectForKey:@"rate"];
+    
+    //TableViewに呼び出したデータを反映する
+    NSString *localCurrencyText = [NSString stringWithFormat:@"現地通貨 %@",localCurrencyName];
+    NSString *convertCurrencyText = [NSString stringWithFormat:@"換算通貨 %@",convertCurrencyName];
+    _currencyArray =@[localCurrencyText, convertCurrencyText];
+    
+    //レートをラベルに表示する
+    NSString *rateText = [NSString stringWithFormat:@"%@",rate];
+    self.resultLabel.text =rateText;
+
+    // テーブルビューを再度読み込み直す(毎回TableViewを作り直す）
+    [self.setTableView reloadData];
+}
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     //現地通貨設定、換算通貨設定を配列に入れる
-    _currencyArray =@[@"現地通貨設定",@"換算通貨設定"];
+    _currencyArray =@[@"   現地通貨",@"   予算通貨"];
     self.setTableView.delegate = self;
     self.setTableView.dataSource = self;
     
@@ -52,10 +81,19 @@
     _adView.alpha =0.0;
     _isVisible = NO;
     
+    //TableViewの余計な行の削除
+    UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
+    view.backgroundColor = [UIColor clearColor];
+    //[self.tableView setTableHeaderView:view];
+    [self.setTableView setTableFooterView:view];
+    
+    // デリゲートの設定
+    self.setTableView.delegate = self;
+    self.setTableView.dataSource = self;
 }
 
 ///TableViewの設定
-//セクション数r
+//セクション数
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -72,7 +110,8 @@
 //行数を返す
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _currencyArray.count;
+//    return _currencyArray.count;
+    return 2;
 }
 
 
@@ -87,7 +126,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifer];
     }
-    cell.textLabel.text = [NSString stringWithFormat:@"行番号=%d",indexPath.row];
+//    cell.textLabel.text = [NSString stringWithFormat:@"行番号=%d",indexPath.row];
     cell.textLabel.text = _currencyArray[indexPath.row];
     return cell;
     
@@ -124,19 +163,18 @@
 //再取得ボタンがTapされた時　APIデータを再取得して、ラベル(resultLabel)に表示
 -(IBAction)tapBtn:(id)sender
 {
-    
-    //? パラメータをUserDefaultからとってくる
     // データを格納するユーザデフォルトを取得
     NSUserDefaults *currencyDefaults = [NSUserDefaults standardUserDefaults];
-    //
-    NSMutableDictionary *currencySettings = [NSMutableDictionary new];
-    NSDictionary *currencyDictionary = [currencyDefaults objectForKey:@"currencyDefaults"];
-    currencySettings = currencyDictionary.mutableCopy;
-    NSString *rate =[NSString new];
-    rate = [currencySettings objectForKey:@"rate"];
-    NSLog(@"%@",rate);
+    NSDictionary *settings = [currencyDefaults objectForKey:@"currencyDefault"];// currencyDefaultのデータを取得
     
-//    self.resultLabel.text = currencySettings;
+    //キーを指定して値を読み出す
+    NSString *rate = [settings objectForKey:@"rate"];
+    
+    //ラベルに表示する
+    NSString *rateText = [NSString stringWithFormat:@"%@",rate];
+    self.resultLabel.text =rateText;
+    
+
     
 
 }

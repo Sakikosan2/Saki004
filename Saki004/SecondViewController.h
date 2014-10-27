@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
+#import "Withdrawalmemo.h"
 
 //広告バナー追加
 #import <iAd/iAd.h>
@@ -36,7 +37,7 @@
 
 @property(strong,nonatomic)NSManagedObjectContext *managedObjectContext;
 @property(strong,nonatomic)NSFetchedResultsController *fetchedResultController;
-
+@property(strong,nonatomic)Withdrawalmemo *withdrawalmemo;
 
 @property (weak, nonatomic) IBOutlet UITableView *withdrawalTableView;
 @property (weak, nonatomic) IBOutlet UILabel *todayLabel;

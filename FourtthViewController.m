@@ -76,6 +76,7 @@
         
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"通貨設定は済んでいますか？" message:@"通貨設定画面で設定できます" delegate:self cancelButtonTitle:@"いいえ、これからです" otherButtonTitles:@"はい、済んでいます", nil];
         
+        
         [alert show];
         _alertFlag = YES;
     }
@@ -94,7 +95,7 @@
     //ユーザーデフォルトを取得
     NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
     
-    //キーを指定して値を読み出す
+    //値とキーをセットで取り出す
     NSString *budget = [_budgetDefaults stringForKey:@"Budget"];
     NSString *startdate = [_budgetDefaults stringForKey:@"Startdate"];
 
@@ -109,6 +110,14 @@
 //    //入力した内容を初期化する
 //    [self.setBTableView reloadData];
     
+    
+    
+    //TableViewの余計な行の削除
+    UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
+    view.backgroundColor = [UIColor clearColor];
+    //[self.tableView setTableHeaderView:view];
+    [self.setBTableView setTableFooterView:view];
+    
 
 }
 
@@ -119,7 +128,6 @@
         case 0:
         {
             //「いいえ」が選択されたとき
-            NSLog(@"いいえ");
             //タブバーコントローラーの２番目のタブに遷移
             self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
             break;
@@ -142,8 +150,8 @@
     //タブバーの高さと調べる
     CGFloat tabBarHeight = self.tabBarController.tabBar.bounds.size.height;
     CGFloat addViewHeight =_adView.frame.size.height;
-    NSLog(@"%f", tabBarHeight);
-    NSLog(@"%f", addViewHeight);
+//    NSLog(@"%f", tabBarHeight);
+//    NSLog(@"%f", addViewHeight);
     //バナーオブジェクト生成
     _adView = [[ADBannerView alloc] initWithFrame:CGRectMake(0, 460, _adView.frame.size.width, _adView.frame.size.height)];
     _adView.delegate = self;
@@ -190,7 +198,11 @@
     [self.view addSubview:_datePickerView];
     // DatePickerをセット
     _datePicker = [UIDatePicker new];
+    //DatePickerのスタイルを◯月/◯日/〇〇年にする
     [_datePicker setDatePickerMode:UIDatePickerModeDate];
+    //DatePickerの時間をローカル時間に設定 →　デフォルト値に影響
+    _datePicker.timeZone = [NSTimeZone systemTimeZone];
+    
     // デフォルトの日付を「今日」に設定
     NSDate *today = [NSDate date];
     [_datePicker setDate:today];
@@ -203,6 +215,13 @@
     [_datePickerDoneButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     [_datePickerDoneButton addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_datePickerView addSubview:_datePickerDoneButton];
+    
+    
+    //TableViewの余計な行の削除
+    UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
+    view.backgroundColor = [UIColor clearColor];
+    //[self.tableView setTableHeaderView:view];
+    [self.setBTableView setTableFooterView:view];
 }
 
 
@@ -306,7 +325,7 @@
 
 
     //ロング型の変数の中身を表示する文字列がld
-    NSLog(@"%ld",(long)indexPath.section);
+//    NSLog(@"%ld",(long)indexPath.section);
 
 }
     
@@ -336,11 +355,10 @@
 }
 
 
-//DoneボタンがTapされた時に何をするか
+//DoneボタンがTapされた時にTableViewに予算額と開始日を表示する
+//保存はSaveボタン。ここは表示だけ
 -(void)tapBtn:(UIButton *)doneButton
 {
-    NSLog(@"Done");
-    
     //viewを下げる
     [self closeTextView];
     [self closeDatePickerView];
@@ -354,15 +372,16 @@
         //二行目（開始日の行）がTapされた時
         //DatePickerで入力された日付（date型）をString型に変換し
         //_startdateに代入
+
         NSDateFormatter *df = [[NSDateFormatter alloc] init];
         [df setDateFormat:@"yyyy/MM/dd"];
         _startDate = [df stringFromDate:_datePicker.date];
     }
     
-    //取り出した予算額と開始日のメンバ変数を%@に指定する
+    //取り出した予算額と開始日のメンバ変数を%@に指定して、TableViewに表示
     _budgetArray =@[[NSString stringWithFormat:@"予算額 %@",_budgetPrice],[NSString stringWithFormat:@"開始日 %@",_startDate]];
     
-    //入力した内容を初期化する
+    //入力した内容を初期化して、TableViewを再作成する
     [self.setBTableView reloadData];
     
     
@@ -370,9 +389,10 @@
 
 
 //SaveボタンがTapされた時
+//入力した金額・日付をユーザーデフォルトに書き込む
 - (IBAction)tapSave:(id)sender {
     
-    ///入力した金額・日付をユーザーデフォルトに書き込む
+    
     //ユーザーデフォルトを取得
     NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
     //予算額：値_budgetPriceと、キーBudgetを指定して_budgetDefaultsに書き込む
@@ -381,9 +401,12 @@
     [_budgetDefaults setObject:_startDate forKey:@"Startdate"];
     //書き込んだデータを即反映
     [_budgetDefaults synchronize];
+   
     
-    NSLog(@"budget=%@",[_budgetDefaults objectForKey:@"Budget"]);
-    NSLog(@"stardate=%@",[_budgetDefaults objectForKey:@"Startdate"]);
+    
+//    NSLog(@"budget=%@",[_budgetDefaults objectForKey:@"Budget"]);
+//    NSLog(@"stardate=%@",[_budgetDefaults objectForKey:@"Startdate"]);
+    
     
     
     ///_budgetDefaultsのデータを読み出す
@@ -392,6 +415,7 @@
     
     //取り出したデータを%@に指定する
     _budgetArray =@[[NSString stringWithFormat:@"予算額 %@",budget],[NSString stringWithFormat:@"開始日 %@",startdate]];
+     NSLog(@"%@",startdate);
     
     //入力した内容を初期化する
     [self.setBTableView reloadData];

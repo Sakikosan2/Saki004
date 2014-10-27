@@ -29,5 +29,7 @@
 //ユーザーデフォルト
 @property(strong,nonatomic) NSUserDefaults *_currencyDefault;
 
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
+- (IBAction)tapBackButton:(id)sender;
 
 @end
