@@ -42,29 +42,42 @@
 
         // Coredataのデータがあるときの残高表示
         // accountresultをNSString型にする
-        NSString *strAccountresult = [NSString stringWithFormat:@"口座残高  %@ %@",[self.withdrawalmemo convertcurrency],[self.withdrawalmemo accountresult]];
+        NSString *strAccountresult = [NSString stringWithFormat:@"口座残高:     %@ (%@)",[self.withdrawalmemo accountresult],[self.withdrawalmemo convertcurrency]];
         self.balanceLabel.text = strAccountresult;
 
         //withdrawaldateをNSString型にする
         NSDateFormatter *df = [NSDateFormatter new];
         [df setDateFormat:@"yyyy/MM/dd"];
         NSString * strWithdrawaldate = [df stringFromDate:[self.withdrawalmemo withdrawaldate]];
-        self.lastwithdrawalLabel.text = [NSString stringWithFormat:@"前回引き出し日 %@", strWithdrawaldate];
+        self.lastwithdrawalLabel.text = [NSString stringWithFormat:@"前回引き出し日:       %@", strWithdrawaldate];
     } else {
         // アプリ初回起動時など、Coredataのdataがない時の残高表示
-        self.balanceLabel.text = @"口座残高  0";
+        self.balanceLabel.text = @"口座残高:        0";
 
         //口座残高をラベルに表示
         // アプリ初回起動時など、Coredataのdataがない時の引き出し日表示（デフォルトで今日）
         NSDateFormatter *df = [NSDateFormatter new];
         [df setDateFormat:@"yyyy/MM/dd"];
         NSString *today = [df stringFromDate:[NSDate new]];
-        self.lastwithdrawalLabel.text = [NSString stringWithFormat:@"前回引き出し日 %@", today];
+        self.lastwithdrawalLabel.text = [NSString stringWithFormat:@"前回引き出し日:       %@", today];
     }
 }
 
 - (void)viewDidLoad
 {
+        //ボタンアイコンの色を緑にする
+        [[UITabBar appearance] setTintColor:[UIColor colorWithRed:(46/255.0) green:(204/255.0) blue:(113/255.0) alpha:1]];
+    
+        //タブのフォントを指定
+        UIFont *font = [UIFont systemFontOfSize:10.0f];
+    
+        //タブのタイトル色指定
+        [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor grayColor], UITextAttributeTextColor,nil] forState:UIControlStateNormal];
+    
+    
+       //タブのタイトル色指定(選択中)
+       [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:(46/255.0) green:(204/255.0) blue:(113/255.0) alpha:1], UITextAttributeTextColor,nil] forState:UIControlStateSelected];
+
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
@@ -115,27 +128,76 @@
 {
     //アラート　＋　画面遷移しないように
     //Userdefaultにデータがあるかどうかを確認
+    
     //Userdefaultを呼び出す
+    NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
+
+    
     //currencySettings
     //budget / rate　取り出す
-    //1　全部がnilの時　if
-    //2 rateがないとき else if
-    //3 budgetがないとき else if
-    //4 全部あるとき else　　この時だけ画面遷移
+    //_budgetdefaultから_budgetPriceを読み出す
+    NSString *budget = [_budgetDefaults stringForKey:@"Budget"];
     
-    //SecondViewControllerへ画面遷移する
-    //画面オブジェクトのインスタンス化(カプセル化)
-    SecondViewController *svc = [self.storyboard instantiateViewControllerWithIdentifier:@"SecondViewController"];
-    //日付はdata型だからそのままでいい　→保存するときはフルのデータで保存！
-    //NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    //[df setDateFormat:@"MM/dd"];
-    svc.selectedDate = date;
-    svc.withdrawalmemo = self.withdrawalmemo;
-    [self presentViewController:svc animated:YES completion:nil];
-    
-    
+    //_currencySettinsの中からrateを取り出す
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *currencySettings = [userDefaults objectForKey:@"currencyDefault"];
+    NSString *rate = [currencySettings objectForKey:@"rate"];
     
 
+    
+    if (currencySettings == nil) {  //予算もレートもnilの時
+        // UIAlertViewを使ってアラートを表示
+        UIAlertView *setAlert = [[UIAlertView alloc] initWithTitle:@"通貨・予算を設定してください"
+                                                           message:nil
+                                                          delegate:nil
+                                                 cancelButtonTitle:nil
+                                                 otherButtonTitles:@"OK", nil];
+        [setAlert show];
+        
+        
+        //通貨設定画面（タブバーコントローラーの２番目のタブに遷移
+        self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
+
+        
+    }else if ( rate == nil){   //rateがないとき
+        //アラートを表示
+        // UIAlertViewを使ってアラートを表示
+        UIAlertView *setAlert = [[UIAlertView alloc] initWithTitle:@"通貨を設定してください"
+                                                           message:nil
+                                                          delegate:nil
+                                                 cancelButtonTitle:nil
+                                                 otherButtonTitles:@"OK", nil];
+        [setAlert show];
+
+        //通貨設定画面（タブバーコントローラーの２番目のタブに遷移)
+        self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
+        
+        
+    }else if( budget == nil){    //budgetがないとき
+        // UIAlertViewを使ってアラートを表示
+        UIAlertView *setAlert = [[UIAlertView alloc] initWithTitle:@"通貨・予算を設定してください"
+                                                           message:nil
+                                                          delegate:nil
+                                                 cancelButtonTitle:nil
+                                                 otherButtonTitles:@"OK", nil];
+        [setAlert show];
+
+        
+        //予算設定画面（タブバーコントローラーの3番目のタブに遷移)
+        self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:2];
+        
+    }else{  //4 全部あるとき
+        //SecondViewControllerへ画面遷移する
+        //画面オブジェクトのインスタンス化(カプセル化)
+        SecondViewController *svc = [self.storyboard instantiateViewControllerWithIdentifier:@"SecondViewController"];
+        //日付はdata型だからそのままでいい　→保存するときはフルのデータで保存！
+        //NSDateFormatter *df = [[NSDateFormatter alloc] init];
+        //[df setDateFormat:@"MM/dd"];
+        svc.selectedDate = date;
+        svc.withdrawalmemo = self.withdrawalmemo;
+        [self presentViewController:svc animated:YES completion:nil];
+    }
+   
 }
 
 

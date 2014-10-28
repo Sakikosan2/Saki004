@@ -31,31 +31,47 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     //選択した通貨を表示する
-    //Userdefaultにある現地通貨を呼び出す
-    //Userdefaultにある換算通貨を呼び出す
-  
-    
     // データを格納するユーザデフォルトを取得
     NSUserDefaults *currencyDefaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *settings = [currencyDefaults objectForKey:@"currencyDefault"];// currencyDefaultのデータを取得
-
+    NSDictionary *settings = [currencyDefaults objectForKey:@"currencyDefault"];
+    
     //キーを指定して値を読み出す
     NSString *localCurrencyName = [settings objectForKey:@"localCurrencyCode"];
     NSString *convertCurrencyName = [settings objectForKey:@"convertCurrencyCode"];
     NSString *rate = [settings objectForKey:@"rate"];
+   
+    if (settings == nil) {      //UserDefaultsにデータがはいってないとき
+        //通貨コードにアスタリスクをセット
+        localCurrencyName = @"***";
+        convertCurrencyName =@"***";
+        NSString *localCurrencyText = [NSString stringWithFormat:@"現地通貨 %@",localCurrencyName];
+        NSString *convertCurrencyText = [NSString stringWithFormat:@"換算通貨 %@",convertCurrencyName];
+        _currencyArray =@[localCurrencyText, convertCurrencyText];
+        localCurrencyName = @"***";
+        convertCurrencyName =@"***";
+        
+        //レートに１をセット
+        self.resultLabel.text =[NSString stringWithFormat:@"1(%@) = 1 (%@)",localCurrencyName,convertCurrencyName];
     
+    }else{
+        
     //TableViewに呼び出したデータを反映する
     NSString *localCurrencyText = [NSString stringWithFormat:@"現地通貨 %@",localCurrencyName];
     NSString *convertCurrencyText = [NSString stringWithFormat:@"換算通貨 %@",convertCurrencyName];
     _currencyArray =@[localCurrencyText, convertCurrencyText];
     
     //レートをラベルに表示する
-    NSString *rateText = [NSString stringWithFormat:@"%@",rate];
+    NSString *roundedRate = [NSString stringWithFormat:@"%.2f", [rate floatValue]];
+    NSString *rateText = [NSString stringWithFormat:@"1(%@) = %@ (%@)",localCurrencyName,roundedRate,convertCurrencyName];
     self.resultLabel.text =rateText;
 
-    // テーブルビューを再度読み込み直す(毎回TableViewを作り直す）
-    [self.setTableView reloadData];
 }
+    
+// テーブルビューを再度読み込み直す(毎回TableViewを作り直す）
+[self.setTableView reloadData];
+}
+
+
 
 
 - (void)viewDidLoad
@@ -165,17 +181,28 @@
 {
     // データを格納するユーザデフォルトを取得
     NSUserDefaults *currencyDefaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *settings = [currencyDefaults objectForKey:@"currencyDefault"];// currencyDefaultのデータを取得
+    NSDictionary *settings = [currencyDefaults objectForKey:@"currencyDefault"];
     
     //キーを指定して値を読み出す
     NSString *rate = [settings objectForKey:@"rate"];
-    
-    //ラベルに表示する
-    NSString *rateText = [NSString stringWithFormat:@"%@",rate];
-    self.resultLabel.text =rateText;
+    NSString *localCurrencyName = [settings objectForKey:@"localCurrencyCode"];
+    NSString *convertCurrencyName = [settings objectForKey:@"convertCurrencyCode"];
     
 
+    if (settings == nil) {      //UserDefaultsにデータがはいってないとき
+        //通貨コードにアスタリスク、レートに１をセット
+        localCurrencyName = @"***";
+        convertCurrencyName =@"***";
+        //ラベルに表示する
+        self.resultLabel.text = [NSString stringWithFormat:@"1(%@) = 1 (%@)",localCurrencyName,convertCurrencyName];
     
+    }else{
+        //ラベルに再取得したUserdefaultの値を代入
+        NSString *roundedRate = [NSString stringWithFormat:@"%.2f", [rate floatValue]];
+        NSString *rateText = [NSString stringWithFormat:@"1(%@) = %@ (%@)",localCurrencyName,roundedRate,convertCurrencyName];
+        self.resultLabel.text =rateText;
+    }
+
 
 }
 

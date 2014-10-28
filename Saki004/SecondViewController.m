@@ -67,11 +67,26 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    //取り出した引き出し額と手数料のメンバ変数を%@に指定する
-    _withdrawalArray =@[[NSString stringWithFormat:@"引き出し額 %@",_withdrawalPrice],[NSString stringWithFormat:@"手数料 %@",_commissionPrice]];
-    
+
+//    //入力されたデータがない場合は「０」を表示
+//    if (_withdrawalPrice ==nil) {
+//    
+//        _withdrawalArray =@[@"引き出し額:    0",@"手数料:           0"];
+//        self.withdrawalTableView.delegate = self;
+//        self.withdrawalTableView.dataSource = self;
+//        
+//    }else{
+//        //入力されたデータがあるときは、引き出し額と手数料額を表示
+//            //引き出し額が入力された時とで分岐すべき？}
+//
+
+    NSString *withdrawalPrice = [NSString stringWithFormat:@"引き出し額: %@",_withdrawalPrice];
+    NSString *commissionPrice = [NSString stringWithFormat:@"手数料: %@",_commissionPrice];
+    _withdrawalArray =@[withdrawalPrice, commissionPrice];
+        
     self.withdrawalTableView.delegate = self;
     self.withdrawalTableView.dataSource = self;
+    
     
     //入力した内容を初期化する
     [self.withdrawalTableView reloadData];
@@ -81,11 +96,9 @@
     view.backgroundColor = [UIColor clearColor];
     //[self.tableView setTableHeaderView:view];
     [self.withdrawalTableView setTableFooterView:view];
-    
-//    //即時反映
-//    [self.withdrawalTableView reloadData];
-//    [super viewWillAppear:animated];
+
 }
+        
 
 
 //画面が表示された時

@@ -38,8 +38,7 @@
     BOOL _viewFlag;
     //YESの時、入力された予算額の値をメンバ変数に指定する
     BOOL _budgetFlag;
-    //? YESの時、
-    BOOL _alertFlag;
+
 
 }
 
@@ -57,33 +56,17 @@
 }
 
 
-//通貨設定が済んでいるかどうかのalertView
 -(void)viewWillAppear:(BOOL)animated
 {
-    //! 選択した通貨をユーザーデフォルト_currencyDefaultsに書き込む
+    //選択した通貨をユーザーデフォルト_currencyDefaultsに書き込む
     NSUserDefaults *_currencyDefaults = [NSUserDefaults standardUserDefaults];
-    
-    
-    //?
-    _alertFlag = [_currencyDefaults boolForKey:@"isShownCurrencySelectAlert"];
-    
     //アップデリゲートをインスタンス化(カプセル化)
     AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
-    
-    
-    if(!_alertFlag)
-    {
-        
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"通貨設定は済んでいますか？" message:@"通貨設定画面で設定できます" delegate:self cancelButtonTitle:@"いいえ、これからです" otherButtonTitles:@"はい、済んでいます", nil];
-        
-        
-        [alert show];
-        _alertFlag = YES;
-    }
     
     //Convertからデータを取り出し、アップデリゲートの_convertCurrencyにセットする
     app._convertCurrency = [_currencyDefaults objectForKey:@"Convert"];
     
+    //この書き方でok??
     //デフォルトの換算通貨の設定をJPYにする
     if (app._convertCurrency == nil){
         [_currencyDefaults setObject:@"JPY" forKey:@"Convert"];
@@ -91,6 +74,7 @@
         app._convertCurrency = @"JPY";
     }
 
+ 
     ///ユーザーデフォルト_budgetDefaultsから予算額と開始日のデータを読み出す
     //ユーザーデフォルトを取得
     NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
@@ -99,45 +83,56 @@
     NSString *budget = [_budgetDefaults stringForKey:@"Budget"];
     NSString *startdate = [_budgetDefaults stringForKey:@"Startdate"];
 
+//    //budget/startdateを配列に入れて、%@に指定する
+//    NSString *budgetNew = [NSString stringWithFormat:@"予算額:     %@  (%@)",budget, app._convertCurrency];
+//    NSString *startdateNew = [NSString stringWithFormat:@"開始日       %@ ",startdateNew];
+//    _budgetArray = @[budgetNew,startdateNew];
+//    
+////    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"開始日 %@" ,startdate]];
+//    
+//    self.setBTableView.delegate = self;
+//    self.setBTableView.dataSource = self;
+//    
+//    
+////    //入力した内容を初期化する
+////    [self.setBTableView reloadData];
+//    
     
-    //budget/startdateを配列に入れて、%@に指定する
-    _budgetArray =@[[NSString stringWithFormat:@"予算額(%@) %@",app._convertCurrency,budget],[NSString stringWithFormat:@"開始日 %@" ,startdate]];
+    
+    
+    if (!budget && !startdate) {      //予算☓　開始日☓（UserDefaultsにデータがはいってないとき)
+        //通貨コードにアスタリスクをセット
+        budget = @"予算額: 0";
+        startdate = @"開始日: ----- ";
+        //budget/startdateを配列に入れて、%@に指定する
+//        NSString *budget = [NSString stringWithFormat:@"予算額:     %@  (%@)",budget, app._convertCurrency];
+//        NSString *startdate = [NSString stringWithFormat:@"開始日       %@",startdate];
+        
+    } else if (!startdate){      //予算◯　開始日☓のとき
+        //予算はUserdefaultのデータを使用
+        budget = [NSString stringWithFormat:@"予算額:     %@  (%@)",budget, app._convertCurrency];
+        //開始日には---------をセット
+        startdate = @"開始日: ----- ";
+    } else if (!budget) {     //予算☓　開始日◯のとき
+        //予算は０をセット
+        budget = @"予算額: 0";
+        //開始日にはUserdefaultのデータをセット
+        startdate = [NSString stringWithFormat:@"開始日       %@",startdate];
+    }else{      //予算も開始日もセットされているとき
+        //どちらもUserdefaultのデータを表示
+        budget = [NSString stringWithFormat:@"予算額:     %@  (%@)",budget, app._convertCurrency];
+        startdate = [NSString stringWithFormat:@"開始日       %@",startdate];
+    }
+    
+    //ここで落ちてる
+    //配列〜〜
+    _budgetArray = @[budget,startdate];
     
     self.setBTableView.delegate = self;
     self.setBTableView.dataSource = self;
     
-    
-//    //入力した内容を初期化する
-//    [self.setBTableView reloadData];
-    
-    
-    
-    //TableViewの余計な行の削除
-    UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
-    view.backgroundColor = [UIColor clearColor];
-    //[self.tableView setTableHeaderView:view];
-    [self.setBTableView setTableFooterView:view];
-    
-
 }
 
-//alertViewが選択された時の処理
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    switch (buttonIndex) {
-        case 0:
-        {
-            //「いいえ」が選択されたとき
-            //タブバーコントローラーの２番目のタブに遷移
-            self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
-            break;
-        }
-        case 1:
-        {
-            break;
-        }
-    }
-}
 
 
 //画面が表示された時
@@ -165,7 +160,7 @@
     //modalViewを作成して
     _textView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 50)];
     //色の配合の仕方を調整
-    _textView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:0.2];
+    _textView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:0.0];
     //まだ隠れている状態＝NOの時、
     _viewFlag = NO;
     //このビューコントローラに乗せる
@@ -356,72 +351,88 @@
 
 
 //DoneボタンがTapされた時にTableViewに予算額と開始日を表示する
-//保存はSaveボタン。ここは表示だけ
 -(void)tapBtn:(UIButton *)doneButton
 {
+    //ユーザーデフォルトを取得
+    NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *budget = [_budgetDefaults objectForKey:@"Budget"];
+    NSString *startdate = [_budgetDefaults objectForKey:@"Startdate"];
+    
+    //選択した通貨をユーザーデフォルト_currencyDefaultsに書き込む
+    NSUserDefaults *_currencyDefaults = [NSUserDefaults standardUserDefaults];
+    //アップデリゲートをインスタンス化(カプセル化)
+    AppDelegate *app = (AppDelegate *) [[UIApplication sharedApplication]delegate];
+    
+
+    //Convertからデータを取り出し、アップデリゲートの_convertCurrencyにセットする
+    app._convertCurrency = [_currencyDefaults objectForKey:@"Convert"];
+    
+    //取り出したデータを%@に指定する
+    _budgetArray =@[[NSString stringWithFormat:@"予算額 :     %@  (%@)",budget,app._convertCurrency],[NSString stringWithFormat:@"開始日       %@",startdate]];
+    NSLog(@"%@",startdate);
+    
     //viewを下げる
     [self closeTextView];
     [self closeDatePickerView];
     
-    //「_budgetFlag=YESの時」= setBTableViewの一行目（予算額の行）がTapされた時
-    //入力された金額を_budgetPriceに代入
-    if (_budgetFlag == YES) {
-        _budgetPrice = _budgetTextField.text;
     
-    }else{
-        //二行目（開始日の行）がTapされた時
+    if (_budgetFlag == YES) {   //「_budgetFlag=YESの時」= setBTableViewの一行目（予算額の行）がTapされた時
+        //入力された金額を_budgetPriceに代入
+        budget = _budgetTextField.text;
+        //予算額：値_budgetPriceと、キーBudgetを指定して_budgetDefaultsに書き込む
+        [_budgetDefaults setObject:budget forKey:@"Budget"];
+    }else{      //二行目（開始日の行）がTapされた時
         //DatePickerで入力された日付（date型）をString型に変換し
         //_startdateに代入
-
         NSDateFormatter *df = [[NSDateFormatter alloc] init];
         [df setDateFormat:@"yyyy/MM/dd"];
-        _startDate = [df stringFromDate:_datePicker.date];
+        startdate = [df stringFromDate:_datePicker.date];
+        
+        //開始日：値_startDateと、キーStartdateを指定して_budgetDefaultsに書き込む
+        [_budgetDefaults setObject:startdate forKey:@"Startdate"];
     }
-    
-    //取り出した予算額と開始日のメンバ変数を%@に指定して、TableViewに表示
-    _budgetArray =@[[NSString stringWithFormat:@"予算額 %@",_budgetPrice],[NSString stringWithFormat:@"開始日 %@",_startDate]];
+
+
+    //書き込んだデータを即反映
+    [_budgetDefaults synchronize];
+
+
+    //取り出したデータを%@に指定する
+    _budgetArray =@[[NSString stringWithFormat:@"予算額 :     %@  (%@)",budget,app._convertCurrency],[NSString stringWithFormat:@"開始日       %@",startdate]];
     
     //入力した内容を初期化して、TableViewを再作成する
     [self.setBTableView reloadData];
-    
-    
 }
 
 
-//SaveボタンがTapされた時
-//入力した金額・日付をユーザーデフォルトに書き込む
-- (IBAction)tapSave:(id)sender {
-    
-    
-    //ユーザーデフォルトを取得
-    NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
-    //予算額：値_budgetPriceと、キーBudgetを指定して_budgetDefaultsに書き込む
-    [_budgetDefaults setObject:_budgetPrice forKey:@"Budget"];
-    //開始日：値_startDateと、キーStartdateを指定して_budgetDefaultsに書き込む
-    [_budgetDefaults setObject:_startDate forKey:@"Startdate"];
-    //書き込んだデータを即反映
-    [_budgetDefaults synchronize];
-   
-    
-    
-//    NSLog(@"budget=%@",[_budgetDefaults objectForKey:@"Budget"]);
-//    NSLog(@"stardate=%@",[_budgetDefaults objectForKey:@"Startdate"]);
-    
-    
-    
-    ///_budgetDefaultsのデータを読み出す
-    NSString *budget = [_budgetDefaults stringForKey:@"Budget"];
-    NSString *startdate = [_budgetDefaults stringForKey:@"Startdate"];
-    
-    //取り出したデータを%@に指定する
-    _budgetArray =@[[NSString stringWithFormat:@"予算額 %@",budget],[NSString stringWithFormat:@"開始日 %@",startdate]];
-     NSLog(@"%@",startdate);
-    
-    //入力した内容を初期化する
-    [self.setBTableView reloadData];
-    
-    
-}
+////SaveボタンがTapされた時
+////入力した金額・日付をユーザーデフォルトに書き込む
+//- (IBAction)tapSave:(id)sender {
+//    
+//    
+//    //ユーザーデフォルトを取得
+//    NSUserDefaults *_budgetDefaults = [NSUserDefaults standardUserDefaults];
+//    //予算額：値_budgetPriceと、キーBudgetを指定して_budgetDefaultsに書き込む
+//    [_budgetDefaults setObject:_budgetPrice forKey:@"Budget"];
+//    //開始日：値_startDateと、キーStartdateを指定して_budgetDefaultsに書き込む
+//    [_budgetDefaults setObject:_startDate forKey:@"Startdate"];
+//    //書き込んだデータを即反映
+//    [_budgetDefaults synchronize];
+//    
+//    
+//    ///_budgetDefaultsのデータを読み出す
+//    NSString *budget = [_budgetDefaults stringForKey:@"Budget"];
+//    NSString *startdate = [_budgetDefaults stringForKey:@"Startdate"];
+//    
+//    //取り出したデータを%@に指定する
+//    _budgetArray =@[[NSString stringWithFormat:@"予算額 %@",budget],[NSString stringWithFormat:@"開始日 %@",startdate]];
+//     NSLog(@"%@",startdate);
+//    
+//    //入力した内容を初期化する
+//    [self.setBTableView reloadData];
+//    
+//    
+//}
 
 
 //Cancelボタンが押された時

@@ -20,7 +20,6 @@
 @property(strong,nonatomic) NSUserDefaults *_budgetDefaults;
 
 @property (weak, nonatomic) IBOutlet UIButton *cancelBtn;
-@property (weak, nonatomic) IBOutlet UIButton *SaveBtn;
 - (IBAction)tapCancel:(id)sender;
 - (IBAction)tapSave:(id)sender;
 

@@ -168,7 +168,7 @@
 {
 
         // UIAlertViewを使ってアラートを表示
-        UIAlertView *apiAlert = [[UIAlertView alloc] initWithTitle:@"再試行してください"
+        UIAlertView *apiAlert = [[UIAlertView alloc] initWithTitle:@"インターネットに接続して\n再試行してください"
                                                         message:text
                                                        delegate:nil
                                               cancelButtonTitle:nil
