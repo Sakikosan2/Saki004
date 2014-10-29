@@ -110,7 +110,7 @@
         
     } else if (!startdate){      //予算◯　開始日☓のとき
         //予算はUserdefaultのデータを使用
-        budget = [NSString stringWithFormat:@"予算額:     %@  (%@)",budget, app._convertCurrency];
+        budget = [NSString stringWithFormat:@"予算額 :     %@  (%@)",budget, app._convertCurrency];
         //開始日には---------をセット
         startdate = @"開始日: ----- ";
     } else if (!budget) {     //予算☓　開始日◯のとき
@@ -120,12 +120,11 @@
         startdate = [NSString stringWithFormat:@"開始日       %@",startdate];
     }else{      //予算も開始日もセットされているとき
         //どちらもUserdefaultのデータを表示
-        budget = [NSString stringWithFormat:@"予算額:     %@  (%@)",budget, app._convertCurrency];
-        startdate = [NSString stringWithFormat:@"開始日       %@",startdate];
+        budget = [NSString stringWithFormat:@"予算額 :     %@  (%@)",budget, app._convertCurrency];
+        startdate = [NSString stringWithFormat:@"開始日 :       %@",startdate];
     }
     
-    //ここで落ちてる
-    //配列〜〜
+    
     _budgetArray = @[budget,startdate];
     
     self.setBTableView.delegate = self;
@@ -160,7 +159,7 @@
     //modalViewを作成して
     _textView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 50)];
     //色の配合の仕方を調整
-    _textView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:0.0];
+    _textView.backgroundColor = [UIColor colorWithRed:0.890  green:0.890 blue:0.890 alpha:1.0];
     //まだ隠れている状態＝NOの時、
     _viewFlag = NO;
     //このビューコントローラに乗せる
@@ -168,7 +167,7 @@
     
     //テキストフィールドを作成
     _budgetTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width-100, 40)];
-    _budgetTextField.backgroundColor = [UIColor grayColor];
+    _budgetTextField.backgroundColor = [UIColor colorWithRed:0.890  green:0.890 blue:0.890 alpha:1.0];
     _budgetTextField.keyboardType = UIKeyboardTypeNumberPad;
     [_budgetTextField addTarget:self action:@selector(tapReturn) forControlEvents:UIControlEventEditingDidEndOnExit];
     [_textView addSubview:_budgetTextField];
@@ -178,7 +177,7 @@
     //テキストフィールド用のDoneボタンを作成してビューに追加
     _doneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100, 0, 100, 40)];
     [_doneButton setTitle:@"Done" forState:UIControlStateNormal];
-    [_doneButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_doneButton setTitleColor:[UIColor colorWithRed: (46/255.0) green:(204/255.0) blue: (113/255.0) alpha:1] forState:UIControlStateNormal];
     [_doneButton addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_textView addSubview:_doneButton];
 
@@ -187,7 +186,7 @@
     //「開始日」を入力するためのDatePickerをmodalViewにのせてにゅっとだす
     // DatePicker表示用のmodalViewを作成
     _datePickerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 50)];
-    _datePickerView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:0.2];
+    _datePickerView.backgroundColor = [UIColor colorWithRed:0.890 green:0.890 blue:0.890 alpha:1.0];
     //まだ隠れている状態＝NOとする
     _viewFlag = NO;
     [self.view addSubview:_datePickerView];
@@ -207,7 +206,7 @@
     // DatePickerビューに_datePickerDoneButtonボタンを作成して追加
     _datePickerDoneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100, 0, 100, 40)];
     [_datePickerDoneButton setTitle:@"Done" forState:UIControlStateNormal];
-    [_datePickerDoneButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_datePickerDoneButton setTitleColor:[UIColor colorWithRed: (46/255.0) green:(204/255.0) blue: (113/255.0) alpha:1] forState:UIControlStateNormal];
     [_datePickerDoneButton addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_datePickerView addSubview:_datePickerDoneButton];
     
@@ -368,7 +367,7 @@
     app._convertCurrency = [_currencyDefaults objectForKey:@"Convert"];
     
     //取り出したデータを%@に指定する
-    _budgetArray =@[[NSString stringWithFormat:@"予算額 :     %@  (%@)",budget,app._convertCurrency],[NSString stringWithFormat:@"開始日       %@",startdate]];
+    _budgetArray =@[[NSString stringWithFormat:@"予算額 :     %@  (%@)",budget,app._convertCurrency],[NSString stringWithFormat:@"開始日 :       %@",startdate]];
     NSLog(@"%@",startdate);
     
     //viewを下げる
@@ -398,7 +397,7 @@
 
 
     //取り出したデータを%@に指定する
-    _budgetArray =@[[NSString stringWithFormat:@"予算額 :     %@  (%@)",budget,app._convertCurrency],[NSString stringWithFormat:@"開始日       %@",startdate]];
+    _budgetArray =@[[NSString stringWithFormat:@"予算額 :     %@  (%@)",budget,app._convertCurrency],[NSString stringWithFormat:@"開始日 :       %@",startdate]];
     
     //入力した内容を初期化して、TableViewを再作成する
     [self.setBTableView reloadData];

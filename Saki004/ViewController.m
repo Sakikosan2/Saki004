@@ -38,7 +38,7 @@
     NSArray *withdrawalmemos = [self.fetchedResultController fetchedObjects];
     if ([withdrawalmemos count] > 0) {
         // 最新のwithdrawalmemoのデータを取得
-        self.withdrawalmemo = (Withdrawalmemo *)[self.fetchedResultController fetchedObjects][0];
+        self.withdrawalmemo = withdrawalmemos[0];
 
         // Coredataのデータがあるときの残高表示
         // accountresultをNSString型にする
@@ -61,6 +61,8 @@
         NSString *today = [df stringFromDate:[NSDate new]];
         self.lastwithdrawalLabel.text = [NSString stringWithFormat:@"前回引き出し日:       %@", today];
     }
+    return;
+    
 }
 
 - (void)viewDidLoad
@@ -107,10 +109,14 @@
 //    NSLog(@"%@", [(Withdrawalmemo *)[self.fetchedResultController fetchedObjects][0] accountresult]);
  
 
+    //口座残高と前回引き出し日のラベルタイトルを表示
+    self.balanceLabelText =[UILabel new];
+//    self.balanceLabelText.frame = CGRectMake(<#CGFloat x#>, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>)
+    
 
-    //口座残高と前回引き出し日のラベルを表示させる
+    //口座残高と前回引き出し日の結果ラベルを表示させる
     self.balanceLabel = [UILabel new];
-    self.balanceLabel.frame = CGRectMake(20, self.view.bounds.size.height -90, 200, 20);
+    self.balanceLabel.frame = CGRectMake(20, self.view.bounds.size.height -90, 300, 20);
     self.balanceLabel.text = @"口座残高";
     [[self calendarView] addSubview:self.balanceLabel];
     
@@ -279,7 +285,7 @@
     [fetchRequest setFetchBatchSize:20];
     //そのリストをどんな順序で並べるのか　ascending:並べ方　Yes:昇順、No:降順
     //条件を複数個指定できるため、配列型
-    [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"withdrawaldate" ascending:NO]]];
+    [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"created" ascending:NO]]];
     
 //    条件を指定してとってくる
 //    NSPredicate *pred

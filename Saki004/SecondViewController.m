@@ -67,36 +67,43 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    ///ユーザーデフォルトから通貨を取得
+    //ユーザーデフォルトを取得
+    NSUserDefaults *currencyDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *settings = [currencyDefaults objectForKey:@"currencyDefault"];
+    //キーを指定して値を読み出す
+    NSString *localCurrencyName = [settings objectForKey:@"localCurrencyCode"];
+    //入力されたときの変数を宣言
+    NSString *withdrawalPrice;
+    NSString *commissionPrice;
 
-//    //入力されたデータがない場合は「０」を表示
-//    if (_withdrawalPrice ==nil) {
-//    
-//        _withdrawalArray =@[@"引き出し額:    0",@"手数料:           0"];
-//        self.withdrawalTableView.delegate = self;
-//        self.withdrawalTableView.dataSource = self;
-//        
-//    }else{
-//        //入力されたデータがあるときは、引き出し額と手数料額を表示
-//            //引き出し額が入力された時とで分岐すべき？}
-//
+    if (withdrawalPrice && commissionPrice) {           //引き出し額◯　且つ　手数料額◯
+        withdrawalPrice = [NSString stringWithFormat:@"引き出し額 :       %@ (%@)",_withdrawalPrice,localCurrencyName];
+        commissionPrice = [NSString stringWithFormat:@"手数料額 　:       %@ (%@)",_commissionPrice,localCurrencyName];
+    }else if (withdrawalPrice && !commissionPrice){     //引き出し額◯　且つ　手数料額☓
+        withdrawalPrice = [NSString stringWithFormat:@"引き出し額 :       %@ (%@)",_withdrawalPrice,localCurrencyName];
+        commissionPrice = @"手数料額 　:";
+    }else if (!withdrawalPrice && commissionPrice){     //引き出し額☓　且つ　手数料額◯
+        withdrawalPrice = @"引き出し額 :";
+         commissionPrice = [NSString stringWithFormat:@"手数料額 　:       %@ (%@)",_commissionPrice,localCurrencyName];
+    }else{
+        withdrawalPrice = @"引き出し額 :";
+        commissionPrice = @"手数料額 　:";
+    }
 
-    NSString *withdrawalPrice = [NSString stringWithFormat:@"引き出し額: %@",_withdrawalPrice];
-    NSString *commissionPrice = [NSString stringWithFormat:@"手数料: %@",_commissionPrice];
-    _withdrawalArray =@[withdrawalPrice, commissionPrice];
-        
+    
+    _withdrawalArray =@[withdrawalPrice,commissionPrice];
     self.withdrawalTableView.delegate = self;
     self.withdrawalTableView.dataSource = self;
-    
     
     //入力した内容を初期化する
     [self.withdrawalTableView reloadData];
     
-    //TableViewの余計な行の削除
-    UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
-    view.backgroundColor = [UIColor clearColor];
-    //[self.tableView setTableHeaderView:view];
-    [self.withdrawalTableView setTableFooterView:view];
-
+//    //TableViewの余計な行の削除
+//    UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
+//    view.backgroundColor = [UIColor clearColor];
+//    //[self.tableView setTableHeaderView:view];
+//    [self.withdrawalTableView setTableFooterView:view];
 }
         
 
@@ -105,7 +112,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-        
+
+    // 引き出し額と手数料額の初期値を空文字
+    _withdrawalPrice = @"";
+    _commissionPrice = @"";
+    
     //今日の日付をラベルに表示
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"MM/dd"];
@@ -114,7 +125,7 @@
     
     
     //TableView
-    _withdrawalArray =@[@"引き出し額",@"手数料"];
+    _withdrawalArray =@[@"引き出し額 :",@"手数料額 　:"];
     self.withdrawalTableView.delegate = self;
     self.withdrawalTableView.dataSource = self;
     
@@ -128,7 +139,7 @@
     //modalViewを作成
     _textView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height,self.view.bounds.size.width, 50)];
     //色の配合の仕方を調整
-    _textView.backgroundColor = [UIColor colorWithRed:0.192157 green:0.760784 blue:0.952941 alpha:0.2];
+    _textView.backgroundColor = [UIColor colorWithRed:0.890 green:0.890 blue:0.890 alpha:1];
     //まだ隠れている状態＝NOとする
     _viewFlag = NO;
     [self.view addSubview:_textView];
@@ -137,7 +148,7 @@
     
     //テキストフィールドを_textViewの上に作成
     _withdrawalTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width-100, 40)];
-    _withdrawalTextField.backgroundColor = [UIColor grayColor];
+    _withdrawalTextField.backgroundColor = [UIColor colorWithRed:0.890 green:0.890 blue:0.890 alpha:1];
     _withdrawalTextField.keyboardType = UIKeyboardTypeNumberPad;
     [_textView addSubview:_withdrawalTextField];
     [self.view addSubview:_textView];
@@ -146,7 +157,7 @@
     //Doneボタンを作成
     _doneButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.bounds.size.width-100, 0, 100, 40)];
     [_doneButton setTitle:@"Done" forState:UIControlStateNormal];
-    [_doneButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_doneButton setTitleColor:[UIColor colorWithRed: (46/255.0) green:(204/255.0) blue: (113/255.0) alpha:1] forState:UIControlStateNormal];
     [_doneButton addTarget:self action:@selector(tapBtn:) forControlEvents:UIControlEventTouchUpInside];
     [_textView addSubview:_doneButton];
     
@@ -181,7 +192,6 @@
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     return @"引き出し額入力";
-    
 }
 
 
@@ -202,14 +212,14 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifer];
     
     
-    //background用のviewを生成
-    UIView *selectionColor = [UIView new];
-    
-    //生成したviewのbackgroundColorに任意の色を設定
-    selectionColor.backgroundColor = [UIColor greenColor];
-    
-    //生成したbackgroundView用のviewを設定する
-    cell.selectedBackgroundView = selectionColor;
+//    //background用のviewを生成
+//    UIView *selectionColor = [UIView new];
+//    
+//    //生成したviewのbackgroundColorに任意の色を設定
+//    selectionColor.backgroundColor = [UIColor colorWithRed:0.180 green:0.925 blue:0.443 alpha:0.5];
+//    
+//    //生成したbackgroundView用のviewを設定する
+//    cell.selectedBackgroundView = selectionColor;
     
     //セルの初期化とスタイルの決定
     if (cell == nil) {
@@ -219,10 +229,6 @@
     
     cell.textLabel.text = [NSString stringWithFormat:@"行番号=%d",indexPath.row];
     cell.textLabel.text = _withdrawalArray[indexPath.row];
-    
-    
-
-    
     
     return cell;
     
@@ -400,12 +406,18 @@
 }
 
 //Doneボタンが押された時
--(IBAction)tapBtn:(id)sender
-{
+-(IBAction)tapBtn:(id)sender{
+
+    ///ユーザーデフォルトから通貨を取得
+    //ユーザーデフォルトを取得
+    NSUserDefaults *currencyDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *settings = [currencyDefaults objectForKey:@"currencyDefault"];
+    //キーを指定して値を読み出す
+    NSString *localCurrencyName = [settings objectForKey:@"localCurrencyCode"];
+
     //入力した金額をメンバ変数に保存
     if (_withdrawalFlag == YES) {
         _withdrawalPrice = _withdrawalTextField.text;
-        
     }
     else{
         _commissionPrice = _withdrawalTextField.text;
@@ -415,7 +427,7 @@
     [self downObjects];
     
     //取り出した引き出し額と手数料のメンバ変数を%@に指定する
-    _withdrawalArray =@[[NSString stringWithFormat:@"引き出し額 %@",_withdrawalPrice],[NSString stringWithFormat:@"手数料 %@",_commissionPrice]];
+    _withdrawalArray =@[[NSString stringWithFormat:@"引き出し額 :       %@ (%@)",_withdrawalPrice,localCurrencyName],[NSString stringWithFormat:@"手数料額 　:       %@",_commissionPrice]];
     
     //入力した内容を初期化する
     [self.withdrawalTableView reloadData];
@@ -473,7 +485,11 @@
 
     
     if (self.withdrawalmemo) {
-        if(self.withdrawalmemo.startdate == startdate){      //Userdefault=CoreData
+        
+NSLog(@"%@", self.withdrawalmemo.startdate);
+NSLog(@"%@", startdate);
+        
+        if([self.withdrawalmemo.startdate isEqualToString:startdate]){      //Userdefault=CoreData
             //口座残高 = {(引き出し額×レート)+(手数料額×レート)}
             //CoreDataのaccountresult - 総引き出し額
             CGFloat accountResultCoredata = [self.withdrawalmemo.accountresult floatValue];
@@ -530,7 +546,8 @@
     [withdrawalmemo setValue:self.selectedDate forKey:@"withdrawaldate"];       //引き出し日
     [withdrawalmemo setValue:withdrawalcurrency forKey:@"withdrawalcurrency"];  //引き出し通貨
     [withdrawalmemo setValue:startdate forKey:@"startdate"];                    //予算(記録)開始日
-
+    [withdrawalmemo setValue:[NSDate new] forKey:@"created"];                   //データ登録日
+    
     // 作成したNSManagedObjectをDBに保存
     NSError *error = nil;
     if (![_managedObjectContext save:&error]) {

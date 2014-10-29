@@ -11,6 +11,7 @@
 
 @implementation Withdrawalmemo
 
+@dynamic created;
 @dynamic convertcurrency;
 @dynamic withdrawalcurrency;
 @dynamic commissioncurrency;

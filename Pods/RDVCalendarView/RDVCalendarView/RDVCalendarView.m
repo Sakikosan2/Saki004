@@ -145,8 +145,8 @@
 
 - (void)layoutSubviews {
     
-    //カレンダーの高さを小さくする(30px)
-    CGSize viewSize = CGSizeMake(self.frame.size.width,self.frame.size.height -30);
+    //カレンダーの高さを小さくする(100px)
+    CGSize viewSize = CGSizeMake(self.frame.size.width,self.frame.size.height - 100);
     CGSize headerSize = CGSizeMake(viewSize.width, 60.0f);
     CGFloat backButtonWidth = MAX([[self backButton] sizeThatFits:CGSizeMake(100, 50)].width, 44);
     CGFloat forwardButtonWidth = MAX([[self forwardButton] sizeThatFits:CGSizeMake(100, 50)].width, 44);

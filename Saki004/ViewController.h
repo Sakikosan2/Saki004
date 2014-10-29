@@ -16,6 +16,10 @@
 
 @property (strong, nonatomic) UILabel *balanceLabel;
 @property (strong, nonatomic) UILabel *lastwithdrawalLabel;
+@property (strong, nonatomic)  UILabel *balanceLabelText;
+@property (strong, nonatomic)  UILabel *lastwithdrawalLabelText;
+
+
 
 //NSManagedObjectContext　はデータの管理(データをの追加、削除)をするオブジェクト(①)
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;

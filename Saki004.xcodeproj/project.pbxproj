@@ -40,6 +40,7 @@
 		3E9DCBBF19CC034C0070E9D1 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E9DCBBE19CC034C0070E9D1 /* CoreData.framework */; };
 		3E9DCBC219CC03B30070E9D1 /* User.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3E9DCBC019CC03B30070E9D1 /* User.xcdatamodeld */; };
 		3EBF11CC19EC05BD00E393AC /* Withdrawalmemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EBF11CB19EC05BD00E393AC /* Withdrawalmemo.m */; };
+		3EE3B9DC1A00C463007F1D5F /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3EE3B9DB1A00C463007F1D5F /* iTunesArtwork@2x.png */; };
 		E1F5F7E845FB4A319BE26148 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E9AF94D1A564748B60ADBE9 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -98,6 +99,7 @@
 		3E9DCBC119CC03B30070E9D1 /* User.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = User.xcdatamodel; sourceTree = "<group>"; };
 		3EBF11CA19EC05BD00E393AC /* Withdrawalmemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Withdrawalmemo.h; sourceTree = "<group>"; };
 		3EBF11CB19EC05BD00E393AC /* Withdrawalmemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Withdrawalmemo.m; sourceTree = "<group>"; };
+		3EE3B9DB1A00C463007F1D5F /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iTunesArtwork@2x.png"; path = "../../../iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		4E9AF94D1A564748B60ADBE9 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FEF5E44B8024BFBAECC3346 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -143,6 +145,7 @@
 		3E121DDB19FE47EE00ADC85E /* TabButton */ = {
 			isa = PBXGroup;
 			children = (
+				3EE3B9DB1A00C463007F1D5F /* iTunesArtwork@2x.png */,
 				3E14D6F419FEC2ED00D391E4 /* tabbar_icon2_1@2x.png */,
 				3E14D6F819FEC33500D391E4 /* tabbar_icon4@2x.png */,
 				3E14D6F619FEC31600D391E4 /* tabbar_icon3@2x.png */,
@@ -331,6 +334,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E53F7A219FF785700CB335D /* doneButton@2x.png in Resources */,
+				3EE3B9DC1A00C463007F1D5F /* iTunesArtwork@2x.png in Resources */,
 				3E14D6EF19FEC2BB00D391E4 /* AppIcon29x29@2x.png in Resources */,
 				3E14D6F919FEC33500D391E4 /* tabbar_icon4@2x.png in Resources */,
 				3E94E4BE19C6CDA200DDBFDD /* Images.xcassets in Resources */,
@@ -533,7 +537,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Saki004/Saki004-Prefix.pch";
 				INFOPLIST_FILE = "Saki004/Saki004-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -547,7 +553,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Saki004/Saki004-Prefix.pch";
 				INFOPLIST_FILE = "Saki004/Saki004-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
