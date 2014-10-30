@@ -427,7 +427,7 @@
     [self downObjects];
     
     //取り出した引き出し額と手数料のメンバ変数を%@に指定する
-    _withdrawalArray =@[[NSString stringWithFormat:@"引き出し額 :       %@ (%@)",_withdrawalPrice,localCurrencyName],[NSString stringWithFormat:@"手数料額 　:       %@",_commissionPrice]];
+    _withdrawalArray =@[[NSString stringWithFormat:@"引き出し額 :       %@ (%@)",_withdrawalPrice,localCurrencyName],[NSString stringWithFormat:@"手数料額 　:       %@(%@)",_commissionPrice,localCurrencyName]];
     
     //入力した内容を初期化する
     [self.withdrawalTableView reloadData];
@@ -484,11 +484,7 @@
     NSLog(@"a+b = %f",calculateWholeWithdrawalPrice);
 
     
-    if (self.withdrawalmemo) {
-        
-NSLog(@"%@", self.withdrawalmemo.startdate);
-NSLog(@"%@", startdate);
-        
+    if (self.withdrawalmemo) {        
         if([self.withdrawalmemo.startdate isEqualToString:startdate]){      //Userdefault=CoreData
             //口座残高 = {(引き出し額×レート)+(手数料額×レート)}
             //CoreDataのaccountresult - 総引き出し額
@@ -529,8 +525,8 @@ NSLog(@"%@", startdate);
     
     // 作成したNSManagedObjectインスタンス(withdrawalmemo)に値を設定する
     //int型float型はNSNumber型に保存してからでないとNSManagedObjectに保存できない:float型の変数→Number型に変換
-    NSNumber *accountResultNew = [NSNumber numberWithFloat:accountResult];  //?変換できてない
-    NSNumber *calculateRateNew = [NSNumber numberWithFloat:calculateRate];
+    NSNumber *accountResultNew = [NSNumber numberWithFloat:[[NSString stringWithFormat:@"%.2f", accountResult] floatValue]];  //?変換できてない
+    NSNumber *calculateRateNew = [NSNumber numberWithFloat:[[NSString stringWithFormat:@"%.2f", calculateRate] floatValue]];
     //string型→Number型の時は一度int型に変換してからNumber型にする
     NSNumber *withdrawalPriceNew  = [NSNumber numberWithInt:[_withdrawalPrice intValue]];
     NSNumber *commissionPriceNew  = [NSNumber numberWithInt:[_commissionPrice intValue]];

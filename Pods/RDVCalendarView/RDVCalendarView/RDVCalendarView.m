@@ -63,7 +63,8 @@
         
         // Setup defaults
         //今日の日付をグリーンにする
-        _currentDayColor = [UIColor colorWithRed:0.400 green:1.000 blue:0.600 alpha:0.8];
+        _currentDayColor = [UIColor colorWithRed: (46/255.0) green:(204/255.0) blue: (113/255.0) alpha:0.7];
+        
         
         //選択された日付のセルを薄いグレーにする(#66FF99)
         _selectedDayColor = [UIColor colorWithRed:0.663 green:0.663 blue:0.663 alpha:0.8];
@@ -87,14 +88,14 @@
         
         //buckButtonとforwarButtonをグリーンにする
         _backButton = [[UIButton alloc] init];
-        [_backButton setTitleColor:[UIColor colorWithRed:0.235 green:0.835 blue:0.686 alpha:1.0] forState:UIControlStateNormal];
+        [_backButton setTitleColor:[UIColor colorWithRed: (46/255.0) green:(204/255.0) blue: (113/255.0) alpha:0.7] forState:UIControlStateNormal];
         [_backButton setTitle:@"Prev" forState:UIControlStateNormal];
         [_backButton addTarget:self action:@selector(showPreviousMonth)
               forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_backButton];
         
         _forwardButton = [[UIButton alloc] init];
-        [_forwardButton setTitleColor:[UIColor colorWithRed:0.235 green:0.835 blue:0.686 alpha:1.0] forState:UIControlStateNormal];
+        [_forwardButton setTitleColor:[UIColor colorWithRed: (46/255.0) green:(204/255.0) blue: (113/255.0) alpha:0.7] forState:UIControlStateNormal];
         [_forwardButton setTitle:@"Next" forState:UIControlStateNormal];
         [_forwardButton addTarget:self action:@selector(showNextMonth)
                  forControlEvents:UIControlEventTouchUpInside];

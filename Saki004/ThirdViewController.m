@@ -44,8 +44,8 @@
         //通貨コードにアスタリスクをセット
         localCurrencyName = @"***";
         convertCurrencyName =@"***";
-        NSString *localCurrencyText = [NSString stringWithFormat:@"現地通貨 %@",localCurrencyName];
-        NSString *convertCurrencyText = [NSString stringWithFormat:@"換算通貨 %@",convertCurrencyName];
+        NSString *localCurrencyText =   [NSString stringWithFormat:@"現地通貨   (%@)",localCurrencyName];
+        NSString *convertCurrencyText = [NSString stringWithFormat:@"換算通貨   (%@)",convertCurrencyName];
         _currencyArray =@[localCurrencyText, convertCurrencyText];
         localCurrencyName = @"***";
         convertCurrencyName =@"***";
@@ -56,8 +56,8 @@
     }else{
         
     //TableViewに呼び出したデータを反映する
-    NSString *localCurrencyText = [NSString stringWithFormat:@"現地通貨 %@",localCurrencyName];
-    NSString *convertCurrencyText = [NSString stringWithFormat:@"換算通貨 %@",convertCurrencyName];
+    NSString *localCurrencyText = [NSString stringWithFormat:@"現地通貨   (%@)",localCurrencyName];
+    NSString *convertCurrencyText = [NSString stringWithFormat:@"換算通貨   (%@)",convertCurrencyName];
     _currencyArray =@[localCurrencyText, convertCurrencyText];
     
     //レートをラベルに表示する
@@ -256,57 +256,57 @@
 
 
 
-//広告
--(void) bannerViewDidLoadAd:(ADBannerView *)banner
-{
-    
-    //if文をつくる.isVisibleの中がNOだったときにこの中の処理をする。
-    
-    if (!_isVisible) {
-        
-        
-        //バナーが表示されるアニメーション。落ちてくる。
-        
-        //「animateAdBannerOn」という名前のアニメーション
-        [UIView beginAnimations:@"animateAdBannerOn" context:nil];
-        
-        //アニメーションの時間の間隔。大きければ大きいほどゆっくり
-        [UIView setAnimationDuration:0.3];
-        
-        //「-(void) bannerViewDidLoadAd:(ADBannerView *)banner」のbannerと同じ
-        //banner.flame=「バナーの形」
-        banner.frame = CGRectOffset (banner.frame, 0, 20);
-        
-        //透明度を0から1にして、見えるようになった。
-        banner.alpha = 1.0;
-        
-        //beginAnimations に対して、　commitAnimations でここで終わり！って意味
-        [UIView commitAnimations];
-        
-        //表示したので、isVisibleをYESにする
-        _isVisible = YES;
-        
-    }
-}
-
-
-//バナー表示でエラーが発生した場合
--(void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
-{
-    //エラーが発生したときに広告が表示されていたら、非表示にする
-    if (_isVisible) {
-        [UIView beginAnimations:@"animateAdBannerOff" context:nil];
-        
-        [UIView setAnimationDuration:0.3];
-        
-        banner.frame = CGRectOffset(banner.frame, 0, -CGRectGetHeight(banner.frame));
-        
-        banner.alpha = 0.0;
-        
-        [UIView commitAnimations];
-        
-    }
-}
+////広告
+//-(void) bannerViewDidLoadAd:(ADBannerView *)banner
+//{
+//    
+//    //if文をつくる.isVisibleの中がNOだったときにこの中の処理をする。
+//    
+//    if (!_isVisible) {
+//        
+//        
+//        //バナーが表示されるアニメーション。落ちてくる。
+//        
+//        //「animateAdBannerOn」という名前のアニメーション
+//        [UIView beginAnimations:@"animateAdBannerOn" context:nil];
+//        
+//        //アニメーションの時間の間隔。大きければ大きいほどゆっくり
+//        [UIView setAnimationDuration:0.3];
+//        
+//        //「-(void) bannerViewDidLoadAd:(ADBannerView *)banner」のbannerと同じ
+//        //banner.flame=「バナーの形」
+//        banner.frame = CGRectOffset (banner.frame, 0, 20);
+//        
+//        //透明度を0から1にして、見えるようになった。
+//        banner.alpha = 1.0;
+//        
+//        //beginAnimations に対して、　commitAnimations でここで終わり！って意味
+//        [UIView commitAnimations];
+//        
+//        //表示したので、isVisibleをYESにする
+//        _isVisible = YES;
+//        
+//    }
+//}
+//
+//
+////バナー表示でエラーが発生した場合
+//-(void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+//{
+//    //エラーが発生したときに広告が表示されていたら、非表示にする
+//    if (_isVisible) {
+//        [UIView beginAnimations:@"animateAdBannerOff" context:nil];
+//        
+//        [UIView setAnimationDuration:0.3];
+//        
+//        banner.frame = CGRectOffset(banner.frame, 0, -CGRectGetHeight(banner.frame));
+//        
+//        banner.alpha = 0.0;
+//        
+//        [UIView commitAnimations];
+//        
+//    }
+//}
 
 
 

@@ -88,7 +88,21 @@
     NSString *currencyCode = [currencyData objectForKey:@"Code"];
     
     //表示する文字列を作成
-    cell.textLabel.text = [NSString stringWithFormat:@"%@(%@)",currencyName,currencyCode];
+    cell.textLabel.text = [NSString stringWithFormat:@"(%@)%@",currencyCode,currencyName];
+    
+    //国旗
+    UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",currencyCode]];
+    
+    //指定画像をリサイズ
+    CGFloat width = 30;  // リサイズ後幅のサイズ
+    CGFloat height = 20;  // リサイズ後高さのサイズ
+    UIGraphicsBeginImageContext(CGSizeMake(width, height));
+    [image drawInRect:CGRectMake(0, 0, width, height)];
+    image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    
+    cell.imageView.image = image;
     
     return cell;
     

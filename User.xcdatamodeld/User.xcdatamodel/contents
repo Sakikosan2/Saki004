@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Withdrawalmemo" representedClassName="Entity" syncable="YES">
-        <attribute name="accountresult" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="accountresult" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="commissioncurrency" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="commissionprice" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="commissionprice" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="convertcurrency" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="created" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="rate" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="rate" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="startdate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="withdrawalcurrency" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="withdrawaldate" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="withdrawalprice" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="withdrawalprice" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
     <elements>
         <element name="Withdrawalmemo" positionX="-63" positionY="-18" width="128" height="195"/>

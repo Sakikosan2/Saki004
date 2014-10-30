@@ -299,6 +299,7 @@
         //キーボードを最初から表示する
         [_budgetTextField becomeFirstResponder];
         
+        
         _budgetFlag = YES;
         _viewFlag = YES;
 
@@ -366,9 +367,7 @@
     //Convertからデータを取り出し、アップデリゲートの_convertCurrencyにセットする
     app._convertCurrency = [_currencyDefaults objectForKey:@"Convert"];
     
-    //取り出したデータを%@に指定する
-    _budgetArray =@[[NSString stringWithFormat:@"予算額 :     %@  (%@)",budget,app._convertCurrency],[NSString stringWithFormat:@"開始日 :       %@",startdate]];
-    NSLog(@"%@",startdate);
+
     
     //viewを下げる
     [self closeTextView];
@@ -380,6 +379,34 @@
         budget = _budgetTextField.text;
         //予算額：値_budgetPriceと、キーBudgetを指定して_budgetDefaultsに書き込む
         [_budgetDefaults setObject:budget forKey:@"Budget"];
+        
+        if (!budget && !startdate) {      //予算☓　開始日☓（UserDefaultsにデータがはいってないとき)
+            //通貨コードにアスタリスクをセット
+            budget = @"予算額: 0";
+            startdate = @"開始日: ----- ";
+            //budget/startdateを配列に入れて、%@に指定する
+            //        NSString *budget = [NSString stringWithFormat:@"予算額:     %@  (%@)",budget, app._convertCurrency];
+            //        NSString *startdate = [NSString stringWithFormat:@"開始日       %@",startdate];
+            
+        } else if (!startdate){      //予算◯　開始日☓のとき
+            //予算はUserdefaultのデータを使用
+            budget = [NSString stringWithFormat:@"予算額 :     %@  (%@)",budget, app._convertCurrency];
+            //開始日には---------をセット
+            startdate = @"開始日: ----- ";
+        } else if (!budget) {     //予算☓　開始日◯のとき
+            //予算は０をセット
+            budget = @"予算額: 0";
+            //開始日にはUserdefaultのデータをセット
+            startdate = [NSString stringWithFormat:@"開始日       %@",startdate];
+        }else{      //予算も開始日もセットされているとき
+            //どちらもUserdefaultのデータを表示
+            budget = [NSString stringWithFormat:@"予算額 :     %@  (%@)",budget, app._convertCurrency];
+            startdate = [NSString stringWithFormat:@"開始日 :       %@",startdate];
+        }
+        
+        
+        
+
     }else{      //二行目（開始日の行）がTapされた時
         //DatePickerで入力された日付（date型）をString型に変換し
         //_startdateに代入
@@ -389,16 +416,41 @@
         
         //開始日：値_startDateと、キーStartdateを指定して_budgetDefaultsに書き込む
         [_budgetDefaults setObject:startdate forKey:@"Startdate"];
+        
+        if (!budget && !startdate) {      //予算☓　開始日☓（UserDefaultsにデータがはいってないとき)
+            //通貨コードにアスタリスクをセット
+            budget = @"予算額: 0";
+            startdate = @"開始日: ----- ";
+            //budget/startdateを配列に入れて、%@に指定する
+            //        NSString *budget = [NSString stringWithFormat:@"予算額:     %@  (%@)",budget, app._convertCurrency];
+            //        NSString *startdate = [NSString stringWithFormat:@"開始日       %@",startdate];
+            
+        } else if (!startdate){      //予算◯　開始日☓のとき
+            //予算はUserdefaultのデータを使用
+            budget = [NSString stringWithFormat:@"予算額 :     %@  (%@)",budget, app._convertCurrency];
+            //開始日には---------をセット
+            startdate = @"開始日: ----- ";
+        } else if (!budget) {     //予算☓　開始日◯のとき
+            //予算は０をセット
+            budget = @"予算額: 0";
+            //開始日にはUserdefaultのデータをセット
+            startdate = [NSString stringWithFormat:@"開始日       %@",startdate];
+        }else{      //予算も開始日もセットされているとき
+            //どちらもUserdefaultのデータを表示
+            budget = [NSString stringWithFormat:@"予算額 :     %@  (%@)",budget, app._convertCurrency];
+            startdate = [NSString stringWithFormat:@"開始日 :       %@",startdate];
+        }
     }
-
-
+    
+        
+        
+    _budgetArray = @[budget,startdate];
+        
+    self.setBTableView.delegate = self;
+    self.setBTableView.dataSource = self;
     //書き込んだデータを即反映
     [_budgetDefaults synchronize];
-
-
-    //取り出したデータを%@に指定する
-    _budgetArray =@[[NSString stringWithFormat:@"予算額 :     %@  (%@)",budget,app._convertCurrency],[NSString stringWithFormat:@"開始日 :       %@",startdate]];
-    
+  
     //入力した内容を初期化して、TableViewを再作成する
     [self.setBTableView reloadData];
 }
@@ -444,40 +496,40 @@
 
 
 
-//広告
--(void) bannerViewDidLoadAd:(ADBannerView *)banner
-{
-//    [_adView setCenter:CGPointMake(self.view.bounds.size.width/2,self.view.bounds.size.height-_adView.bounds.size.height/2)];
-    //_isVisibleがNOの時（広告が表示されていないとき、この処理を実行）
-    if (!_isVisible) {
-            //「animateAdBannerOn」という名前のアニメーション
-            [UIView beginAnimations:@"animateAdBannerOn" context:nil];
-            //アニメーションの時間の間隔。大きければ大きいほどゆっくり
-            [UIView setAnimationDuration:0.3];
-            //「-(void) bannerViewDidLoadAd:(ADBannerView *)banner」のbannerと同じ
-            //banner.flame=「バナーの形」
-            banner.frame = CGRectOffset (banner.frame, 0, 20);
-            //透明度を0から1にして、見えるようにする
-            banner.alpha = 1.0;
-            [UIView commitAnimations];
-            //表示したので、isVisibleをYESにする
-            _isVisible = YES;
-    }
-}
-
-
-//広告：エラーが発生した場合
--(void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
-{
-    //エラーが発生したときに広告が表示されていたら、非表示にする
-    if (_isVisible) {
-        [UIView beginAnimations:@"animateAdBannerOff" context:nil];
-        [UIView setAnimationDuration:0.3];
-        banner.frame = CGRectOffset(banner.frame, 0, -CGRectGetHeight(banner.frame));
-        banner.alpha = 0.0;
-        [UIView commitAnimations];
-    }
-}
+////広告
+//-(void) bannerViewDidLoadAd:(ADBannerView *)banner
+//{
+////    [_adView setCenter:CGPointMake(self.view.bounds.size.width/2,self.view.bounds.size.height-_adView.bounds.size.height/2)];
+//    //_isVisibleがNOの時（広告が表示されていないとき、この処理を実行）
+//    if (!_isVisible) {
+//            //「animateAdBannerOn」という名前のアニメーション
+//            [UIView beginAnimations:@"animateAdBannerOn" context:nil];
+//            //アニメーションの時間の間隔。大きければ大きいほどゆっくり
+//            [UIView setAnimationDuration:0.3];
+//            //「-(void) bannerViewDidLoadAd:(ADBannerView *)banner」のbannerと同じ
+//            //banner.flame=「バナーの形」
+//            banner.frame = CGRectOffset (banner.frame, 0, 20);
+//            //透明度を0から1にして、見えるようにする
+//            banner.alpha = 1.0;
+//            [UIView commitAnimations];
+//            //表示したので、isVisibleをYESにする
+//            _isVisible = YES;
+//    }
+//}
+//
+//
+////広告：エラーが発生した場合
+//-(void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+//{
+//    //エラーが発生したときに広告が表示されていたら、非表示にする
+//    if (_isVisible) {
+//        [UIView beginAnimations:@"animateAdBannerOff" context:nil];
+//        [UIView setAnimationDuration:0.3];
+//        banner.frame = CGRectOffset(banner.frame, 0, -CGRectGetHeight(banner.frame));
+//        banner.alpha = 0.0;
+//        [UIView commitAnimations];
+//    }
+//}
 
 
 

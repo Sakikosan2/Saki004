@@ -38,8 +38,7 @@
     NSArray *withdrawalmemos = [self.fetchedResultController fetchedObjects];
     if ([withdrawalmemos count] > 0) {
         // 最新のwithdrawalmemoのデータを取得
-        self.withdrawalmemo = withdrawalmemos[0];
-
+        self.withdrawalmemo = withdrawalmemos[0];        
         // Coredataのデータがあるときの残高表示
         // accountresultをNSString型にする
         NSString *strAccountresult = [NSString stringWithFormat:@"口座残高:     %@ (%@)",[self.withdrawalmemo accountresult],[self.withdrawalmemo convertcurrency]];
